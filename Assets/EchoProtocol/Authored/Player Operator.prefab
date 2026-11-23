@@ -312,6 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Controller: {fileID: 8089782121703750843}
   View: {fileID: 7193855284640301068}
+  maxHealth: 100
   walkSpeed: 4
   sprintSpeed: 6
   slowSpeed: 2.6

@@ -7054,15 +7054,6 @@ MonoBehaviour:
   replayActors:
   - {fileID: 416646608258047969, guid: ca7ea7bbf88d74c4ca957c7d8d03856a, type: 3}
   - {fileID: 2707592564084500811, guid: 66b9996786ae4b24daefc49ed5b2fe4f, type: 3}
-  maxPlayerHealth: 100
-  shotDamage: 25
-  fireInterval: 0.24
-  shotRange: 45
-  aimOffset: {x: -0.22, y: 0.08, z: -0.07}
-  laboratoryLoopSeconds: 20
-  maintenanceLoopSeconds: 18
-  reactorLoopSeconds: 16
-  tacticalLoopSeconds: 20
   sentryWreckagePrefab: {fileID: 7171739695682764892, guid: 7db24cf2aade4294e98becebac022e3a, type: 3}
   darkMaterial: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
   plateOn: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
@@ -7277,8 +7268,6 @@ MonoBehaviour:
     Cue: 9
     Source: {fileID: 2067899691}
   authoredWeapon: {fileID: 2037124910}
-  authoredMuzzle: {fileID: 2037124911}
-  serviceWindowSeconds: 1.4
   archivePanel: {fileID: 759489964}
   normalArchiveRows: {fileID: 83249276}
   compactArchiveRows: {fileID: 1152193692}
@@ -26412,6 +26401,8 @@ MonoBehaviour:
   Door: {fileID: 62067247639932615}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
+  LoopSeconds: 20
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 4150714139418649814}
   VistaSpin: {fileID: 7400000, guid: ed1678223093652498b331786d5cc65d, type: 2}
   ResonanceNode: {fileID: 2747904232151141324}
@@ -82905,6 +82896,8 @@ MonoBehaviour:
   Door: {fileID: 4050199025480810480}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 1593652775}
+  LoopSeconds: 20
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 9082691516003432794}
   VistaSpin: {fileID: 7400000, guid: ed1678223093652498b331786d5cc65d, type: 2}
   ResonanceNode: {fileID: 3241829313564914218}
@@ -89128,6 +89121,8 @@ MonoBehaviour:
   Door: {fileID: 8562123581298104060}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
+  LoopSeconds: 20
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 1079524702186215255}
   VistaSpin: {fileID: 7400000, guid: ed1678223093652498b331786d5cc65d, type: 2}
   ResonanceNode: {fileID: 7251572717377022034}
@@ -123204,6 +123199,8 @@ MonoBehaviour:
   Door: {fileID: 1723499026819184967}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
+  LoopSeconds: 20
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 0}
   VistaSpin: {fileID: 0}
   ResonanceNode: {fileID: 2090089076951099904}
@@ -146966,6 +146963,8 @@ MonoBehaviour:
   Door: {fileID: 3871506389865439797}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
+  LoopSeconds: 18
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 0}
   VistaSpin: {fileID: 0}
   ResonanceNode: {fileID: 4264717848313796239}
@@ -147554,6 +147553,8 @@ MonoBehaviour:
   Door: {fileID: 2073008991211483676}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
+  LoopSeconds: 16
+  ServiceWindowSeconds: 1.4
   VistaCore: {fileID: 5962964487386376529}
   VistaSpin: {fileID: 7400000, guid: ed1678223093652498b331786d5cc65d, type: 2}
   ResonanceNode: {fileID: 2351139618936161672}

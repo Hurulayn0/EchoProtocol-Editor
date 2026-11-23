@@ -24,6 +24,8 @@ namespace EchoProtocol
         public Transform Door;
         public Vector3 DoorOpenOffset = Vector3.up * 4.5f;
         public Transform PlayerSpawn;
+        [Min(1)] public float LoopSeconds = EchoPrototypeGame.LoopLength;
+        [Min(.1f)] public float ServiceWindowSeconds = 1.4f;
         public Transform VistaCore;
         public AnimationClip VistaSpin;
         public Transform ResonanceNode;

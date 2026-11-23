@@ -88,7 +88,9 @@ namespace EchoProtocol
         private void BeginSector(int index)
         {
             if (index < 0 || index >= EchoLevelDefinition.Campaign.Length || index > preferences.UnlockedLevel) return;
-            elapsedTotal = 0; savedLoops = 0; LoadLevel(index); SetScreen(EchoScreen.Playing); SaveCheckpoint(index); SaveSession();
+            elapsedTotal = 0; savedLoops = 0;
+            if (ChangeScene(CampaignScene(index), saveOnArrival: true)) return;
+            LoadLevel(index); SetScreen(EchoScreen.Playing); SaveCheckpoint(index); SaveSession();
         }
         private void RestartSector()
         {

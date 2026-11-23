@@ -48,8 +48,8 @@ namespace EchoProtocol
                 if (!show) continue;
                 RaycastHit hit;
                 Vector3 origin = shot.Action.Origin;
-                Vector3 end = origin + shot.Action.Direction * 45;
-                if (Physics.Raycast(origin, shot.Action.Direction, out hit, 45, ~(1 << 2), QueryTriggerInteraction.Ignore)) end = hit.point;
+                Vector3 end = origin + shot.Action.Direction * weaponSettings.Range;
+                if (Physics.Raycast(origin, shot.Action.Direction, out hit, weaponSettings.Range, ~(1 << 2), QueryTriggerInteraction.Ignore)) end = hit.point;
                 ghost.ShotPreview.widthMultiplier = template.widthMultiplier * (2 - (shot.Time - clock));
                 ghost.ShotPreview.SetPosition(0, origin); ghost.ShotPreview.SetPosition(1, end);
             }

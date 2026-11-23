@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace EchoProtocol
 {
@@ -27,7 +28,7 @@ namespace EchoProtocol
         private Collider doorCollider;
         private float clock, nextSample, doorFraction, elapsedTotal;
         private bool power, plateHeld, doorOpen, paused = true, won, testing;
-        [SerializeField, Min(1)] private int maxPlayerHealth = 100;
+        private int MaxPlayerHealth => player.MaxHealth;
         private int levelIndex, playerHealth, echoActivations, echoShots, savedLoops;
         private EchoScreen screen = EchoScreen.MainMenu;
         private string message = "Geçmişin, takım arkadaşın.";
@@ -87,21 +88,33 @@ namespace EchoProtocol
             player.CaptureSceneSettings();
             spawn = player.Pose;
             weaponRoot = authoredWeapon;
-            weaponMotion = weaponRoot.Find("Weapon Motion");
+            weaponSettings = weaponRoot.GetComponent<EchoWeaponSettings>();
+            weaponMotion = weaponSettings.Motion;
             motionRestPosition = weaponMotion.localPosition;
             motionRestRotation = weaponMotion.localRotation;
-            muzzle = authoredMuzzle;
+            muzzle = weaponSettings.Muzzle;
             CreateImmersion();
             CreateAudioBank();
             ApplyPreferences();
-            LoadLevel(0);
-            SetScreen(EchoScreen.MainMenu);
+            InitializeSceneEntry();
         }
 
         private IEnumerator Start()
         {
             string[] args = Environment.GetCommandLineArgs();
-            if (Array.IndexOf(args, "-echo-smoke-test") < 0) yield break;
+            if (sceneEntry != LegacyScene && automatedRun)
+            {
+                SceneManager.LoadScene(ValidationScene);
+                yield break;
+            }
+            if (runValidationOnEntry)
+            {
+                runValidationOnEntry = false;
+                yield return null;
+                StartSmokeChecks();
+                yield break;
+            }
+            if (!automatedRun) yield break;
             Application.runInBackground = true;
             int captureIndex = Array.IndexOf(args, "-echo-capture");
             string capturePath = captureIndex >= 0 && captureIndex + 1 < args.Length ? args[captureIndex + 1] : null;
@@ -134,7 +147,7 @@ namespace EchoProtocol
 
         private void ProcessControls(float dt, EchoInputFrame input, bool canPlay = true)
         {
-            if (input.Test) { StartSmokeChecks(); return; }
+            if (input.Test) { OpenValidation(); return; }
             if (screen == EchoScreen.Playing && storyBriefingActive)
             {
                 if (input.Confirm || input.Pause || Input.GetKeyDown(KeyCode.Space)) DismissStoryBriefing();
@@ -147,7 +160,7 @@ namespace EchoProtocol
                     if (echoTeaching) FinishEchoTeaching();
                     return;
                 }
-                if (screen == EchoScreen.GameWon && sampleActive) { LoadLevel(2); SetScreen(EchoScreen.Playing); SaveSession(); }
+                if (screen == EchoScreen.GameWon && sampleActive) ContinueToReactor();
                 else if (screen == EchoScreen.MainMenu || screen == EchoScreen.GameWon) BeginCampaign();
                 else if (screen == EchoScreen.GameLost) RetryLevel();
                 else if (screen == EchoScreen.LevelComplete) ContinueCampaign();
@@ -222,6 +235,8 @@ namespace EchoProtocol
         {
             elapsedTotal = 0; savedLoops = 0;
             if (IsLiveDifficulty) { preferences.ArchiveMask = 0; preferences.SampleMemory = false; }
+            if (CanPersist) preferences.Save();
+            if (ChangeScene(LaboratoryScene, saveOnArrival: true)) return;
             LoadLevel(0); SetScreen(EchoScreen.Playing);
             SaveCheckpoint(0); SaveSession();
         }
@@ -229,8 +244,14 @@ namespace EchoProtocol
         private void ContinueSavedCampaign()
         {
             if (preferences.ResumeLevel < 0) return;
-            if (resumeSave != null && resumeSave.Level == preferences.ResumeLevel) { RestoreSession(resumeSave); return; }
+            if (resumeSave != null && resumeSave.Level == preferences.ResumeLevel)
+            {
+                int target = resumeSave.Layout == 1 ? SynchronizationScene : CampaignScene(resumeSave.Level);
+                if (!ChangeScene(target, resumeSave)) RestoreSession(resumeSave);
+                return;
+            }
             elapsedTotal = 0; savedLoops = 0;
+            if (ChangeScene(CampaignScene(preferences.ResumeLevel), saveOnArrival: true)) return;
             LoadLevel(preferences.ResumeLevel); SetScreen(EchoScreen.Playing); SaveSession();
         }
 
@@ -277,14 +298,127 @@ namespace EchoProtocol
         {
             if (screen != EchoScreen.LevelComplete) return;
             if (!testing && levelIndex == 1) { BeginSample(); return; }
+            if (ChangeScene(CampaignScene(levelIndex + 1), saveOnArrival: true)) return;
             LoadLevel(levelIndex + 1); SetScreen(EchoScreen.Playing); SaveSession();
         }
 
         private void ReturnToMenu()
         {
             SaveSession();
+            if (ChangeScene(MenuScene)) return;
             LoadLevel(0); SetScreen(EchoScreen.MainMenu);
             message = "Geçmişin, takım arkadaşın.";
+        }
+
+        private const int LegacyScene = -2, MenuScene = -1, LaboratoryScene = 0;
+        private const int MaintenanceScene = 1, SynchronizationScene = 2, ReactorScene = 3;
+        private const string ValidationScene = "EchoPrototype";
+
+        [SerializeField] private string[] sceneNames =
+        {
+            "MainMenu", "Level1_ArastirmaLabi", "Level2_BakimHatti",
+            "Level3_Eszamanlilik", "Level4_Reaktor"
+        };
+
+        [SerializeField, Range(LegacyScene, ReactorScene)] private int sceneEntry = LegacyScene;
+        private static SceneEntryRequest pendingSceneEntry;
+        private static bool runValidationOnEntry;
+        private bool loadingScene;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetSceneRequests()
+        {
+            pendingSceneEntry = null;
+            runValidationOnEntry = false;
+        }
+
+        private sealed class SceneEntryRequest
+        {
+            public int Entry;
+            public EchoSessionSave Resume;
+            public float Elapsed;
+            public int Loops;
+            public bool SaveOnArrival;
+        }
+
+        private static int CampaignScene(int index) => index == 2 ? ReactorScene : index;
+
+        private bool ChangeScene(int entry, EchoSessionSave resume = null, bool saveOnArrival = false)
+        {
+            if (sceneEntry == LegacyScene || testing || sceneEntry == entry) return false;
+            if (loadingScene) return true;
+
+            pendingSceneEntry = new SceneEntryRequest
+            {
+                Entry = entry,
+                Resume = resume,
+                Elapsed = elapsedTotal,
+                Loops = savedLoops,
+                SaveOnArrival = saveOnArrival
+            };
+            loadingScene = true;
+            SceneManager.LoadScene(sceneNames[entry + 1]);
+            return true;
+        }
+
+        private void InitializeSceneEntry()
+        {
+            if (sceneEntry == LegacyScene || sceneEntry == MenuScene)
+            {
+                pendingSceneEntry = null;
+                LoadLevel(0);
+                SetScreen(EchoScreen.MainMenu);
+                return;
+            }
+
+            SceneEntryRequest requested = pendingSceneEntry;
+            pendingSceneEntry = null;
+            if (requested != null && requested.Entry != sceneEntry) requested = null;
+            if (requested != null && requested.Resume != null)
+            {
+                RestoreSession(requested.Resume);
+                return;
+            }
+
+            if (sceneEntry == SynchronizationScene)
+            {
+                StartSampleStage();
+            }
+            else
+            {
+                LoadLevel(sceneEntry == ReactorScene ? 2 : sceneEntry);
+                SetScreen(EchoScreen.Playing);
+            }
+
+            if (requested == null) return;
+            elapsedTotal = requested.Elapsed;
+            savedLoops = requested.Loops;
+            if (!requested.SaveOnArrival) return;
+            if (!sampleActive) SaveCheckpoint(levelIndex);
+            SaveSession();
+        }
+
+        private void ContinueToReactor()
+        {
+            if (ChangeScene(ReactorScene, saveOnArrival: true)) return;
+            LoadLevel(2);
+            SetScreen(EchoScreen.Playing);
+            SaveSession();
+        }
+
+        private void OpenValidation()
+        {
+            if (sceneEntry == LegacyScene)
+            {
+                StartSmokeChecks();
+                return;
+            }
+
+            if (loadingScene) return;
+            SaveSession();
+            runValidationOnEntry = true;
+            loadingScene = true;
+            SceneManager.LoadScene(ValidationScene);
         }
 
         private void LoadLevel(int index)
@@ -497,7 +631,7 @@ namespace EchoProtocol
             ghosts.Clear();
             clock = 0; nextSample = recordingInterval; power = false; plateHeld = false; doorOpen = false;
             doorFraction = 0; echoActivations = 0; echoShots = 0;
-            playerHealth = maxPlayerHealth; nextPlayerShot = 0; damageFlash = 0;
+            playerHealth = MaxPlayerHealth; nextPlayerShot = 0; damageFlash = 0;
             notificationRemaining = 0;
             recoil = 0; muzzleTimer = 0; hitTimer = 0; killTimer = 0;
             teamHitTimer = 0; teamHits = 0;

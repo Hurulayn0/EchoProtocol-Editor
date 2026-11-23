@@ -43,20 +43,7 @@ namespace EchoProtocol
             return "AKTİF: +%30 Soğuma · 10 Enerji · +5 Bonus Hasar";
         }
 
-        [SerializeField, Range(1, LoopLength)] private float laboratoryLoopSeconds = 20;
-        [SerializeField, Range(1, LoopLength)] private float maintenanceLoopSeconds = 18;
-        [SerializeField, Range(1, LoopLength)] private float reactorLoopSeconds = 16;
-        [SerializeField, Range(1, LoopLength)] private float tacticalLoopSeconds = 20;
-
-        private float ActiveLoopLength
-        {
-            get
-            {
-                if (!IsLiveDifficulty) return LoopLength;
-                if (sampleActive) return tacticalLoopSeconds;
-                return levelIndex == 0 ? laboratoryLoopSeconds : levelIndex == 1 ? maintenanceLoopSeconds : reactorLoopSeconds;
-            }
-        }
+        private float ActiveLoopLength => IsLiveDifficulty && activeRoom != null ? activeRoom.LoopSeconds : LoopLength;
 
         private void ResetWeaponEnergy()
         {

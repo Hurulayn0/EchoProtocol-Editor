@@ -17,6 +17,9 @@ namespace EchoProtocol
     {
         public CharacterController Controller;
         public Camera View;
+        [SerializeField, Min(1)] private int maxHealth = 100;
+        public int MaxHealth => maxHealth;
+
         [SerializeField, Min(0)] private float walkSpeed = 4f;
         [SerializeField, Min(0)] private float sprintSpeed = 6f;
         [SerializeField, Min(0)] private float slowSpeed = 2.6f;

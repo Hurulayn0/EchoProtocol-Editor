@@ -53,7 +53,7 @@ namespace EchoProtocol
                 {
                     ShowEmpArc(ResonancePosition, ArchivePosition, powerOn);
                 }
-                if (playerHealth > 0) playerHealth = Mathf.Min(maxPlayerHealth, playerHealth + 25);
+                if (playerHealth > 0) playerHealth = Mathf.Min(MaxPlayerHealth, playerHealth + 25);
                 EmitImpact(ResonancePosition, Level.Accent, 42, 2.2f);
                 SpawnResonanceShockwave(ResonancePosition, accents[levelIndex]);
                 RefillWeaponEnergyFromEmp(4f, sampleActive && sampleStage == 1
@@ -81,7 +81,7 @@ namespace EchoProtocol
             resonanceNode.GetComponent<Renderer>().sharedMaterial = darkMaterial;
             foreach (EchoEnemy enemy in enemies)
                 if (Vector3.Distance(enemy.transform.position, ResonancePosition) < 6) { enemy.Stagger(2); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.72f, owner: enemy.transform); }
-            if (Vector3.Distance(player.transform.position, ResonancePosition) < 6 && playerHealth > 0) playerHealth = Mathf.Min(maxPlayerHealth, playerHealth + 20);
+            if (Vector3.Distance(player.transform.position, ResonancePosition) < 6 && playerHealth > 0) playerHealth = Mathf.Min(MaxPlayerHealth, playerHealth + 20);
             EmitImpact(ResonancePosition, Level.Accent, 35, 1.8f);
             SpawnResonanceShockwave(ResonancePosition, accents[levelIndex]);
             RefillWeaponEnergyFromEmp();
@@ -132,7 +132,7 @@ namespace EchoProtocol
             if (CanPersist) preferences.Save();
             if (IsLiveDifficulty)
             {
-                playerHealth = maxPlayerHealth;
+                playerHealth = MaxPlayerHealth;
                 foreach (EchoEnemy enemy in enemies)
                 {
                     if (!enemy.Alive) continue;

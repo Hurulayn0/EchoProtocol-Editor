@@ -44,7 +44,7 @@ namespace EchoProtocol
             {
                 maintenanceDifficulty.text = CurrentDifficultyLabel();
                 maintenanceStage.text = SampleStageNames[sampleStage];
-                maintenanceHealth.text = $"CAN {playerHealth} / {maxPlayerHealth}  ·  ECHO {ghosts.Count} / {MaxEchoes}";
+                maintenanceHealth.text = $"CAN {playerHealth} / {MaxPlayerHealth}  ·  ECHO {ghosts.Count} / {MaxEchoes}";
                 maintenanceClock.text = $"DÖNGÜ {clock:00.0} / {duration:0.#}s";
                 maintenanceClock.color = clock > duration - 5 ? Color.yellow : uiText;
                 maintenanceCheckpoint.text = $"KONTROL NOKTASI {sampleStage + 1} / 3";
@@ -57,8 +57,8 @@ namespace EchoProtocol
             sectorDifficulty.text = CurrentDifficultyLabel();
             sectorDifficulty.color = CurrentDifficultyColor();
             echoAndGuardCount.text = $"ECHO {ghosts.Count} / {MaxEchoes}    MUHAFIZ {LivingEnemies()}";
-            playerHealthLabel.text = $"CAN {playerHealth} / {maxPlayerHealth}";
-            playerHealthBar.fillAmount = (float)playerHealth / maxPlayerHealth;
+            playerHealthLabel.text = $"CAN {playerHealth} / {MaxPlayerHealth}";
+            playerHealthBar.fillAmount = (float)playerHealth / MaxPlayerHealth;
             playerHealthBar.color = playerHealth > 30 ? Level.Accent : criticalHealthTint;
             campaignGuidance.text = Guidance();
 

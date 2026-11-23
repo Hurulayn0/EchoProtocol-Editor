@@ -143,7 +143,7 @@ namespace EchoProtocol
                 case 1: ContinueSavedCampaign(); break;
                 case 2: SetScreen(EchoScreen.Controls); break;
                 case 3: OpenSettings(); break;
-                case 4: StartSmokeChecks(); break;
+                case 4: OpenValidation(); break;
                 case 5: creditsOverlayActive = true; break;
                 case 6: QuitGame(); break;
                 case 7: SetScreen(EchoScreen.Archives); break;
@@ -315,7 +315,7 @@ namespace EchoProtocol
             {
                 case 1 when screen == EchoScreen.GameLost: RetryLevel(); break;
                 case 2: ReturnToMenu(); break;
-                case 3 when screen == EchoScreen.GameWon: LoadLevel(2); SetScreen(EchoScreen.Playing); SaveSession(); break;
+                case 3 when screen == EchoScreen.GameWon: ContinueToReactor(); break;
                 case 4 when screen == EchoScreen.GameWon: BeginSample(); break;
             }
         }

@@ -10,7 +10,6 @@ namespace EchoProtocol
         private bool sampleActive, sampleDecoyObserved, sampleExtraction, sampleCrossingAuthorized, sampleStageMemoryHacked;
         private int sampleStage, sampleCompleted, sampleDeaths;
         private float sampleServiceUntil;
-        [SerializeField, Min(.1f)] private float serviceWindowSeconds = 1.4f;
         private Transform sampleShutter, sampleSensor;
         private BoxCollider sampleSensorArea;
         private readonly List<SampleDevice> sampleDevices = new List<SampleDevice>();
@@ -30,7 +29,14 @@ namespace EchoProtocol
         private void BeginSample()
         {
             elapsedTotal = 0; savedLoops = 0; sampleCompleted = 0; sampleDeaths = 0; sectorDamageTaken = 0;
-            LoadSampleStage(0); SetScreen(EchoScreen.Playing); SaveSession();
+            if (ChangeScene(SynchronizationScene, saveOnArrival: true)) return;
+            StartSampleStage();
+            SaveSession();
+        }
+
+        private void StartSampleStage()
+        {
+            LoadSampleStage(0); SetScreen(EchoScreen.Playing);
             Notify(IsLiveDifficulty ? "Muhafızı aş, servis geçidini Echo ile aç ve yük asansörüne ulaş." : "Yük asansörüne ulaş. Servis düğmesi geçidi yalnızca 1,4 saniye açar.");
             if (!IsLiveDifficulty) { TogglePlanning(); echoTeaching = true; }
         }
@@ -73,7 +79,7 @@ namespace EchoProtocol
             SampleDevice device = sampleDevices[id];
             if (Vector3.Distance(actor + Vector3.up * 1.2f, device.Position) > 2.6f) return false;
             string failure = null;
-            if (sampleStage == 0) sampleServiceUntil = clock + serviceWindowSeconds;
+            if (sampleStage == 0) sampleServiceUntil = clock + activeRoom.ServiceWindowSeconds;
             else if (sampleStage == 1 && ResonanceRemaining <= 0) failure = "Rezonans yok. E denemen kaydedildi; enerji penceresinde tekrar oynatılabilir.";
             else if (sampleStage == 2 && id == 1)
             {
@@ -92,7 +98,7 @@ namespace EchoProtocol
                     {
                         sampleStageMemoryHacked = true;
                         preferences.SampleMemory = true; if (CanPersist) preferences.Save();
-                        playerHealth = maxPlayerHealth;
+                        playerHealth = MaxPlayerHealth;
                         SpawnResonanceShockwave(device.Position, powerOn);
                         if (!fromEcho) { Notify("GÖZLEM BELLEĞİ İNDİRİLDİ! +100 Can · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(archiveUnlockAudio, 0.72f); SaveSession();
                     }

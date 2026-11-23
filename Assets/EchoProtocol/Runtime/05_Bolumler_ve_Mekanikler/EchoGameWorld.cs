@@ -15,11 +15,11 @@ namespace EchoProtocol
         [SerializeField] private GameObject authoredRoomDisplay;
         [SerializeField] private EchoPlayer authoredPlayer;
         [SerializeField] private Transform authoredWeapon;
-        [SerializeField] private GameObject authoredMuzzle;
         private Vector3 closedDoorPosition, doorOpenOffset;
         private bool closedDoorCollision;
         private Vector3 roomDisplayPosition;
         private Transform roomDisplayParent, roomPlayerSpawn;
+        private EchoRoomLayout activeRoom;
         private readonly Dictionary<Transform, Material> idleMaterials = new Dictionary<Transform, Material>();
         private Vector3 resonanceRestScale;
         private Quaternion outerRingRest, innerRingRest;
@@ -54,6 +54,7 @@ namespace EchoProtocol
         private void LoadAuthoredRoom(EchoRoomLayout[] rooms, int index)
         {
             EchoRoomLayout layout = rooms[index];
+            activeRoom = layout;
             roomDisplayParent = layout.transform.parent;
             roomDisplayPosition = layout.transform.localPosition;
             layout.transform.SetParent(transform, false);

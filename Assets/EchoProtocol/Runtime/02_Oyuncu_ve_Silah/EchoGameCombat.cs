@@ -6,10 +6,7 @@ namespace EchoProtocol
 {
     public sealed partial class EchoPrototypeGame
     {
-        [SerializeField, Min(1)] private int shotDamage = 25;
-        [SerializeField, Min(.01f)] private float fireInterval = .24f;
-        [SerializeField, Min(1)] private float shotRange = 45f;
-        [SerializeField] private Vector3 aimOffset = new Vector3(-.22f, .08f, -.07f);
+        private EchoWeaponSettings weaponSettings;
         private Transform weaponMotion;
         private Vector3 motionRestPosition;
         private Quaternion motionRestRotation;
@@ -23,7 +20,7 @@ namespace EchoProtocol
         {
             if (planning || screen != EchoScreen.Playing || clock + .0001f < nextPlayerShot) return false;
             if (!TryConsumeWeaponEnergy()) return false;
-            nextPlayerShot = clock + fireInterval;
+            nextPlayerShot = clock + weaponSettings.FireInterval;
             EchoAction shot = EchoAction.Fire(player.View.transform.position, player.View.transform.forward);
             RecordPose(clock, player.Pose); RecordAction(clock, shot);
             ExecuteShot(shot, false); recoil = 1; muzzleTimer = .08f;
@@ -37,8 +34,8 @@ namespace EchoProtocol
             if (fromEcho) TriggerGhostAttackAnimation(replayingEcho);
             Physics.SyncTransforms();
             RaycastHit hit;
-            Vector3 end = action.Origin + action.Direction * shotRange;
-            if (Physics.Raycast(action.Origin, action.Direction, out hit, shotRange, ~(1 << 2), QueryTriggerInteraction.Ignore))
+            Vector3 end = action.Origin + action.Direction * weaponSettings.Range;
+            if (Physics.Raycast(action.Origin, action.Direction, out hit, weaponSettings.Range, ~(1 << 2), QueryTriggerInteraction.Ignore))
             {
                 end = hit.point;
                 if (sampleActive && fromEcho && hit.transform.IsChildOf(player.transform))
@@ -54,7 +51,7 @@ namespace EchoProtocol
                     bool headshot = hit.point.y - enemy.transform.position.y >= 1.4f;
                     int actor = fromEcho ? (replayingEcho >= 0 && replayingEcho < ghosts.Count ? replayingEcho + 1 : -1) : 0;
                     bool teamHit = sampleActive && sampleStage == 2 && enemy.RegisterTeamHit(actor, clock);
-                    enemy.TakeDamage((headshot ? shotDamage * 2 : shotDamage) + EffectiveBonusShotDamage + (teamHit ? 10 : 0));
+                    enemy.TakeDamage((headshot ? weaponSettings.Damage * 2 : weaponSettings.Damage) + EffectiveBonusShotDamage + (teamHit ? 10 : 0));
                     if (teamHit) ShowTeamHit(enemy, hit.point, fromEcho);
                     if (headshot && enemy.Alive) { enemy.Stagger(.45f); PlayAttachedSound(WorldCue.SentryStun, hit.point, 0.65f, owner: enemy.transform); }
                     if (headshot && !fromEcho) { headshotTimer = .6f; PlayUiSound(weaponHeadshotAudio, 0.7f); }
@@ -88,15 +85,15 @@ namespace EchoProtocol
 
         private void TickWeapon(float dt)
         {
-            recoil = Mathf.MoveTowards(recoil, 0, dt * 7);
+            recoil = Mathf.MoveTowards(recoil, 0, dt * weaponSettings.RecoilRecovery);
             muzzleTimer = Mathf.Max(0, muzzleTimer - dt); hitTimer = Mathf.Max(0, hitTimer - dt);
             killTimer = Mathf.Max(0, killTimer - dt);
-            Vector3 offset = player.IsAiming ? aimOffset : Vector3.zero;
-            offset.z -= recoil * .075f;
+            Vector3 offset = player.IsAiming ? weaponSettings.AimOffset : Vector3.zero;
+            offset.z -= recoil * weaponSettings.RecoilDistance;
             if (dt > 0) { weaponTravel += dt * player.Controller.velocity.magnitude * 1.9f; float walk = player.IsAiming ? .0015f : .009f; offset += new Vector3(Mathf.Sin(weaponTravel) * walk, Mathf.Sin(weaponTravel * 2) * walk, 0); }
             Vector3 target = motionRestPosition + weaponRoot.InverseTransformVector(weaponRoot.parent.TransformVector(offset));
             weaponMotion.localPosition = dt == 0 ? target : Vector3.Lerp(weaponMotion.localPosition, target, 1 - Mathf.Exp(-18 * dt));
-            weaponMotion.localRotation = motionRestRotation * Quaternion.Euler(-recoil * 6.5f, 0, recoil * 1.5f);
+            weaponMotion.localRotation = motionRestRotation * Quaternion.Euler(weaponSettings.RecoilRotation * recoil);
             muzzle.SetActive(muzzleTimer > 0);
         }
 
