@@ -4,8 +4,6 @@ namespace EchoProtocol
 {
     public sealed partial class EchoPrototypeGame
     {
-        [SerializeField] private LineRenderer cyanShotPreview, purpleShotPreview, teamHitRing;
-        [SerializeField, Min(.01f)] private float teamHitRingDuration = .65f;
 
         private float teamHitTimer;
         private int teamHits;
@@ -40,7 +38,7 @@ namespace EchoProtocol
             {
                 Ghost ghost = ghosts[i]; EchoSavedAction shot;
                 bool show = UpcomingEchoShot(i, out shot);
-                LineRenderer template = i == 0 ? cyanShotPreview : purpleShotPreview;
+                LineRenderer template = i == 0 ? effectsBindings.cyanShotPreview : effectsBindings.purpleShotPreview;
                 if (show && ghost.ShotPreview == null)
                     ghost.ShotPreview = Instantiate(template, ghost.Body.transform);
                 if (ghost.ShotPreview == null) continue;
@@ -60,9 +58,9 @@ namespace EchoProtocol
             teamHits++; teamHitTimer = 1.1f;
             if (enemy.Alive) enemy.Stagger(.8f);
             EmitImpact(point, new Color(.25f, 1, .9f), 28, .8f);
-            LineRenderer ring = Instantiate(teamHitRing, enemy.transform.position, Quaternion.identity, worldRoot);
+            LineRenderer ring = Instantiate(effectsBindings.teamHitRing, enemy.transform.position, Quaternion.identity, worldRoot);
             transientBeams.Add(ring.gameObject);
-            Destroy(ring.gameObject, teamHitRingDuration);
+            Destroy(ring.gameObject, effectsBindings.teamHitRingDuration);
             SampleEvent("EŞZAMANLI VURUŞ / +10 HASAR", fromEcho);
         }
 

@@ -324,7 +324,7 @@ namespace EchoProtocol
                     worldRoot.GetComponentsInChildren<EchoEnemy>(true).Length != Level.Enemies.Length)
                     throw new InvalidOperationException("World/recording objects leaked in reset cycle " + cycle);
             }
-            Verify(FindSound(weaponSound, "Weapon/sfx_weapon_pulse_fire").clip != null && ghosts.Count == 2 && transform.childCount == 1,
+            Verify(FindSound(audioBindings.weaponSound, "Weapon/sfx_weapon_pulse_fire").clip != null && ghosts.Count == 2 && transform.childCount == 1,
                 "45 sector transitions and 180 loop commits keep active worlds and Echo counts bounded");
             ClearRun(); yield return null; yield return null;
             Verify(transientBeams.Count == 0 && ghosts.Count == 0 && current.FrameCount == 1,

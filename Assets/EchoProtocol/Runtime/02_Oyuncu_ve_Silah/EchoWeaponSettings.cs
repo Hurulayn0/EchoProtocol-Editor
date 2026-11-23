@@ -5,6 +5,7 @@ namespace EchoProtocol
     [DisallowMultipleComponent]
     public sealed class EchoWeaponSettings : MonoBehaviour
     {
+        [SerializeField] internal AudioSource weaponAdsAudio, weaponDryFireAudio, weaponFireAudio, weaponHeadshotAudio, weaponHitmarkerAudio;
         [SerializeField, Min(1)] private int damage = 25;
         [SerializeField, Min(.01f)] private float fireInterval = .24f;
         [SerializeField, Min(1)] private float range = 45f;
@@ -14,6 +15,8 @@ namespace EchoProtocol
         [SerializeField] private Vector3 recoilRotation = new Vector3(-6.5f, 0f, 1.5f);
         [SerializeField] private Transform motion;
         [SerializeField] private GameObject muzzle;
+
+        [SerializeField] internal Material shotMaterial;
 
         public int Damage => damage;
         public float FireInterval => fireInterval;

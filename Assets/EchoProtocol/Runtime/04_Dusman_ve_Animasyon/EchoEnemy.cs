@@ -7,6 +7,8 @@ namespace EchoProtocol
     // One enemy type: a patrolling hitscan sentry. Echoes can draw its fire.
     public sealed class EchoEnemy : MonoBehaviour
     {
+        [SerializeField] internal Material attackBeam;
+        [SerializeField] internal GameObject wreckagePrefab;
         public const int MaxHealth = 60;
         [SerializeField, Min(1)] private int baseHealth = MaxHealth;
         [SerializeField, Min(1)] private int baseDamage = 12;

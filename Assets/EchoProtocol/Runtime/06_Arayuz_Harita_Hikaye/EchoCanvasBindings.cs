@@ -1,0 +1,92 @@
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+namespace EchoProtocol
+{
+    [DisallowMultipleComponent]
+    public sealed class EchoCanvasBindings : MonoBehaviour
+    {
+        [SerializeField] internal RectTransform mainMenuPanel;
+        [SerializeField] internal RectTransform controlsPanel;
+        [SerializeField] internal CanvasGroup menuInput;
+        [SerializeField] internal TMP_Text continueLabel, unavailableLabel, archiveLabel, validationLabel;
+        [SerializeField] internal TMP_Text[] sectorRecords;
+        [SerializeField] internal Button[] sectorButtons;
+        [SerializeField] internal RectTransform settingsPanel, statePanel;
+        [SerializeField] internal Slider[] settingSliders;
+        [SerializeField] internal TMP_Text[] settingLabels;
+        [SerializeField] internal TMP_Text invertSetting, stateTitle, stateDescription, statePrimary, restartLabel;
+        [SerializeField] internal GameObject pausedOptions, resultOptions;
+        [SerializeField] internal CanvasGroup stateInput, settingsInput;
+        [SerializeField] internal GameObject archivePanel, normalArchiveRows, compactArchiveRows, archiveMemory;
+        [SerializeField] internal TMP_Text archiveCountLabel, archiveMemoryCountLabel, archiveBonusSummary;
+        [SerializeField] internal GameObject[] archiveLocked, archiveUnlocked, compactArchiveLocked, compactArchiveUnlocked;
+        [SerializeField] internal Color archiveBonusActive;
+        [SerializeField] internal GameObject maintenanceWonPanel, maintenanceLostPanel;
+        [SerializeField] internal TMP_Text maintenanceWinTitle, maintenanceWinStats, maintenanceLossStats;
+        [SerializeField] internal TMP_Text[] maintenanceResultEvents;
+        [SerializeField] internal CanvasGroup archiveControls, maintenanceWinControls, maintenanceLossControls;
+        [SerializeField] internal GameObject[] briefingPanels;
+        [SerializeField] internal TMP_Text[] briefingDescriptions;
+        [SerializeField] internal GameObject finalPanel, creditsPanel;
+        [SerializeField] internal TMP_Text finalRank;
+        [SerializeField] internal TMP_Text[] finalStats;
+        [SerializeField] internal Graphic[] finalRankAccents;
+        [SerializeField] internal Image finalRankBackground;
+        [SerializeField] internal GameObject[] finalCreditHighlights, menuCreditHighlights;
+        [SerializeField] internal Image narrativeBackground;
+        [SerializeField] internal Image[] narrativeParticles;
+        [SerializeField] internal CanvasGroup[] briefingGlow, briefingSignal;
+        [SerializeField] internal CanvasGroup finalGlow;
+        [SerializeField] internal GameObject combatHud;
+        [SerializeField] internal GameObject idleReticle, hitReticle, teamHitReticle, headshotReticle;
+        [SerializeField] internal CanvasGroup damageScreen, damageFront, damageBack, damageRight, damageLeft;
+        [SerializeField] internal GameObject crouchIndicator;
+        [SerializeField] internal CanvasGroup empBanner, chapterBanner, chapterBannerUnderEmp;
+        [SerializeField] internal TMP_Text empBannerLabel, chapterTitle, chapterSubtitle, chapterTitleUnderEmp, chapterSubtitleUnderEmp;
+        [SerializeField] internal Image chapterAccent, chapterAccentUnderEmp;
+        [SerializeField] internal Color chapterEasyColor, chapterMediumColor, chapterReactorColor, chapterMaintenanceColor;
+        [SerializeField] internal GameObject statusHud, campaignStatus, maintenanceStatus, singleConsoleClock, dualConsoleClock;
+        [SerializeField] internal TMP_Text sectorName, sectorDifficulty, echoAndGuardCount, playerHealthLabel;
+        [SerializeField] internal TMP_Text singleLoopClockLabel, dualLoopClockLabel, singlePowerLabel, dualPowerLabel;
+        [SerializeField] internal TMP_Text consoleAStatus, consoleBStatus, campaignGuidance;
+        [SerializeField] internal TMP_Text maintenanceDifficulty, maintenanceStage, maintenanceHealth, maintenanceClock, maintenanceCheckpoint;
+        [SerializeField] internal Image sectorAccent, playerHealthBar, singleLoopBar, dualLoopBar;
+        [SerializeField] internal Color criticalHealthTint, lateClockTint, completedConsoleTint;
+        [SerializeField] internal GameObject campaignWeaponPanel, maintenanceWeaponPanel;
+        [SerializeField] internal TMP_Text campaignWeaponTitle, campaignEnergyLabel, maintenanceEnergyLabel;
+        [SerializeField] internal Image[] campaignPips, campaignBonusPips, maintenancePips, maintenanceBonusPips;
+        [SerializeField] internal Color emptyPipColor, lowEnergyColor, hotPipColor, dimHotPipColor, overchargeStart, overchargeEnd, hotWeaponColor;
+        [SerializeField] internal GameObject[] campaignEchoCards, maintenanceEchoCards;
+        [SerializeField] internal TMP_Text[] campaignEchoTitles, campaignEchoTasks, maintenanceEchoTasks;
+        [SerializeField] internal Image[] campaignEchoProgress, maintenanceEchoProgress;
+        [SerializeField] internal TMP_Text lockedVaultPrompt, openedVaultPrompt, offlineConsolePrompt, poweredConsolePrompt;
+        [SerializeField] internal GameObject sampleDetails, campaignTactics, sampleTactics, testProgressPanel;
+        [SerializeField] internal TMP_Text sampleObjective, sampleGateHint, sampleDeviceState, sampleArchiveInfo, sampleRecordHint, sampleBottomHint;
+        [SerializeField] internal TMP_Text campaignInstructions, campaignTacticsTip, resonanceTitle, resonanceBonus, resonanceHint, testProgressLabel;
+        [SerializeField] internal Image resonanceAccent, campaignRewind, sampleRewind;
+        [SerializeField] internal GameObject campaignHeadshot, sampleHeadshot, campaignKill, sampleTeamHit;
+        [SerializeField] internal TMP_Text campaignRewindLabel, sampleTargetThreat, sampleDevicePrompt, sampleEchoHit;
+        [SerializeField] internal TMP_Text[] upcomingShotLabels, upcomingDeviceLabels;
+        [SerializeField] internal RectTransform campaignMarkerTemplate, sampleMarkerTemplate, echoPlaybackTemplate, campaignEnemyTemplate, sampleEnemyTemplate;
+        [SerializeField] internal Color gateReadyTint, vaultBonusTint, targetPlayerTint;
+        [SerializeField] internal GameObject minimapPanel;
+        [SerializeField] internal RectTransform minimapArea, minimapSweep, minimapSweepGlow;
+        [SerializeField] internal CanvasRenderer minimapRenderer;
+        [SerializeField] internal TMP_Text minimapLabelTemplate, minimapHeading, minimapNorth;
+        [SerializeField] internal Image minimapAccent, minimapOutline, minimapTelemetry;
+        [SerializeField] internal Image[] minimapAccentDetails;
+        [SerializeField] internal GameObject campaignPlan, maintenancePlan, echoTeachingPanel;
+        [SerializeField] internal RectTransform campaignPlanArea, maintenancePlanArea;
+        [SerializeField] internal CanvasRenderer campaignPlanRenderer, maintenancePlanRenderer;
+        [SerializeField] internal TMP_Text campaignPlanMarker, maintenancePlanMarker;
+        [SerializeField] internal TMP_Text campaignPlanHeading, campaignPlanGoal, maintenancePlanHeading, maintenancePlanHelp;
+        [SerializeField] internal TMP_Text maintenancePlanGoal, maintenancePlanGate, maintenancePlanPreview;
+        [SerializeField] internal TMP_Text[] campaignPlanCards, campaignPlanActions, maintenancePlanCards, maintenancePlanActions;
+        [SerializeField] internal TMP_Text maintenanceCloseAction;
+        [SerializeField] internal Button[] campaignPlanButtons, maintenancePlanButtons;
+        [SerializeField] internal Slider maintenancePlanSlider;
+        [SerializeField] internal CanvasGroup campaignPlanInput, maintenancePlanInput, teachingPlanInput;
+    }
+}

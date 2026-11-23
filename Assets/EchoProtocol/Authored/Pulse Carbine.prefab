@@ -385,6 +385,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d19ff1b144bc4cabb0744bec830a73c2, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  weaponAdsAudio: {fileID: 5368844402517842017}
+  weaponDryFireAudio: {fileID: 558180562933551556}
+  weaponFireAudio: {fileID: 796398496023978605}
+  weaponHeadshotAudio: {fileID: 2187652162730343943}
+  weaponHitmarkerAudio: {fileID: 8225978605436124305}
+  shotMaterial: {fileID: 2100000, guid: 77c1ddde4be3562469b8b2735b4dc96e, type: 2}
   damage: 25
   fireInterval: 0.24
   range: 45

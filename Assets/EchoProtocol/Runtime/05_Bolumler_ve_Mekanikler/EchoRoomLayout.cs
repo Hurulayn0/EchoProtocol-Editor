@@ -21,6 +21,12 @@ namespace EchoProtocol
             public string Label;
         }
 
+        [Header("Mechanism materials")]
+        public Material ResonanceSpent, SensorActive, PowerActive, RelayStandby, ObjectiveStandby;
+        public Material ShockwaveAccent;
+        public MeshRenderer ShockwavePrefab;
+        public AnimationClip ShockwaveAnimation;
+
         public Transform Door;
         public Vector3 DoorOpenOffset = Vector3.up * 4.5f;
         public Transform PlayerSpawn;

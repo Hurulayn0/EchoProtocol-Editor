@@ -54,26 +54,26 @@ namespace EchoProtocol
                     enemy.TakeDamage((headshot ? weaponSettings.Damage * 2 : weaponSettings.Damage) + EffectiveBonusShotDamage + (teamHit ? 10 : 0));
                     if (teamHit) ShowTeamHit(enemy, hit.point, fromEcho);
                     if (headshot && enemy.Alive) { enemy.Stagger(.45f); PlayAttachedSound(WorldCue.SentryStun, hit.point, 0.65f, owner: enemy.transform); }
-                    if (headshot && !fromEcho) { headshotTimer = .6f; PlayUiSound(weaponHeadshotAudio, 0.7f); }
-                    else if (!fromEcho) PlayUiSound(weaponHitmarkerAudio, 0.55f);
-                    if (!enemy.Alive) { EmitImpact(hit.point, new Color(1, .65f, .2f), 22, .75f); PlayAttachedSound(WorldCue.SentryDestroy, hit.point, 0.8f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    if (headshot && !fromEcho) { headshotTimer = .6f; PlayUiSound(weaponSettings.weaponHeadshotAudio, 0.7f); }
+                    else if (!fromEcho) PlayUiSound(weaponSettings.weaponHitmarkerAudio, 0.55f);
+                    if (!enemy.Alive) { EmitImpact(hit.point, new Color(1, .65f, .2f), 22, .75f); PlayAttachedSound(WorldCue.SentryDestroy, hit.point, 0.8f, owner: enemy.transform); SpawnSentryWreckage(enemy); }
                     if (!fromEcho) hitTimer = .12f;
                     if (!enemy.Alive) killTimer = .6f;
                 }
             }
-            ShowBeam(action.Origin + action.Direction * .3f, end, fromEcho ? (replayingEcho == 1 ? ghostPurple : ghostCyan) : shotMaterial);
-            PlayWorldSound(weaponFireAudio, action.Origin, fromEcho ? 0.42f : 0.72f, fromEcho ? 1.12f : 1.0f);
+            ShowBeam(action.Origin + action.Direction * .3f, end, fromEcho ? replayActors[replayingEcho == 1 ? 1 : 0].shotMaterial : weaponSettings.shotMaterial);
+            PlayWorldSound(weaponSettings.weaponFireAudio, action.Origin, fromEcho ? 0.42f : 0.72f, fromEcho ? 1.12f : 1.0f);
         }
 
         private void ShowBeam(Vector3 from, Vector3 to, Material material)
         {
-            LineRenderer line = Instantiate(tracePrefab, worldRoot);
+            LineRenderer line = Instantiate(effectsBindings.tracePrefab, worldRoot);
             line.gameObject.name = "Pulse trace";
             transientBeams.RemoveAll(item => item == null);
             transientBeams.Add(line.gameObject);
             line.sharedMaterial = material;
             line.SetPosition(0, from); line.SetPosition(1, to);
-            Destroy(line.gameObject, traceDuration);
+            Destroy(line.gameObject, effectsBindings.traceDuration);
         }
 
         private void ClearBeams()
@@ -102,7 +102,7 @@ namespace EchoProtocol
             if (playerHealth <= 0 || damage <= 0 || screen != EchoScreen.Playing) return;
             playerHealth = Mathf.Max(0, playerHealth - damage); damageFlash = .25f;
             sectorDamageTaken += damage;
-            PlayUiSound(playerHurtAudio, 0.65f);
+            PlayUiSound(player.playerHurtAudio, 0.65f);
             if (playerHealth == 0)
             {
                 if (sampleActive) sampleDeaths++;

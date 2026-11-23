@@ -670,6 +670,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f15436776e1c31468fe687f3fddcda3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackBeam: {fileID: 2100000, guid: eff97185037ee9045bac44c0636838fe, type: 2}
+  wreckagePrefab: {fileID: 7171739695682764892, guid: 7db24cf2aade4294e98becebac022e3a, type: 3}
   baseHealth: 60
   baseDamage: 12
   baseDetectionRange: 14

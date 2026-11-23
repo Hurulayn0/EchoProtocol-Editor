@@ -20,13 +20,6 @@ namespace EchoProtocol
 
 
 
-        [SerializeField] private GameObject minimapPanel;
-        [SerializeField] private RectTransform minimapArea, minimapSweep, minimapSweepGlow;
-        [SerializeField] private CanvasRenderer minimapRenderer;
-        [SerializeField] private TMP_Text minimapLabelTemplate, minimapHeading, minimapNorth;
-        [SerializeField] private Image minimapAccent, minimapOutline, minimapTelemetry;
-        [SerializeField] private Image[] minimapAccentDetails;
-        [SerializeField] private RawImage minimapScanlines;
 
         private readonly List<Vector3> minimapVertices = new List<Vector3>();
         private readonly List<int> minimapIndices = new List<int>();
@@ -44,30 +37,27 @@ namespace EchoProtocol
         private void RefreshMinimap()
         {
             bool visible = screen == EchoScreen.Playing && !planning && player != null;
-            minimapPanel.SetActive(visible);
+            canvasBindings.minimapPanel.SetActive(visible);
             if (!visible) return;
 
-            BeginMapGeometry(minimapLabelTemplate);
+            BeginMapGeometry(canvasBindings.minimapLabelTemplate);
             float time = Time.unscaledTime;
             Color accent = Level.Accent;
-            minimapAccent.color = minimapHeading.color = accent;
-            ApplyMinimapAccent(minimapOutline, accent);
-            foreach (Image detail in minimapAccentDetails) ApplyMinimapAccent(detail, accent);
-            Color north = minimapNorth.color;
-            minimapNorth.color = new Color(accent.r, accent.g, accent.b, north.a);
-            Color telemetry = minimapTelemetry.color;
+            canvasBindings.minimapAccent.color = canvasBindings.minimapHeading.color = accent;
+            ApplyMinimapAccent(canvasBindings.minimapOutline, accent);
+            foreach (Image detail in canvasBindings.minimapAccentDetails) ApplyMinimapAccent(detail, accent);
+            Color north = canvasBindings.minimapNorth.color;
+            canvasBindings.minimapNorth.color = new Color(accent.r, accent.g, accent.b, north.a);
+            Color telemetry = canvasBindings.minimapTelemetry.color;
             telemetry.a = .68f + .32f * Mathf.Sin(time * 4.2f);
-            minimapTelemetry.color = telemetry;
-            Rect area = minimapArea.rect;
+            canvasBindings.minimapTelemetry.color = telemetry;
+            Rect area = canvasBindings.minimapArea.rect;
             float sweep = time * 36f % area.height;
-            minimapSweep.anchoredPosition = new Vector2(minimapSweep.anchoredPosition.x, -sweep);
-            minimapSweepGlow.anchoredPosition = new Vector2(minimapSweepGlow.anchoredPosition.x, -Mathf.Max(0, sweep - minimapSweepGlow.rect.height));
-            Rect uv = minimapScanlines.uvRect;
-            uv.y = time * .1f;
-            minimapScanlines.uvRect = uv;
+            canvasBindings.minimapSweep.anchoredPosition = new Vector2(canvasBindings.minimapSweep.anchoredPosition.x, -sweep);
+            canvasBindings.minimapSweepGlow.anchoredPosition = new Vector2(canvasBindings.minimapSweepGlow.anchoredPosition.x, -Mathf.Max(0, sweep - canvasBindings.minimapSweepGlow.rect.height));
 
             RenderMinimapGeometry(new Rect(0, 0, area.width, area.height), accent);
-            FinishMapGeometry(minimapRenderer);
+            FinishMapGeometry(canvasBindings.minimapRenderer);
         }
 
         private void BeginMapGeometry(TMP_Text template)
@@ -358,85 +348,74 @@ namespace EchoProtocol
             else TogglePlanning();
         }
 
-        [SerializeField] private GameObject campaignPlan, maintenancePlan, echoTeachingPanel;
-        [SerializeField] private RectTransform campaignPlanArea, maintenancePlanArea;
-        [SerializeField] private CanvasRenderer campaignPlanRenderer, maintenancePlanRenderer;
-        [SerializeField] private TMP_Text campaignPlanMarker, maintenancePlanMarker;
-        [SerializeField] private TMP_Text campaignPlanHeading, campaignPlanGoal, maintenancePlanHeading, maintenancePlanHelp;
-        [SerializeField] private TMP_Text maintenancePlanGoal, maintenancePlanGate, maintenancePlanPreview;
-        [SerializeField] private TMP_Text[] campaignPlanCards, campaignPlanActions, maintenancePlanCards, maintenancePlanActions;
-        [SerializeField] private TMP_Text maintenanceCloseAction;
-        [SerializeField] private Button[] campaignPlanButtons, maintenancePlanButtons;
-        [SerializeField] private Slider maintenancePlanSlider;
-        [SerializeField] private CanvasGroup campaignPlanInput, maintenancePlanInput, teachingPlanInput;
 
         private void RefreshPlanningPanels()
         {
             bool visible = screen == EchoScreen.Playing && planning;
             bool campaign = visible && !sampleActive;
             bool maintenance = visible && sampleActive && !echoTeaching;
-            campaignPlan.SetActive(campaign);
-            maintenancePlan.SetActive(maintenance);
-            echoTeachingPanel.SetActive(visible && sampleActive && echoTeaching);
-            teachingPlanInput.interactable = !testing;
+            canvasBindings.campaignPlan.SetActive(campaign);
+            canvasBindings.maintenancePlan.SetActive(maintenance);
+            canvasBindings.echoTeachingPanel.SetActive(visible && sampleActive && echoTeaching);
+            canvasBindings.teachingPlanInput.interactable = !testing;
             if (!campaign && !maintenance) return;
 
             if (campaign)
             {
-                campaignPlanInput.interactable = !testing;
-                campaignPlanHeading.color = Level.Accent;
-                campaignPlanGoal.text = Level.Objective;
-                for (int i = 0; i < campaignPlanCards.Length; i++)
+                canvasBindings.campaignPlanInput.interactable = !testing;
+                canvasBindings.campaignPlanHeading.color = Level.Accent;
+                canvasBindings.campaignPlanGoal.text = Level.Objective;
+                for (int i = 0; i < canvasBindings.campaignPlanCards.Length; i++)
                 {
                     bool recorded = i < recordings.Count;
                     bool selected = replacementEchoSlot == i;
-                    campaignPlanCards[i].text = recorded ? $"ECHO {i + 1} / {recordings[i].Duration:0.0}s\n" +
+                    canvasBindings.campaignPlanCards[i].text = recorded ? $"ECHO {i + 1} / {recordings[i].Duration:0.0}s\n" +
                         (selected ? "SEÇİLDİ (SONRAKİ R)" : "KORUNUYOR") : $"ECHO {i + 1} / BOŞ";
-                    campaignPlanButtons[i].gameObject.SetActive(recorded);
-                    campaignPlanActions[i].text = selected ? "SEÇİLDİ" : "R İLE DEĞİŞTİR";
+                    canvasBindings.campaignPlanButtons[i].gameObject.SetActive(recorded);
+                    canvasBindings.campaignPlanActions[i].text = selected ? "SEÇİLDİ" : "R İLE DEĞİŞTİR";
                 }
-                BeginMapGeometry(campaignPlanMarker);
-                RenderCampaignPlan(new Rect(Vector2.zero, campaignPlanArea.rect.size));
-                FinishMapGeometry(campaignPlanRenderer);
+                BeginMapGeometry(canvasBindings.campaignPlanMarker);
+                RenderCampaignPlan(new Rect(Vector2.zero, canvasBindings.campaignPlanArea.rect.size));
+                FinishMapGeometry(canvasBindings.campaignPlanRenderer);
                 return;
             }
 
-            maintenancePlanInput.interactable = !testing;
+            canvasBindings.maintenancePlanInput.interactable = !testing;
             bool expired = clock >= ActiveLoopLength;
-            maintenancePlanHeading.text = pendingEchoRecord ?
+            canvasBindings.maintenancePlanHeading.text = pendingEchoRecord ?
                 recordings.Count == MaxEchoes ? "YENİ KAYIT HAZIR / HANGİ ECHO DEĞİŞSİN?" : "20 SANİYE DOLDU / BU KAYDI SAKLA?" :
                 "ECHO PLANI / ZAMAN DURDU";
-            maintenancePlanHelp.text = pendingEchoRecord ?
+            canvasBindings.maintenancePlanHelp.text = pendingEchoRecord ?
                 expired ? "Kaydı saklayabilir veya bu denemeyi bırakabilirsin. Mevcut Echo’lar sen seçmeden değişmez." :
                     "Seçmeden hiçbir Echo silinmez. Tab ile iptal edip mevcut denemene devam edebilirsin." :
                 "Kaydedilmiş hareketi incele. Echo otomatik oynar; bu harita ona yeni komut vermez.";
-            maintenancePlanGoal.text = SampleGoal();
-            maintenancePlanGate.text = SampleGateReason();
-            maintenancePlanGate.color = Level.Accent;
-            maintenancePlanPreview.text = $"ROTA ÖNİZLEMESİ {planPreviewTime:0.0} / 20s · Yalnızca haritadaki kayıt konumları değişir; dünya çalışmaz.";
-            maintenancePlanSlider.maxValue = ActiveLoopLength;
-            maintenancePlanSlider.SetValueWithoutNotify(planPreviewTime);
-            maintenanceCloseAction.text = pendingEchoRecord ?
+            canvasBindings.maintenancePlanGoal.text = SampleGoal();
+            canvasBindings.maintenancePlanGate.text = SampleGateReason();
+            canvasBindings.maintenancePlanGate.color = Level.Accent;
+            canvasBindings.maintenancePlanPreview.text = $"ROTA ÖNİZLEMESİ {planPreviewTime:0.0} / 20s · Yalnızca haritadaki kayıt konumları değişir; dünya çalışmaz.";
+            canvasBindings.maintenancePlanSlider.maxValue = ActiveLoopLength;
+            canvasBindings.maintenancePlanSlider.SetValueWithoutNotify(planPreviewTime);
+            canvasBindings.maintenanceCloseAction.text = pendingEchoRecord ?
                 expired ? "BU DENEMEYİ SAKLAMA / TAB" : "KAYDI DEĞİŞTİRME / TAB" : "DEVAM ET / TAB";
-            for (int i = 0; i < maintenancePlanCards.Length; i++)
+            for (int i = 0; i < canvasBindings.maintenancePlanCards.Length; i++)
             {
                 bool recorded = i < recordings.Count;
                 bool create = pendingEchoRecord && i == recordings.Count;
-                maintenancePlanCards[i].text = recorded ? $"ECHO {i + 1} / OTOMATİK TEKRAR\n" + SampleTapeEvents(i) :
+                canvasBindings.maintenancePlanCards[i].text = recorded ? $"ECHO {i + 1} / OTOMATİK TEKRAR\n" + SampleTapeEvents(i) :
                     $"ECHO {i + 1} / BOŞ\nKendi rotanı yap, sonra R ile kaydet.";
-                maintenancePlanButtons[i].gameObject.SetActive(recorded || create);
-                maintenancePlanActions[i].text = create ? "YENİ ECHO OLUŞTUR" :
+                canvasBindings.maintenancePlanButtons[i].gameObject.SetActive(recorded || create);
+                canvasBindings.maintenancePlanActions[i].text = create ? "YENİ ECHO OLUŞTUR" :
                     pendingEchoRecord ? "BUNUN YERİNE KAYDET" : "SONRAKİ R / BUNU DEĞİŞTİR";
             }
-            BeginMapGeometry(maintenancePlanMarker);
-            RenderMaintenancePlan(new Rect(Vector2.zero, maintenancePlanArea.rect.size));
-            FinishMapGeometry(maintenancePlanRenderer);
+            BeginMapGeometry(canvasBindings.maintenancePlanMarker);
+            RenderMaintenancePlan(new Rect(Vector2.zero, canvasBindings.maintenancePlanArea.rect.size));
+            FinishMapGeometry(canvasBindings.maintenancePlanRenderer);
         }
 
         public void ActivatePlanningButton(int action)
         {
             if (testing || screen != EchoScreen.Playing || !planning) return;
-            PlayUiSound(uiClickAudio, .55f);
+            PlayUiSound(audioBindings.uiClickAudio, .55f);
             switch (action)
             {
                 case 0:

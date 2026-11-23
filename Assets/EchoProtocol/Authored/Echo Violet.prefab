@@ -261,6 +261,7 @@ MonoBehaviour:
   aim: {fileID: 2287325081441370035}
   motion: {fileID: 2504009226551015464}
   actionCue: {fileID: 4993078876437871019}
+  shotMaterial: {fileID: 2100000, guid: d64ef0b3d52d6af40aa966e7be1eb78d, type: 2}
 --- !u!1 &7445968867021952116
 GameObject:
   m_ObjectHideFlags: 0

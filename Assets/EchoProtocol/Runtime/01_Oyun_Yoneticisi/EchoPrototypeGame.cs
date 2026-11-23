@@ -83,12 +83,12 @@ namespace EchoProtocol
             automatedRun = Array.IndexOf(Environment.GetCommandLineArgs(), "-echo-smoke-test") >= 0;
             preferences.Load(authoredPlayer.LookSensitivity, authoredPlayer.View.fieldOfView);
             InitializeSession();
-            authoredRoomDisplay.SetActive(false);
+            if (sceneEntry == LegacyScene || sceneEntry == SynchronizationScene) authoredRoomDisplay.SetActive(false);
             player = authoredPlayer;
             player.CaptureSceneSettings();
             spawn = player.Pose;
-            weaponRoot = authoredWeapon;
-            weaponSettings = weaponRoot.GetComponent<EchoWeaponSettings>();
+            weaponSettings = player.GetComponentInChildren<EchoWeaponSettings>(true);
+            weaponRoot = weaponSettings.transform;
             weaponMotion = weaponSettings.Motion;
             motionRestPosition = weaponMotion.localPosition;
             motionRestRotation = weaponMotion.localRotation;
@@ -102,7 +102,7 @@ namespace EchoProtocol
         private IEnumerator Start()
         {
             string[] args = Environment.GetCommandLineArgs();
-            if (sceneEntry != LegacyScene && automatedRun)
+            if (sceneEntry != LegacyScene && automatedRun && Application.CanStreamedLevelBeLoaded(ValidationScene))
             {
                 SceneManager.LoadScene(ValidationScene);
                 yield break;
@@ -224,8 +224,8 @@ namespace EchoProtocol
             if (value == EchoScreen.Playing && pendingStoryBriefing && IsLiveDifficulty) OpenStoryBriefing();
             if (previous != value)
             {
-                if (value == EchoScreen.LevelComplete || value == EchoScreen.GameWon) PlayUiSound(checkpointWinAudio, 0.72f);
-                else if (value == EchoScreen.GameLost) PlayUiSound(loopFailAudio, 0.72f);
+                if (value == EchoScreen.LevelComplete || value == EchoScreen.GameWon) PlayUiSound(audioBindings.checkpointWinAudio, 0.72f);
+                else if (value == EchoScreen.GameLost) PlayUiSound(audioBindings.loopFailAudio, 0.72f);
             }
             TickImmersion();
             TickAudioMusic(0);
@@ -314,7 +314,7 @@ namespace EchoProtocol
         private const int MaintenanceScene = 1, SynchronizationScene = 2, ReactorScene = 3;
         private const string ValidationScene = "EchoPrototype";
 
-        [SerializeField] private string[] sceneNames =
+        private static readonly string[] sceneNames =
         {
             "MainMenu", "Level1_ArastirmaLabi", "Level2_BakimHatti",
             "Level3_Eszamanlilik", "Level4_Reaktor"
@@ -323,6 +323,9 @@ namespace EchoProtocol
         [SerializeField, Range(LegacyScene, ReactorScene)] private int sceneEntry = LegacyScene;
         private static SceneEntryRequest pendingSceneEntry;
         private static bool runValidationOnEntry;
+        [SerializeField] private EchoCanvasBindings canvasBindings;
+        [SerializeField] private EchoAudioBindings audioBindings;
+        [SerializeField] private EchoEffectsBindings effectsBindings;
         private bool loadingScene;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -414,7 +417,7 @@ namespace EchoProtocol
                 return;
             }
 
-            if (loadingScene) return;
+            if (loadingScene || !Application.CanStreamedLevelBeLoaded(ValidationScene)) return;
             SaveSession();
             runValidationOnEntry = true;
             loadingScene = true;
@@ -429,7 +432,7 @@ namespace EchoProtocol
             ghosts.Clear(); recordings.Clear(); savedTapes.Clear(); enemies.Clear(); consoles.Clear();
             sectorElapsed = 0; sectorLoops = 0; sectorDamageTaken = 0;
             levelIndex = Mathf.Clamp(index, 0, EchoLevelDefinition.Campaign.Length - 1);
-            LoadAuthoredRoom(campaignRooms, levelIndex);
+            LoadAuthoredRoom(sceneEntry == LegacyScene ? campaignRooms[levelIndex] : authoredRoomDisplay.GetComponentInChildren<EchoRoomLayout>(true));
             NewLoop(); introRemaining = 6;
             TriggerChapterBanner();
             QueueStoryBriefing();
@@ -446,7 +449,7 @@ namespace EchoProtocol
             foreach (EchoEnemy enemy in enemies)
             {
                 Vector3 enemyPos = enemy.transform.position;
-                enemy.Tick(dt, player, decoyPositions, dmg => { RegisterDamageSource(enemyPos); DamagePlayer(dmg); }, (from, to) => { ShowBeam(from, to, enemyBeam); PlayAttachedSound(WorldCue.SentryFire, from, 0.72f, owner: enemy.transform); });
+                enemy.Tick(dt, player, decoyPositions, dmg => { RegisterDamageSource(enemyPos); DamagePlayer(dmg); }, (from, to) => { ShowBeam(from, to, enemy.attackBeam); PlayAttachedSound(WorldCue.SentryFire, from, 0.72f, owner: enemy.transform); });
                 if (playerHealth == 0) break;
             }
             UpdateDoor(dt);
@@ -522,8 +525,8 @@ namespace EchoProtocol
             Physics.SyncTransforms();
             RaycastHit hit;
             if (!Physics.Raycast(player.View.transform.position, player.View.transform.forward, out hit, 2.6f,
-                ~(1 << 2), QueryTriggerInteraction.Ignore)) { PlayUiSound(consoleErrorAudio, 0.35f); return; }
-            if (hit.transform == archiveTerminal) { if (TryArchive(player.transform.position, false)) { PlayUiSound(archiveUnlockAudio, 0.72f); RecordPose(clock, player.Pose); RecordAction(clock, EchoAction.Archive(levelIndex)); SaveSession(); } else PlayUiSound(consoleErrorAudio, 0.45f); return; }
+                ~(1 << 2), QueryTriggerInteraction.Ignore)) { PlayUiSound(audioBindings.consoleErrorAudio, 0.35f); return; }
+            if (hit.transform == archiveTerminal) { if (TryArchive(player.transform.position, false)) { PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); RecordPose(clock, player.Pose); RecordAction(clock, EchoAction.Archive(levelIndex)); SaveSession(); } else PlayUiSound(audioBindings.consoleErrorAudio, 0.45f); return; }
             foreach (ConsoleState item in consoles)
             {
                 if (hit.transform != item.Visual || !TryActivate(player.transform.position, item.Id)) continue;
@@ -533,7 +536,7 @@ namespace EchoProtocol
                 Notify("Güç açıldı. Plakada kal ve R ile bir Echo kaydet.");
                 return;
             }
-            PlayUiSound(consoleErrorAudio, 0.35f);
+            PlayUiSound(audioBindings.consoleErrorAudio, 0.35f);
         }
 
         private bool TryActivate(Vector3 actorPosition, int id)
@@ -578,7 +581,10 @@ namespace EchoProtocol
             CompleteSectorProfile();
             RecordCurrentPerformanceRank(levelIndex, sectorElapsed, sectorLoops);
             SetScreen(levelIndex == 2 ? EchoScreen.GameWon : EchoScreen.LevelComplete);
-            SaveCheckpoint(levelIndex == 2 ? -1 : levelIndex + 1);
+            if (levelIndex == MaintenanceScene && sceneEntry != LegacyScene && !testing)
+                SaveSynchronizationCheckpoint();
+            else
+                SaveCheckpoint(levelIndex == 2 ? -1 : levelIndex + 1);
             message = levelIndex == 2 ? "PROTOCOL VERIFIED. Tum sektorler tamamlandi." : "Sektor temiz. Sonraki protokole hazirsin.";
         }
 
@@ -597,8 +603,8 @@ namespace EchoProtocol
             else { recordings.Add(current); savedTapes.Add(saved); }
             bool replaced = selectedReplacement || recordings.Count > MaxEchoes;
             if (!selectedReplacement && replaced) { recordings.RemoveAt(0); if (savedTapes.Count > MaxEchoes) savedTapes.RemoveAt(0); }
-            PlayUiSound(echoRecordAudio, 0.65f);
-            PlayUiSound(echoResetAudio, 0.6f);
+            PlayUiSound(audioBindings.echoRecordAudio, 0.65f);
+            PlayUiSound(audioBindings.echoResetAudio, 0.6f);
             savedLoops++; sectorLoops++; NewLoop(); SetScreen(EchoScreen.Playing); SaveSession();
             Notify(selectedReplacement ? "Echo " + (replacementIndex + 1) + " değiştirildi. Diğer Echo korundu; ikisi de otomatik oynuyor."
                 : replaced ? "Yeni Echo kaydedildi. İki Echo sınırı nedeniyle en eski kayıt silindi."
@@ -643,11 +649,18 @@ namespace EchoProtocol
                 item.PlateVisual.GetComponent<Renderer>().sharedMaterial = IdleMaterial(item.PlateVisual);
             }
             foreach (EchoEnemy enemy in enemies) enemy.ResetEnemy();
-            player.SetPose(spawn); if (sampleActive) ResetSampleLoop(); TickWeapon(0);
+            if (sampleActive) ResetSampleLoop();
+            else player.SetPose(roomPlayerSpawn == null ? spawn : new EchoPose
+            {
+                Position = roomPlayerSpawn.position,
+                Rotation = roomPlayerSpawn.rotation,
+                Pitch = spawn.Pitch
+            });
+            TickWeapon(0);
             current = new ReplayTimeline<EchoPose, EchoAction>(); RecordPose(0, player.Pose);
             for (int i = 0; i < recordings.Count; i++) ghosts.Add(CreateGhost(recordings[i], i));
             ResetAudioTracking();
-            if (ghosts.Count > 0 && screen == EchoScreen.Playing) PlayUiSound(echoSpawnAudio, 0.5f);
+            if (ghosts.Count > 0 && screen == EchoScreen.Playing) PlayUiSound(audioBindings.echoSpawnAudio, 0.5f);
             Physics.SyncTransforms();
         }
 

@@ -6,13 +6,6 @@ namespace EchoProtocol
     // Playback for the clips assigned in the scene under Assets/Sesler.
     public sealed partial class EchoPrototypeGame
     {
-        [SerializeField] private AudioSource menuMusicSource, gameMusicSource;
-        [SerializeField] private Transform uiSound, playerSound, weaponSound, loopSound;
-        [SerializeField] private AudioSource archiveUnlockAudio, checkpointWinAudio, loopFailAudio, uiClickAudio;
-        [SerializeField] private AudioSource consoleErrorAudio, echoResetAudio, echoRecordAudio, echoSpawnAudio;
-        [SerializeField] private AudioSource loopWarningAudio, playerHurtAudio, playerLandAudio, playerJumpAudio;
-        [SerializeField] private AudioSource footstepOneAudio, footstepTwoAudio, weaponAdsAudio, weaponDryFireAudio;
-        [SerializeField] private AudioSource weaponHeadshotAudio, weaponHitmarkerAudio, weaponFireAudio;
         private readonly Dictionary<AudioSource, Vector2> soundDefaults = new Dictionary<AudioSource, Vector2>();
         private float footstepTimer, lastWarningSecond = -1f;
         private bool wasGrounded = true, wasAiming, wasDoorOpen;
@@ -23,17 +16,17 @@ namespace EchoProtocol
 
         private void CreateAudioBank()
         {
-            foreach (WorldSoundLink link in worldSoundLinks)
+            foreach (WorldSoundLink link in audioBindings.worldSoundLinks)
                 worldSound.Add((link.Owner, link.Cue), link.Source);
-            menuMusicGain = menuMusicSource.volume;
-            gameMusicGain = gameMusicSource.volume;
-            gameMusicPitch = gameMusicSource.pitch;
+            menuMusicGain = audioBindings.menuMusicSource.volume;
+            gameMusicGain = audioBindings.gameMusicSource.volume;
+            gameMusicPitch = audioBindings.gameMusicSource.pitch;
             if (!AudioSilent)
             {
-                menuMusicSource.volume = 0;
-                gameMusicSource.volume = 0;
-                if (!menuMusicSource.isPlaying) menuMusicSource.Play();
-                if (!gameMusicSource.isPlaying) gameMusicSource.Play();
+                audioBindings.menuMusicSource.volume = 0;
+                audioBindings.gameMusicSource.volume = 0;
+                if (!audioBindings.menuMusicSource.isPlaying) audioBindings.menuMusicSource.Play();
+                if (!audioBindings.gameMusicSource.isPlaying) audioBindings.gameMusicSource.Play();
             }
         }
 
@@ -51,17 +44,16 @@ namespace EchoProtocol
             float pan = Vector3.Dot(player.View.transform.right, offset.normalized) * .65f;
             PlaySource(source, volume / (1f + offset.magnitude * .04f), pitch, pan);
         }
-        private enum WorldCue { SentryAlert, SentryCharge, SentryDestroy, SentryFire, SentryStun, DoorOpen, ResonanceActivate, ResonancePulse, ConsoleInteract, RelayPower, EchoAction }
+        internal enum WorldCue { SentryAlert, SentryCharge, SentryDestroy, SentryFire, SentryStun, DoorOpen, ResonanceActivate, ResonancePulse, ConsoleInteract, RelayPower, EchoAction }
 
         [System.Serializable]
-        private struct WorldSoundLink
+        internal struct WorldSoundLink
         {
             public Transform Owner;
             public WorldCue Cue;
             public AudioSource Source;
         }
 
-        [SerializeField] private WorldSoundLink[] worldSoundLinks;
         private readonly Dictionary<(Transform, WorldCue), AudioSource> worldSound =
             new Dictionary<(Transform, WorldCue), AudioSource>();
 
@@ -127,7 +119,7 @@ namespace EchoProtocol
 
         private void TickAudioMusic(float dt)
         {
-            if (AudioSilent || menuMusicSource == null || gameMusicSource == null) return;
+            if (AudioSilent || audioBindings.menuMusicSource == null || audioBindings.gameMusicSource == null) return;
             bool inMenu = screen == EchoScreen.MainMenu || screen == EchoScreen.Controls || screen == EchoScreen.Settings || screen == EchoScreen.Archives;
             bool inPlay = screen == EchoScreen.Playing && !planning;
             float master = preferences.Volume * preferences.MusicVolume;
@@ -136,12 +128,12 @@ namespace EchoProtocol
             float rate = dt > 0f ? 1f - Mathf.Exp(-3.5f * dt) : 1f;
             menuMusicVolume = Mathf.Lerp(menuMusicVolume, targetMenu, rate);
             gameMusicVolume = Mathf.Lerp(gameMusicVolume, targetGame, rate);
-            menuMusicSource.volume = menuMusicGain * menuMusicVolume;
-            gameMusicSource.volume = gameMusicGain * gameMusicVolume;
+            audioBindings.menuMusicSource.volume = menuMusicGain * menuMusicVolume;
+            audioBindings.gameMusicSource.volume = gameMusicGain * gameMusicVolume;
             // Subtle tempo lift on harder levels or final 4 seconds of the loop
             float tensionPitch = levelIndex == 2 ? 1.06f : (sampleActive ? 1.03f : (levelIndex == 1 ? 1.02f : 1.0f));
             if (inPlay && ActiveLoopLength - clock <= 4f) tensionPitch += 0.04f;
-            gameMusicSource.pitch = gameMusicPitch * tensionPitch;
+            audioBindings.gameMusicSource.pitch = gameMusicPitch * tensionPitch;
         }
 
         private void TickGameplayAudio(float dt)
@@ -153,8 +145,8 @@ namespace EchoProtocol
             Vector3 horizVel = player.Controller != null ? new Vector3(player.Controller.velocity.x, 0, player.Controller.velocity.z) : Vector3.zero;
             float speed = horizVel.magnitude;
 
-            if (!wasGrounded && grounded) PlayUiSound(playerLandAudio, 0.52f, 0.95f);
-            else if (wasGrounded && !grounded && player.Controller.velocity.y > 1.5f) PlayUiSound(playerJumpAudio, 0.45f, 1.02f);
+            if (!wasGrounded && grounded) PlayUiSound(player.playerLandAudio, 0.52f, 0.95f);
+            else if (wasGrounded && !grounded && player.Controller.velocity.y > 1.5f) PlayUiSound(player.playerJumpAudio, 0.45f, 1.02f);
             wasGrounded = grounded;
 
             if (grounded && speed > 0.8f)
@@ -163,14 +155,14 @@ namespace EchoProtocol
                 if (footstepTimer <= 0f)
                 {
                     bool alt = ((int)(elapsedTotal * 3f)) % 2 == 0;
-                    PlayUiSound(alt ? footstepOneAudio : footstepTwoAudio, speed > 4.8f ? 0.42f : 0.28f, alt ? 1.0f : 0.94f);
+                    PlayUiSound(alt ? player.footstepOneAudio : player.footstepTwoAudio, speed > 4.8f ? 0.42f : 0.28f, alt ? 1.0f : 0.94f);
                     footstepTimer = 0.44f;
                 }
             }
             else footstepTimer = 0.08f;
 
             // ADS optic zoom click
-            if (player.IsAiming && !wasAiming) PlayUiSound(weaponAdsAudio, 0.42f, 1.0f);
+            if (player.IsAiming && !wasAiming) PlayUiSound(weaponSettings.weaponAdsAudio, 0.42f, 1.0f);
             wasAiming = player.IsAiming;
 
             // Door opening transition sound
@@ -208,7 +200,7 @@ namespace EchoProtocol
                 if (sec != Mathf.RoundToInt(lastWarningSecond))
                 {
                     lastWarningSecond = sec;
-                    PlayUiSound(loopWarningAudio, 0.55f, 1.0f + (3 - sec) * 0.12f);
+                    PlayUiSound(audioBindings.loopWarningAudio, 0.55f, 1.0f + (3 - sec) * 0.12f);
                 }
             }
             else lastWarningSecond = -1f;

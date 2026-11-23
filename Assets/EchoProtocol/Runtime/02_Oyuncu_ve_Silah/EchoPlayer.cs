@@ -15,6 +15,7 @@ namespace EchoProtocol
     }
     public sealed class EchoPlayer : MonoBehaviour
     {
+        [SerializeField] internal AudioSource footstepOneAudio, footstepTwoAudio, playerHurtAudio, playerJumpAudio, playerLandAudio;
         public CharacterController Controller;
         public Camera View;
         [SerializeField, Min(1)] private int maxHealth = 100;

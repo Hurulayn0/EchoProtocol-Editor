@@ -19,8 +19,6 @@ namespace EchoProtocol
         private readonly List<GameObject> wreckageObjects = new List<GameObject>();
         private readonly List<ShockwaveRing> activeShockwaves = new List<ShockwaveRing>();
         private Transform empRingOuter, empRingInner, empConduitLine;
-        [SerializeField] private MeshRenderer shockwavePrefab;
-        [SerializeField] private AnimationClip shockwaveAnimation;
 
         private sealed class ShockwaveRing
         {
@@ -74,7 +72,7 @@ namespace EchoProtocol
             }
             if (weaponOverheated)
             {
-                PlayUiSound(weaponDryFireAudio, 0.55f);
+                PlayUiSound(weaponSettings.weaponDryFireAudio, 0.55f);
                 Notify("SİLAH AŞIRI ISINDI / Enerji soğuyor... (EMP Küresi anında doldurur)");
                 return false;
             }
@@ -83,7 +81,7 @@ namespace EchoProtocol
             if (weaponEnergy <= .01f)
             {
                 weaponOverheated = true;
-                PlayUiSound(weaponDryFireAudio, 0.55f, 0.85f);
+                PlayUiSound(weaponSettings.weaponDryFireAudio, 0.55f, 0.85f);
                 Notify("ENERJİ TÜKENDİ / Kısa soğuma bekleniyor...");
             }
             return true;
@@ -169,7 +167,7 @@ namespace EchoProtocol
         private void ShowEmpArc(Vector3 from, Vector3 to, Material mat = null)
         {
             if (!IsLiveDifficulty || worldRoot == null) return;
-            LineRenderer line = Instantiate(arcPrefab, worldRoot);
+            LineRenderer line = Instantiate(effectsBindings.arcPrefab, worldRoot);
             line.gameObject.name = "EMP Lightning Arc";
             transientBeams.RemoveAll(item => item == null);
             transientBeams.Add(line.gameObject);
@@ -183,13 +181,13 @@ namespace EchoProtocol
                 line.SetPosition(i, pt);
             }
             line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            Destroy(line.gameObject, arcDuration);
+            Destroy(line.gameObject, effectsBindings.arcDuration);
         }
 
         private void SpawnResonanceShockwave(Vector3 origin, Material mat)
         {
             if (!IsLiveDifficulty || worldRoot == null) return;
-            MeshRenderer ring = Instantiate(shockwavePrefab, origin, worldRoot.rotation, worldRoot);
+            MeshRenderer ring = Instantiate(activeRoom.ShockwavePrefab, origin, worldRoot.rotation, worldRoot);
             if (mat != null) ring.sharedMaterial = mat;
             activeShockwaves.Add(new ShockwaveRing { Ring = ring.gameObject });
         }
@@ -201,8 +199,8 @@ namespace EchoProtocol
                 ShockwaveRing sw = activeShockwaves[i];
                 if (sw.Ring == null) { activeShockwaves.RemoveAt(i); continue; }
                 sw.Age += dt;
-                shockwaveAnimation.SampleAnimation(sw.Ring, Mathf.Min(sw.Age, shockwaveAnimation.length));
-                if (sw.Age >= shockwaveAnimation.length)
+                activeRoom.ShockwaveAnimation.SampleAnimation(sw.Ring, Mathf.Min(sw.Age, activeRoom.ShockwaveAnimation.length));
+                if (sw.Age >= activeRoom.ShockwaveAnimation.length)
                 {
                     sw.Ring.SetActive(false);
                     Destroy(sw.Ring);
@@ -218,17 +216,16 @@ namespace EchoProtocol
             activeShockwaves.Clear();
         }
 
-        [SerializeField] private GameObject sentryWreckagePrefab;
 
-        private void SpawnSentryWreckage(Vector3 position, Quaternion rotation)
+        private void SpawnSentryWreckage(EchoEnemy enemy)
         {
             if (!IsLiveDifficulty || worldRoot == null) return;
-            GameObject wreck = Instantiate(sentryWreckagePrefab, position, rotation, worldRoot);
+            GameObject wreck = Instantiate(enemy.wreckagePrefab, enemy.transform.position, enemy.transform.rotation, worldRoot);
             wreck.name = "Sentry wreckage";
             EchoRobotMotion motion = wreck.GetComponentInChildren<EchoRobotMotion>();
             if (motion != null) motion.TriggerCollapse();
             wreckageObjects.Add(wreck);
-            EmitImpact(position + Vector3.up * 1.1f, new Color(1f, .62f, .18f), 28, 1.1f);
+            EmitImpact(enemy.transform.position + Vector3.up * 1.1f, new Color(1f, .62f, .18f), 28, 1.1f);
             AddCameraShake(.38f);
         }
 

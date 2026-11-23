@@ -47,10 +47,31 @@ namespace EchoProtocol
         private void SaveSession()
         {
             if (!CanPersist || saveStore == null || screen == EchoScreen.MainMenu || screen == EchoScreen.GameWon || screen == EchoScreen.LevelComplete) return;
+            WriteCheckpoint(CaptureSession());
+        }
+
+        private void SaveSynchronizationCheckpoint()
+        {
+            if (CanPersist && saveStore != null) WriteCheckpoint(SynchronizationCheckpoint());
+        }
+
+        private EchoSessionSave SynchronizationCheckpoint() => new EchoSessionSave
+        {
+            Version = 2,
+            Layout = 1,
+            Level = MaintenanceScene,
+            Memory = preferences.SampleMemory,
+            Tapes = Array.Empty<EchoSavedTape>()
+        };
+
+        private void WriteCheckpoint(EchoSessionSave data)
+        {
             try
             {
-                var data = CaptureSession();
-                saveStore.Write(data); resumeSave = data; preferences.ResumeLevel = levelIndex; preferences.Save();
+                saveStore.Write(data);
+                resumeSave = data;
+                preferences.ResumeLevel = data.Level;
+                preferences.Save();
             }
             catch (Exception ex) when (ex is InvalidDataException || ex is IOException || ex is UnauthorizedAccessException || ex is ArgumentException)
             { Notify("Kayıt dosyasına yazılamadı. Klasör erişimini kontrol et; oyuna devam edebilirsin."); Debug.LogWarning("ECHO SAVE: " + ex.Message); }

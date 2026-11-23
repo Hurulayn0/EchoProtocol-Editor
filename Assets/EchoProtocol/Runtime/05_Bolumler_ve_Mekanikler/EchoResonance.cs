@@ -39,10 +39,10 @@ namespace EchoProtocol
                 foreach (EchoEnemy enemy in enemies)
                 {
                     if (!enemy.Alive) continue;
-                    ShowEmpArc(ResonancePosition, enemy.transform.position + Vector3.up * 1.2f, ghostCyan);
+                    ShowEmpArc(ResonancePosition, enemy.transform.position + Vector3.up * 1.2f, replayActors[0].shotMaterial);
                     enemy.TakeDamage(20);
                     if (enemy.Alive) { enemy.Stagger(3.5f); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.78f, owner: enemy.transform); }
-                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy); }
                 }
                 if (sampleActive)
                 {
@@ -55,7 +55,7 @@ namespace EchoProtocol
                 }
                 if (playerHealth > 0) playerHealth = Mathf.Min(MaxPlayerHealth, playerHealth + 25);
                 EmitImpact(ResonancePosition, Level.Accent, 42, 2.2f);
-                SpawnResonanceShockwave(ResonancePosition, accents[levelIndex]);
+                SpawnResonanceShockwave(ResonancePosition, activeRoom.ShockwaveAccent);
                 RefillWeaponEnergyFromEmp(4f, sampleActive && sampleStage == 1
                     ? "EMP AKTARIMI! RÖLELER 10 SN ENERJİLENDİ · MUHAFIZ -20 CAN & 3.5 SN DONDU · +25 CAN!"
                     : "EMP ZİNCİR ŞOKU! TÜM MUHAFIZLAR -20 CAN & 3.5 SN DONDU · +25 CAN · 4 SN AŞIRI YÜKLEME!");
@@ -83,7 +83,7 @@ namespace EchoProtocol
                 if (Vector3.Distance(enemy.transform.position, ResonancePosition) < 6) { enemy.Stagger(2); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.72f, owner: enemy.transform); }
             if (Vector3.Distance(player.transform.position, ResonancePosition) < 6 && playerHealth > 0) playerHealth = Mathf.Min(MaxPlayerHealth, playerHealth + 20);
             EmitImpact(ResonancePosition, Level.Accent, 35, 1.8f);
-            SpawnResonanceShockwave(ResonancePosition, accents[levelIndex]);
+            SpawnResonanceShockwave(ResonancePosition, activeRoom.ShockwaveAccent);
             RefillWeaponEnergyFromEmp();
             AddCameraShake(.42f);
             if (sampleActive) { SampleEvent("EMP Rezonansı / 6 sn enerji", fromEcho); Notify("EMP ŞOKU! Muhafız 2 sn dondu · +20 Can · Silah enerjisi doldu!"); }
@@ -139,12 +139,12 @@ namespace EchoProtocol
                     ShowEmpArc(ArchivePosition, enemy.transform.position + Vector3.up * 1.2f, powerOn);
                     enemy.TakeDamage(25);
                     if (enemy.Alive) { enemy.Stagger(4f); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.8f, owner: enemy.transform); }
-                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy); }
                 }
                 SpawnResonanceShockwave(ArchivePosition, powerOn);
                 RefillWeaponEnergyFromEmp(6f, "VERİ KASASI HACKLENDİ (" + ArchiveCount + "/3)! 100 CAN · MUHAFIZLAR FELÇ · " + ActiveVaultBonusText());
                 AddCameraShake(.45f);
-                if (!fromEcho) { Notify("VERİ KASASI HACKLENDİ (" + ArchiveCount + "/3)! " + ActiveVaultBonusText() + " · 100 Can & 6 sn Aşırı Yükleme!"); notificationRemaining = 8; }
+                if (!fromEcho) { Notify("VERİ KASASI HACKLENDİ (" + ArchiveCount + "/3)! " + ActiveVaultBonusText() + $" · Can {MaxPlayerHealth} & 6 sn Aşırı Yükleme!"); notificationRemaining = 8; }
             }
             else if (!fromEcho)
             {

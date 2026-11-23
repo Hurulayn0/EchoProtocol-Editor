@@ -1567,6 +1567,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 121267231}
+  - component: {fileID: 910000000000000003}
   m_Layer: 0
   m_Name: 03_Cevre_ve_Harita
   m_TagString: Untagged
@@ -7054,20 +7055,6 @@ MonoBehaviour:
   replayActors:
   - {fileID: 416646608258047969, guid: ca7ea7bbf88d74c4ca957c7d8d03856a, type: 3}
   - {fileID: 2707592564084500811, guid: 66b9996786ae4b24daefc49ed5b2fe4f, type: 3}
-  sentryWreckagePrefab: {fileID: 7171739695682764892, guid: 7db24cf2aade4294e98becebac022e3a, type: 3}
-  darkMaterial: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
-  plateOn: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
-  powerOn: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
-  powerOff: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
-  objectiveOff: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
-  ghostCyan: {fileID: 2100000, guid: c00786dc6a189be41a324898a66bcc7c, type: 2}
-  ghostPurple: {fileID: 2100000, guid: d64ef0b3d52d6af40aa966e7be1eb78d, type: 2}
-  enemyBeam: {fileID: 2100000, guid: eff97185037ee9045bac44c0636838fe, type: 2}
-  shotMaterial: {fileID: 2100000, guid: 77c1ddde4be3562469b8b2735b4dc96e, type: 2}
-  accents:
-  - {fileID: 2100000, guid: 3b5d9ff15fe80374ba6dfff9a694b229, type: 2}
-  - {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
-  - {fileID: 2100000, guid: 586ba1554143d9a46b8951bcb951e8fc, type: 2}
   campaignRooms:
   - {fileID: 6613847099829876894}
   - {fileID: 7900676079477918640}
@@ -7082,604 +7069,9 @@ MonoBehaviour:
   - {fileID: 2067899689}
   authoredRoomDisplay: {fileID: 121267230}
   authoredPlayer: {fileID: 2037124912}
-  cyanShotPreview: {fileID: 4283549291506426420, guid: 7b53e0b48a0608b40a5a4ec75337376b, type: 3}
-  purpleShotPreview: {fileID: 3828025175089185852, guid: 67ddf40f12eb3334b93ae2ca1c643434, type: 3}
-  teamHitRing: {fileID: 7506864240257422331, guid: 8fb9c7ac19c37c3449d02aa3e7c795a6, type: 3}
-  teamHitRingDuration: 0.65
-  shockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
-  shockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
-  archiveUnlockAudio: {fileID: 1225335010}
-  checkpointWinAudio: {fileID: 2141192232}
-  loopFailAudio: {fileID: 546140307}
-  uiClickAudio: {fileID: 2112349656}
-  consoleErrorAudio: {fileID: 1268756500}
-  echoResetAudio: {fileID: 1136887330}
-  echoRecordAudio: {fileID: 903683416}
-  echoSpawnAudio: {fileID: 1872444071}
-  loopWarningAudio: {fileID: 50428594}
-  playerHurtAudio: {fileID: 1211798078}
-  playerLandAudio: {fileID: 1211798077}
-  playerJumpAudio: {fileID: 1211798076}
-  footstepOneAudio: {fileID: 1211798075}
-  footstepTwoAudio: {fileID: 1211798074}
-  weaponAdsAudio: {fileID: 1211798073}
-  weaponDryFireAudio: {fileID: 1211798072}
-  weaponHeadshotAudio: {fileID: 1211798071}
-  weaponHitmarkerAudio: {fileID: 1211798070}
-  weaponFireAudio: {fileID: 1211798069}
-  worldSoundLinks:
-  - Owner: {fileID: 1723499026819184967}
-    Cue: 5
-    Source: {fileID: 1175856024}
-  - Owner: {fileID: 2695802511892189472}
-    Cue: 8
-    Source: {fileID: 1401738849}
-  - Owner: {fileID: 2090089076951099904}
-    Cue: 6
-    Source: {fileID: 110089404}
-  - Owner: {fileID: 2090089076951099904}
-    Cue: 7
-    Source: {fileID: 339187776}
-  - Owner: {fileID: 4050199025480810480}
-    Cue: 5
-    Source: {fileID: 1544106186}
-  - Owner: {fileID: 1331765535472446578}
-    Cue: 8
-    Source: {fileID: 935200857}
-  - Owner: {fileID: 1331765535472446578}
-    Cue: 9
-    Source: {fileID: 1230728741}
-  - Owner: {fileID: 3241829313564914218}
-    Cue: 6
-    Source: {fileID: 239903260}
-  - Owner: {fileID: 3241829313564914218}
-    Cue: 7
-    Source: {fileID: 1875292994}
-  - Owner: {fileID: 3871506389865439797}
-    Cue: 5
-    Source: {fileID: 796535853}
-  - Owner: {fileID: 8821227726422250255}
-    Cue: 8
-    Source: {fileID: 568392546}
-  - Owner: {fileID: 4264717848313796239}
-    Cue: 6
-    Source: {fileID: 703663300}
-  - Owner: {fileID: 4264717848313796239}
-    Cue: 7
-    Source: {fileID: 1622158202}
-  - Owner: {fileID: 8562123581298104060}
-    Cue: 5
-    Source: {fileID: 1084872610}
-  - Owner: {fileID: 7251572717377022034}
-    Cue: 6
-    Source: {fileID: 123329072}
-  - Owner: {fileID: 7251572717377022034}
-    Cue: 7
-    Source: {fileID: 994002389}
-  - Owner: {fileID: 7170084227420458965}
-    Cue: 8
-    Source: {fileID: 1667324423}
-  - Owner: {fileID: 7170084227420458965}
-    Cue: 9
-    Source: {fileID: 263096446}
-  - Owner: {fileID: 5746196122683061783}
-    Cue: 8
-    Source: {fileID: 976280917}
-  - Owner: {fileID: 5746196122683061783}
-    Cue: 9
-    Source: {fileID: 119306249}
-  - Owner: {fileID: 2073008991211483676}
-    Cue: 5
-    Source: {fileID: 1822429310}
-  - Owner: {fileID: 58410539591583883}
-    Cue: 8
-    Source: {fileID: 241662354}
-  - Owner: {fileID: 2522992237028837684}
-    Cue: 8
-    Source: {fileID: 812755973}
-  - Owner: {fileID: 2351139618936161672}
-    Cue: 6
-    Source: {fileID: 319694191}
-  - Owner: {fileID: 2351139618936161672}
-    Cue: 7
-    Source: {fileID: 1627474639}
-  - Owner: {fileID: 62067247639932615}
-    Cue: 5
-    Source: {fileID: 7855096}
-  - Owner: {fileID: 2747904232151141324}
-    Cue: 6
-    Source: {fileID: 708511939}
-  - Owner: {fileID: 2747904232151141324}
-    Cue: 7
-    Source: {fileID: 314078007}
-  - Owner: {fileID: 4516513301352273634}
-    Cue: 8
-    Source: {fileID: 1661869187}
-  - Owner: {fileID: 4516513301352273634}
-    Cue: 9
-    Source: {fileID: 564559733}
-  - Owner: {fileID: 7833005104713469725}
-    Cue: 8
-    Source: {fileID: 1066460520}
-  - Owner: {fileID: 7833005104713469725}
-    Cue: 9
-    Source: {fileID: 1067375703}
-  - Owner: {fileID: 8108578637661658739}
-    Cue: 8
-    Source: {fileID: 1086342493}
-  - Owner: {fileID: 8108578637661658739}
-    Cue: 9
-    Source: {fileID: 193115460}
-  - Owner: {fileID: 850204205}
-    Cue: 5
-    Source: {fileID: 850204204}
-  - Owner: {fileID: 850204203}
-    Cue: 8
-    Source: {fileID: 850204202}
-  - Owner: {fileID: 850204203}
-    Cue: 9
-    Source: {fileID: 850204201}
-  - Owner: {fileID: 1828732640}
-    Cue: 5
-    Source: {fileID: 1828732639}
-  - Owner: {fileID: 1828732638}
-    Cue: 6
-    Source: {fileID: 1828732637}
-  - Owner: {fileID: 1828732638}
-    Cue: 7
-    Source: {fileID: 1828732636}
-  - Owner: {fileID: 1828732635}
-    Cue: 8
-    Source: {fileID: 1828732634}
-  - Owner: {fileID: 1828732635}
-    Cue: 9
-    Source: {fileID: 1828732633}
-  - Owner: {fileID: 1828732632}
-    Cue: 8
-    Source: {fileID: 1828732631}
-  - Owner: {fileID: 1828732632}
-    Cue: 9
-    Source: {fileID: 1828732630}
-  - Owner: {fileID: 2067899704}
-    Cue: 5
-    Source: {fileID: 2067899703}
-  - Owner: {fileID: 2067899702}
-    Cue: 6
-    Source: {fileID: 2067899701}
-  - Owner: {fileID: 2067899702}
-    Cue: 7
-    Source: {fileID: 2067899700}
-  - Owner: {fileID: 2067899699}
-    Cue: 8
-    Source: {fileID: 2067899698}
-  - Owner: {fileID: 2067899699}
-    Cue: 9
-    Source: {fileID: 2067899697}
-  - Owner: {fileID: 2067899696}
-    Cue: 8
-    Source: {fileID: 2067899695}
-  - Owner: {fileID: 2067899696}
-    Cue: 9
-    Source: {fileID: 2067899694}
-  - Owner: {fileID: 2067899693}
-    Cue: 8
-    Source: {fileID: 2067899692}
-  - Owner: {fileID: 2067899693}
-    Cue: 9
-    Source: {fileID: 2067899691}
-  authoredWeapon: {fileID: 2037124910}
-  archivePanel: {fileID: 759489964}
-  normalArchiveRows: {fileID: 83249276}
-  compactArchiveRows: {fileID: 1152193692}
-  archiveMemory: {fileID: 756099772}
-  archiveCountLabel: {fileID: 1635607133}
-  archiveMemoryCountLabel: {fileID: 1082874862}
-  archiveBonusSummary: {fileID: 117140031}
-  archiveLocked:
-  - {fileID: 1707424939}
-  - {fileID: 794937046}
-  - {fileID: 273342347}
-  archiveUnlocked:
-  - {fileID: 1105483562}
-  - {fileID: 2053505296}
-  - {fileID: 2006947600}
-  compactArchiveLocked:
-  - {fileID: 1113954882}
-  - {fileID: 1555956894}
-  - {fileID: 724721253}
-  compactArchiveUnlocked:
-  - {fileID: 2123983572}
-  - {fileID: 310483083}
-  - {fileID: 972531709}
-  archiveBonusActive: {r: 0.32, g: 0.92, b: 0.58, a: 1}
-  maintenanceWonPanel: {fileID: 433251631}
-  maintenanceLostPanel: {fileID: 337206932}
-  maintenanceWinTitle: {fileID: 1242135519}
-  maintenanceWinStats: {fileID: 1088172752}
-  maintenanceLossStats: {fileID: 545372227}
-  maintenanceResultEvents:
-  - {fileID: 865974906}
-  - {fileID: 1470869125}
-  - {fileID: 1118065471}
-  - {fileID: 1058374484}
-  - {fileID: 1135930565}
-  archiveControls: {fileID: 759489965}
-  maintenanceWinControls: {fileID: 433251633}
-  maintenanceLossControls: {fileID: 337206933}
-  campaignWeaponPanel: {fileID: 685436953}
-  maintenanceWeaponPanel: {fileID: 5653813}
-  campaignWeaponTitle: {fileID: 527974191}
-  campaignEnergyLabel: {fileID: 157413856}
-  maintenanceEnergyLabel: {fileID: 129463214}
-  campaignPips:
-  - {fileID: 1003514507}
-  - {fileID: 1800382481}
-  - {fileID: 579781184}
-  - {fileID: 187545124}
-  - {fileID: 319322353}
-  - {fileID: 255378968}
-  - {fileID: 997347080}
-  - {fileID: 553064799}
-  campaignBonusPips:
-  - {fileID: 1618641040}
-  - {fileID: 1874760731}
-  - {fileID: 93836645}
-  - {fileID: 1371883164}
-  - {fileID: 1499120180}
-  - {fileID: 1624326748}
-  - {fileID: 335081440}
-  - {fileID: 378781853}
-  - {fileID: 994074190}
-  - {fileID: 1735558416}
-  maintenancePips:
-  - {fileID: 588922943}
-  - {fileID: 931671725}
-  - {fileID: 116399962}
-  - {fileID: 1900706085}
-  - {fileID: 624305675}
-  - {fileID: 1339015367}
-  - {fileID: 1134992761}
-  - {fileID: 1752665089}
-  maintenanceBonusPips:
-  - {fileID: 484577512}
-  - {fileID: 565266809}
-  - {fileID: 1645821456}
-  - {fileID: 1567645470}
-  - {fileID: 167150342}
-  - {fileID: 292175916}
-  - {fileID: 246819858}
-  - {fileID: 711968683}
-  - {fileID: 1261069784}
-  - {fileID: 917847748}
-  emptyPipColor: {r: 0.14, g: 0.19, b: 0.25, a: 1}
-  lowEnergyColor: {r: 1, g: 0.62, b: 0.18, a: 1}
-  hotPipColor: {r: 1, g: 0.22, b: 0.18, a: 1}
-  dimHotPipColor: {r: 0.45, g: 0.1, b: 0.1, a: 1}
-  overchargeStart: {r: 0.2, g: 0.95, b: 1, a: 1}
-  overchargeEnd: {r: 1, g: 0.88, b: 0.25, a: 1}
-  hotWeaponColor: {r: 1, g: 0.3, b: 0.25, a: 1}
-  campaignEchoCards:
-  - {fileID: 578089796}
-  - {fileID: 1930244913}
-  maintenanceEchoCards:
-  - {fileID: 363215735}
-  - {fileID: 129370259}
-  campaignEchoTitles:
-  - {fileID: 890116535}
-  - {fileID: 1144263178}
-  campaignEchoTasks:
-  - {fileID: 796926929}
-  - {fileID: 1987681825}
-  maintenanceEchoTasks:
-  - {fileID: 1326290856}
-  - {fileID: 478508687}
-  campaignEchoProgress:
-  - {fileID: 399362828}
-  - {fileID: 1543571575}
-  maintenanceEchoProgress:
-  - {fileID: 808462328}
-  - {fileID: 1170275068}
-  briefingPanels:
-  - {fileID: 1672869975}
-  - {fileID: 235169927}
-  - {fileID: 947325973}
-  - {fileID: 1385061491}
-  - {fileID: 2087855581}
-  - {fileID: 837875386}
-  briefingDescriptions:
-  - {fileID: 727198063}
-  - {fileID: 1047659525}
-  - {fileID: 98112212}
-  - {fileID: 414208088}
-  - {fileID: 30580146}
-  - {fileID: 86497003}
-  finalPanel: {fileID: 1427705255}
-  creditsPanel: {fileID: 1564819802}
-  finalRank: {fileID: 2118973179}
-  finalStats:
-  - {fileID: 1021776582}
-  - {fileID: 1372596162}
-  - {fileID: 1546578447}
-  - {fileID: 612160186}
-  finalRankAccents:
-  - {fileID: 1278492124}
-  - {fileID: 1268305280}
-  - {fileID: 52393663}
-  - {fileID: 1108694691}
-  - {fileID: 1551591958}
-  - {fileID: 577586263}
-  - {fileID: 1427278654}
-  - {fileID: 1133232000}
-  - {fileID: 259928797}
-  - {fileID: 2118973179}
-  finalRankBackground: {fileID: 1960869141}
-  finalCreditHighlights:
-  - {fileID: 1481666433}
-  - {fileID: 1019501455}
-  - {fileID: 1195698593}
-  - {fileID: 1313832675}
-  - {fileID: 30052693}
-  menuCreditHighlights:
-  - {fileID: 1406454336}
-  - {fileID: 1552157493}
-  - {fileID: 1188733305}
-  - {fileID: 1848085874}
-  - {fileID: 267388384}
-  narrativeBackground: {fileID: 1147647559}
-  narrativeScanlines: {fileID: 988335855}
-  narrativeParticles:
-  - {fileID: 159280917}
-  - {fileID: 969272219}
-  - {fileID: 1220990716}
-  - {fileID: 1871414737}
-  - {fileID: 1196357823}
-  - {fileID: 1283960496}
-  - {fileID: 1774830703}
-  - {fileID: 1139630112}
-  - {fileID: 2016308621}
-  - {fileID: 1150041317}
-  - {fileID: 1344229935}
-  - {fileID: 1194298109}
-  - {fileID: 564377535}
-  - {fileID: 1629401899}
-  - {fileID: 2023614289}
-  - {fileID: 1572301750}
-  - {fileID: 2069329235}
-  - {fileID: 18022697}
-  - {fileID: 1334657100}
-  - {fileID: 1115461451}
-  - {fileID: 678058643}
-  - {fileID: 1754585243}
-  - {fileID: 858250110}
-  - {fileID: 320810098}
-  - {fileID: 1601431980}
-  - {fileID: 1191419247}
-  briefingGlow:
-  - {fileID: 2023777983}
-  - {fileID: 554920970}
-  - {fileID: 1785761589}
-  - {fileID: 1404647626}
-  - {fileID: 1735816732}
-  - {fileID: 1293556072}
-  briefingSignal:
-  - {fileID: 195943310}
-  - {fileID: 1476426826}
-  - {fileID: 1602862813}
-  - {fileID: 2053956918}
-  - {fileID: 1504702709}
-  - {fileID: 1388922547}
-  finalGlow: {fileID: 1896698003}
-  lockedVaultPrompt: {fileID: 992402951}
-  openedVaultPrompt: {fileID: 1040504881}
-  offlineConsolePrompt: {fileID: 865852697}
-  poweredConsolePrompt: {fileID: 1972492639}
-  minimapPanel: {fileID: 1574592061}
-  minimapArea: {fileID: 311949196}
-  minimapSweep: {fileID: 428338873}
-  minimapSweepGlow: {fileID: 957885819}
-  minimapRenderer: {fileID: 1916722890}
-  minimapLabelTemplate: {fileID: 837739197}
-  minimapHeading: {fileID: 1946927384}
-  minimapNorth: {fileID: 174391545}
-  minimapAccent: {fileID: 225280909}
-  minimapOutline: {fileID: 210318632}
-  minimapTelemetry: {fileID: 1146575076}
-  minimapAccentDetails:
-  - {fileID: 182562261}
-  - {fileID: 292684537}
-  - {fileID: 886020926}
-  - {fileID: 928982264}
-  - {fileID: 937794984}
-  - {fileID: 325504972}
-  - {fileID: 1015542412}
-  - {fileID: 450059578}
-  - {fileID: 1649991656}
-  - {fileID: 1441743925}
-  - {fileID: 428338871}
-  - {fileID: 957885817}
-  minimapScanlines: {fileID: 1280272896}
-  campaignPlan: {fileID: 1875718742}
-  maintenancePlan: {fileID: 431090907}
-  echoTeachingPanel: {fileID: 851139102}
-  campaignPlanArea: {fileID: 935855414}
-  maintenancePlanArea: {fileID: 1734969604}
-  campaignPlanRenderer: {fileID: 1630614676}
-  maintenancePlanRenderer: {fileID: 735213269}
-  campaignPlanMarker: {fileID: 961719261}
-  maintenancePlanMarker: {fileID: 1719244150}
-  campaignPlanHeading: {fileID: 899671748}
-  campaignPlanGoal: {fileID: 517048443}
-  maintenancePlanHeading: {fileID: 1371653793}
-  maintenancePlanHelp: {fileID: 1828190294}
-  maintenancePlanGoal: {fileID: 493273212}
-  maintenancePlanGate: {fileID: 1296057322}
-  maintenancePlanPreview: {fileID: 1418535124}
-  campaignPlanCards:
-  - {fileID: 561648474}
-  - {fileID: 1443941575}
-  campaignPlanActions:
-  - {fileID: 1124415420}
-  - {fileID: 821911673}
-  maintenancePlanCards:
-  - {fileID: 1505238407}
-  - {fileID: 548054273}
-  maintenancePlanActions:
-  - {fileID: 23471323}
-  - {fileID: 575821306}
-  maintenanceCloseAction: {fileID: 1993471813}
-  campaignPlanButtons:
-  - {fileID: 1760135919}
-  - {fileID: 1597939518}
-  maintenancePlanButtons:
-  - {fileID: 275769445}
-  - {fileID: 1852833528}
-  maintenancePlanSlider: {fileID: 1590577390}
-  campaignPlanInput: {fileID: 1875718743}
-  maintenancePlanInput: {fileID: 431090908}
-  teachingPlanInput: {fileID: 851139103}
-  sampleDetails: {fileID: 540673574}
-  campaignTactics: {fileID: 1902837545}
-  sampleTactics: {fileID: 1864440643}
-  testProgressPanel: {fileID: 1616717584}
-  sampleObjective: {fileID: 1736078355}
-  sampleGateHint: {fileID: 1865926341}
-  sampleDeviceState: {fileID: 464563379}
-  sampleArchiveInfo: {fileID: 1780730395}
-  sampleRecordHint: {fileID: 1707967731}
-  sampleBottomHint: {fileID: 1776112590}
-  campaignInstructions: {fileID: 176043683}
-  campaignTacticsTip: {fileID: 1526379379}
-  resonanceTitle: {fileID: 1521145539}
-  resonanceBonus: {fileID: 1742771221}
-  resonanceHint: {fileID: 1673949782}
-  testProgressLabel: {fileID: 839109748}
-  resonanceAccent: {fileID: 929490652}
-  campaignRewind: {fileID: 1618719108}
-  sampleRewind: {fileID: 715509986}
-  campaignHeadshot: {fileID: 1379976836}
-  sampleHeadshot: {fileID: 1447043398}
-  campaignKill: {fileID: 1553121478}
-  sampleTeamHit: {fileID: 1665999536}
-  campaignRewindLabel: {fileID: 1136134072}
-  sampleTargetThreat: {fileID: 2073785371}
-  sampleDevicePrompt: {fileID: 224833466}
-  sampleEchoHit: {fileID: 1567883308}
-  upcomingShotLabels:
-  - {fileID: 1053178345}
-  - {fileID: 1627160957}
-  upcomingDeviceLabels:
-  - {fileID: 1911830235}
-  - {fileID: 833249125}
-  campaignMarkerTemplate: {fileID: 1789302860}
-  sampleMarkerTemplate: {fileID: 989917249}
-  echoPlaybackTemplate: {fileID: 1832990361}
-  campaignEnemyTemplate: {fileID: 970135844}
-  sampleEnemyTemplate: {fileID: 1203743850}
-  gateReadyTint: {r: 0.25, g: 0.9, b: 0.55, a: 1}
-  vaultBonusTint: {r: 0.35, g: 0.92, b: 0.6, a: 1}
-  targetPlayerTint: {r: 1, g: 0.4, b: 0.2, a: 1}
-  combatHud: {fileID: 1290518288}
-  idleReticle: {fileID: 1980141644}
-  hitReticle: {fileID: 1071691514}
-  teamHitReticle: {fileID: 1044173711}
-  headshotReticle: {fileID: 1732235313}
-  damageScreen: {fileID: 253079968}
-  damageFront: {fileID: 1428537810}
-  damageBack: {fileID: 1714387388}
-  damageRight: {fileID: 970152255}
-  damageLeft: {fileID: 1110318650}
-  crouchIndicator: {fileID: 89142855}
-  empBanner: {fileID: 2040776444}
-  chapterBanner: {fileID: 508753350}
-  chapterBannerUnderEmp: {fileID: 76748298}
-  empBannerLabel: {fileID: 389650566}
-  chapterTitle: {fileID: 948321416}
-  chapterSubtitle: {fileID: 1644158756}
-  chapterTitleUnderEmp: {fileID: 353243370}
-  chapterSubtitleUnderEmp: {fileID: 273122097}
-  chapterAccent: {fileID: 502549234}
-  chapterAccentUnderEmp: {fileID: 173698902}
-  chapterEasyColor: {r: 0.22, g: 0.9, b: 0.55, a: 1}
-  chapterMediumColor: {r: 1, g: 0.72, b: 0.2, a: 1}
-  chapterReactorColor: {r: 0.95, g: 0.32, b: 0.88, a: 1}
-  chapterMaintenanceColor: {r: 1, g: 0.46, b: 0.22, a: 1}
-  statusHud: {fileID: 663116751}
-  campaignStatus: {fileID: 521208026}
-  maintenanceStatus: {fileID: 45728347}
-  singleConsoleClock: {fileID: 1622412680}
-  dualConsoleClock: {fileID: 1036591663}
-  sectorName: {fileID: 942250056}
-  sectorDifficulty: {fileID: 1714033406}
-  echoAndGuardCount: {fileID: 2101409182}
-  playerHealthLabel: {fileID: 1447636368}
-  singleLoopClockLabel: {fileID: 1381055749}
-  dualLoopClockLabel: {fileID: 1290818613}
-  singlePowerLabel: {fileID: 645770171}
-  dualPowerLabel: {fileID: 161640308}
-  consoleAStatus: {fileID: 1768478389}
-  consoleBStatus: {fileID: 630154053}
-  campaignGuidance: {fileID: 1891490587}
-  maintenanceDifficulty: {fileID: 1660282519}
-  maintenanceStage: {fileID: 898248314}
-  maintenanceHealth: {fileID: 781468688}
-  maintenanceClock: {fileID: 601295456}
-  maintenanceCheckpoint: {fileID: 1570516697}
-  sectorAccent: {fileID: 655615890}
-  playerHealthBar: {fileID: 1736413651}
-  singleLoopBar: {fileID: 654971677}
-  dualLoopBar: {fileID: 215846644}
-  criticalHealthTint: {r: 1, g: 0.2, b: 0.2, a: 1}
-  lateClockTint: {r: 1, g: 0.55, b: 0.2, a: 1}
-  completedConsoleTint: {r: 0.25, g: 0.85, b: 0.55, a: 1}
-  mainMenuPanel: {fileID: 1300390332}
-  controlsPanel: {fileID: 590155530}
-  menuInput: {fileID: 1300390331}
-  continueLabel: {fileID: 1456763687}
-  unavailableLabel: {fileID: 823068210}
-  archiveLabel: {fileID: 2063833066}
-  validationLabel: {fileID: 1611791159}
-  sectorRecords:
-  - {fileID: 424652551}
-  - {fileID: 823754863}
-  - {fileID: 982240196}
-  - {fileID: 406767824}
-  sectorButtons:
-  - {fileID: 311672675}
-  - {fileID: 1152196795}
-  - {fileID: 1018197496}
-  - {fileID: 986033645}
-  settingsPanel: {fileID: 560077146}
-  statePanel: {fileID: 1543792722}
-  settingSliders:
-  - {fileID: 1439830687}
-  - {fileID: 1762517646}
-  - {fileID: 810987846}
-  - {fileID: 1404711813}
-  settingLabels:
-  - {fileID: 695065728}
-  - {fileID: 1688201241}
-  - {fileID: 968029105}
-  - {fileID: 1477634557}
-  invertSetting: {fileID: 1220878495}
-  stateTitle: {fileID: 264454288}
-  stateDescription: {fileID: 851911665}
-  statePrimary: {fileID: 1096579762}
-  restartLabel: {fileID: 1838814316}
-  pausedOptions: {fileID: 694283889}
-  resultOptions: {fileID: 63532606}
-  stateInput: {fileID: 1543792723}
-  settingsInput: {fileID: 560077145}
-  menuMusicSource: {fileID: 859014050}
-  gameMusicSource: {fileID: 1148458723}
-  uiSound: {fileID: 894775943}
-  playerSound: {fileID: 2037124914}
-  weaponSound: {fileID: 2037124913}
-  loopSound: {fileID: 1780342857}
-  impactPrefab: {fileID: 6960550843755605315, guid: 42de595bf844958498217eb9b1569d5b, type: 3}
-  tracePrefab: {fileID: 5650092755984971970, guid: 35e44d4b9f48a704290c3408ea5c0fe3, type: 3}
-  arcPrefab: {fileID: 2828136002024320189, guid: d75c47234890a67428f7df225e4a7fa8, type: 3}
-  traceDuration: 0.09
-  arcDuration: 0.45
+  canvasBindings: {fileID: 910000000000000001}
+  audioBindings: {fileID: 910000000000000002}
+  effectsBindings: {fileID: 910000000000000003}
 --- !u!1 &568392544
 GameObject:
   m_ObjectHideFlags: 0
@@ -9057,6 +8449,7 @@ GameObject:
   - component: {fileID: 771844773}
   - component: {fileID: 771844772}
   - component: {fileID: 771844771}
+  - component: {fileID: 910000000000000001}
   m_Layer: 0
   m_Name: 06_Arayuz_UI
   m_TagString: Untagged
@@ -10898,6 +10291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 894775943}
+  - component: {fileID: 910000000000000002}
   m_Layer: 0
   m_Name: UI Audio
   m_TagString: Untagged
@@ -26398,6 +25792,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 62067247639932615}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
@@ -82893,6 +82295,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 4050199025480810480}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 1593652775}
@@ -89118,6 +88528,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 8562123581298104060}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
@@ -123196,6 +122614,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3b5d9ff15fe80374ba6dfff9a694b229, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 1723499026819184967}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
@@ -146960,6 +146386,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 3871506389865439797}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
@@ -147550,6 +146984,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 586ba1554143d9a46b8951bcb951e8fc, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 2073008991211483676}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
@@ -213042,79 +212484,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987965912}
   m_CullTransparentMesh: 1
---- !u!1 &988335854
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 988335857}
-  - component: {fileID: 988335856}
-  - component: {fileID: 988335855}
-  m_Layer: 0
-  m_Name: Scanlines
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &988335855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988335854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: ee20ed84ff175c643b27c5abcb889369, type: 2}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 180
---- !u!222 &988335856
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988335854}
-  m_CullTransparentMesh: 1
---- !u!224 &988335857
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988335854}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1390939244}
-  m_RootOrder: 27
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 720}
-  m_Pivot: {x: 0, y: 1}
 --- !u!1 &991049497
 GameObject:
   m_ObjectHideFlags: 0
@@ -223766,7 +223135,6 @@ RectTransform:
   - {fileID: 320810100}
   - {fileID: 1601431982}
   - {fileID: 1191419249}
-  - {fileID: 988335857}
   m_Father: {fileID: 771844774}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -244461,7 +243829,6 @@ RectTransform:
   - {fileID: 1916722891}
   - {fileID: 1358849775}
   - {fileID: 174391547}
-  - {fileID: 1280272898}
   m_Father: {fileID: 1574592062}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -249744,79 +249111,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1271096573}
   m_CullTransparentMesh: 1
---- !u!1 &1280272895
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1280272898}
-  - component: {fileID: 1280272897}
-  - component: {fileID: 1280272896}
-  m_Layer: 0
-  m_Name: Scanlines
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1280272896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280272895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: ee20ed84ff175c643b27c5abcb889369, type: 2}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 44
---- !u!222 &1280272897
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280272895}
-  m_CullTransparentMesh: 1
---- !u!224 &1280272898
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1280272895}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 311949196}
-  m_RootOrder: 20
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 204, y: 178}
-  m_Pivot: {x: 0, y: 1}
 --- !u!1 &1281945316
 GameObject:
   m_ObjectHideFlags: 0
@@ -262364,3 +261658,622 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &910000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 771844770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1288da67b2494060bfb1b0bc6e837159, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  mainMenuPanel: {fileID: 1300390332}
+  controlsPanel: {fileID: 590155530}
+  menuInput: {fileID: 1300390331}
+  continueLabel: {fileID: 1456763687}
+  unavailableLabel: {fileID: 823068210}
+  archiveLabel: {fileID: 2063833066}
+  validationLabel: {fileID: 1611791159}
+  sectorRecords:
+  - {fileID: 424652551}
+  - {fileID: 823754863}
+  - {fileID: 982240196}
+  - {fileID: 406767824}
+  sectorButtons:
+  - {fileID: 311672675}
+  - {fileID: 1152196795}
+  - {fileID: 1018197496}
+  - {fileID: 986033645}
+  settingsPanel: {fileID: 560077146}
+  statePanel: {fileID: 1543792722}
+  settingSliders:
+  - {fileID: 1439830687}
+  - {fileID: 1762517646}
+  - {fileID: 810987846}
+  - {fileID: 1404711813}
+  settingLabels:
+  - {fileID: 695065728}
+  - {fileID: 1688201241}
+  - {fileID: 968029105}
+  - {fileID: 1477634557}
+  invertSetting: {fileID: 1220878495}
+  stateTitle: {fileID: 264454288}
+  stateDescription: {fileID: 851911665}
+  statePrimary: {fileID: 1096579762}
+  restartLabel: {fileID: 1838814316}
+  pausedOptions: {fileID: 694283889}
+  resultOptions: {fileID: 63532606}
+  stateInput: {fileID: 1543792723}
+  settingsInput: {fileID: 560077145}
+  archivePanel: {fileID: 759489964}
+  normalArchiveRows: {fileID: 83249276}
+  compactArchiveRows: {fileID: 1152193692}
+  archiveMemory: {fileID: 756099772}
+  archiveCountLabel: {fileID: 1635607133}
+  archiveMemoryCountLabel: {fileID: 1082874862}
+  archiveBonusSummary: {fileID: 117140031}
+  archiveLocked:
+  - {fileID: 1707424939}
+  - {fileID: 794937046}
+  - {fileID: 273342347}
+  archiveUnlocked:
+  - {fileID: 1105483562}
+  - {fileID: 2053505296}
+  - {fileID: 2006947600}
+  compactArchiveLocked:
+  - {fileID: 1113954882}
+  - {fileID: 1555956894}
+  - {fileID: 724721253}
+  compactArchiveUnlocked:
+  - {fileID: 2123983572}
+  - {fileID: 310483083}
+  - {fileID: 972531709}
+  archiveBonusActive: {r: 0.32, g: 0.92, b: 0.58, a: 1}
+  maintenanceWonPanel: {fileID: 433251631}
+  maintenanceLostPanel: {fileID: 337206932}
+  maintenanceWinTitle: {fileID: 1242135519}
+  maintenanceWinStats: {fileID: 1088172752}
+  maintenanceLossStats: {fileID: 545372227}
+  maintenanceResultEvents:
+  - {fileID: 865974906}
+  - {fileID: 1470869125}
+  - {fileID: 1118065471}
+  - {fileID: 1058374484}
+  - {fileID: 1135930565}
+  archiveControls: {fileID: 759489965}
+  maintenanceWinControls: {fileID: 433251633}
+  maintenanceLossControls: {fileID: 337206933}
+  briefingPanels:
+  - {fileID: 1672869975}
+  - {fileID: 235169927}
+  - {fileID: 947325973}
+  - {fileID: 1385061491}
+  - {fileID: 2087855581}
+  - {fileID: 837875386}
+  briefingDescriptions:
+  - {fileID: 727198063}
+  - {fileID: 1047659525}
+  - {fileID: 98112212}
+  - {fileID: 414208088}
+  - {fileID: 30580146}
+  - {fileID: 86497003}
+  finalPanel: {fileID: 1427705255}
+  creditsPanel: {fileID: 1564819802}
+  finalRank: {fileID: 2118973179}
+  finalStats:
+  - {fileID: 1021776582}
+  - {fileID: 1372596162}
+  - {fileID: 1546578447}
+  - {fileID: 612160186}
+  finalRankAccents:
+  - {fileID: 1278492124}
+  - {fileID: 1268305280}
+  - {fileID: 52393663}
+  - {fileID: 1108694691}
+  - {fileID: 1551591958}
+  - {fileID: 577586263}
+  - {fileID: 1427278654}
+  - {fileID: 1133232000}
+  - {fileID: 259928797}
+  - {fileID: 2118973179}
+  finalRankBackground: {fileID: 1960869141}
+  finalCreditHighlights:
+  - {fileID: 1481666433}
+  - {fileID: 1019501455}
+  - {fileID: 1195698593}
+  - {fileID: 1313832675}
+  - {fileID: 30052693}
+  menuCreditHighlights:
+  - {fileID: 1406454336}
+  - {fileID: 1552157493}
+  - {fileID: 1188733305}
+  - {fileID: 1848085874}
+  - {fileID: 267388384}
+  narrativeBackground: {fileID: 1147647559}
+  narrativeParticles:
+  - {fileID: 159280917}
+  - {fileID: 969272219}
+  - {fileID: 1220990716}
+  - {fileID: 1871414737}
+  - {fileID: 1196357823}
+  - {fileID: 1283960496}
+  - {fileID: 1774830703}
+  - {fileID: 1139630112}
+  - {fileID: 2016308621}
+  - {fileID: 1150041317}
+  - {fileID: 1344229935}
+  - {fileID: 1194298109}
+  - {fileID: 564377535}
+  - {fileID: 1629401899}
+  - {fileID: 2023614289}
+  - {fileID: 1572301750}
+  - {fileID: 2069329235}
+  - {fileID: 18022697}
+  - {fileID: 1334657100}
+  - {fileID: 1115461451}
+  - {fileID: 678058643}
+  - {fileID: 1754585243}
+  - {fileID: 858250110}
+  - {fileID: 320810098}
+  - {fileID: 1601431980}
+  - {fileID: 1191419247}
+  briefingGlow:
+  - {fileID: 2023777983}
+  - {fileID: 554920970}
+  - {fileID: 1785761589}
+  - {fileID: 1404647626}
+  - {fileID: 1735816732}
+  - {fileID: 1293556072}
+  briefingSignal:
+  - {fileID: 195943310}
+  - {fileID: 1476426826}
+  - {fileID: 1602862813}
+  - {fileID: 2053956918}
+  - {fileID: 1504702709}
+  - {fileID: 1388922547}
+  finalGlow: {fileID: 1896698003}
+  combatHud: {fileID: 1290518288}
+  idleReticle: {fileID: 1980141644}
+  hitReticle: {fileID: 1071691514}
+  teamHitReticle: {fileID: 1044173711}
+  headshotReticle: {fileID: 1732235313}
+  damageScreen: {fileID: 253079968}
+  damageFront: {fileID: 1428537810}
+  damageBack: {fileID: 1714387388}
+  damageRight: {fileID: 970152255}
+  damageLeft: {fileID: 1110318650}
+  crouchIndicator: {fileID: 89142855}
+  empBanner: {fileID: 2040776444}
+  chapterBanner: {fileID: 508753350}
+  chapterBannerUnderEmp: {fileID: 76748298}
+  empBannerLabel: {fileID: 389650566}
+  chapterTitle: {fileID: 948321416}
+  chapterSubtitle: {fileID: 1644158756}
+  chapterTitleUnderEmp: {fileID: 353243370}
+  chapterSubtitleUnderEmp: {fileID: 273122097}
+  chapterAccent: {fileID: 502549234}
+  chapterAccentUnderEmp: {fileID: 173698902}
+  chapterEasyColor: {r: 0.22, g: 0.9, b: 0.55, a: 1}
+  chapterMediumColor: {r: 1, g: 0.72, b: 0.2, a: 1}
+  chapterReactorColor: {r: 0.95, g: 0.32, b: 0.88, a: 1}
+  chapterMaintenanceColor: {r: 1, g: 0.46, b: 0.22, a: 1}
+  statusHud: {fileID: 663116751}
+  campaignStatus: {fileID: 521208026}
+  maintenanceStatus: {fileID: 45728347}
+  singleConsoleClock: {fileID: 1622412680}
+  dualConsoleClock: {fileID: 1036591663}
+  sectorName: {fileID: 942250056}
+  sectorDifficulty: {fileID: 1714033406}
+  echoAndGuardCount: {fileID: 2101409182}
+  playerHealthLabel: {fileID: 1447636368}
+  singleLoopClockLabel: {fileID: 1381055749}
+  dualLoopClockLabel: {fileID: 1290818613}
+  singlePowerLabel: {fileID: 645770171}
+  dualPowerLabel: {fileID: 161640308}
+  consoleAStatus: {fileID: 1768478389}
+  consoleBStatus: {fileID: 630154053}
+  campaignGuidance: {fileID: 1891490587}
+  maintenanceDifficulty: {fileID: 1660282519}
+  maintenanceStage: {fileID: 898248314}
+  maintenanceHealth: {fileID: 781468688}
+  maintenanceClock: {fileID: 601295456}
+  maintenanceCheckpoint: {fileID: 1570516697}
+  sectorAccent: {fileID: 655615890}
+  playerHealthBar: {fileID: 1736413651}
+  singleLoopBar: {fileID: 654971677}
+  dualLoopBar: {fileID: 215846644}
+  criticalHealthTint: {r: 1, g: 0.2, b: 0.2, a: 1}
+  lateClockTint: {r: 1, g: 0.55, b: 0.2, a: 1}
+  completedConsoleTint: {r: 0.25, g: 0.85, b: 0.55, a: 1}
+  campaignWeaponPanel: {fileID: 685436953}
+  maintenanceWeaponPanel: {fileID: 5653813}
+  campaignWeaponTitle: {fileID: 527974191}
+  campaignEnergyLabel: {fileID: 157413856}
+  maintenanceEnergyLabel: {fileID: 129463214}
+  campaignPips:
+  - {fileID: 1003514507}
+  - {fileID: 1800382481}
+  - {fileID: 579781184}
+  - {fileID: 187545124}
+  - {fileID: 319322353}
+  - {fileID: 255378968}
+  - {fileID: 997347080}
+  - {fileID: 553064799}
+  campaignBonusPips:
+  - {fileID: 1618641040}
+  - {fileID: 1874760731}
+  - {fileID: 93836645}
+  - {fileID: 1371883164}
+  - {fileID: 1499120180}
+  - {fileID: 1624326748}
+  - {fileID: 335081440}
+  - {fileID: 378781853}
+  - {fileID: 994074190}
+  - {fileID: 1735558416}
+  maintenancePips:
+  - {fileID: 588922943}
+  - {fileID: 931671725}
+  - {fileID: 116399962}
+  - {fileID: 1900706085}
+  - {fileID: 624305675}
+  - {fileID: 1339015367}
+  - {fileID: 1134992761}
+  - {fileID: 1752665089}
+  maintenanceBonusPips:
+  - {fileID: 484577512}
+  - {fileID: 565266809}
+  - {fileID: 1645821456}
+  - {fileID: 1567645470}
+  - {fileID: 167150342}
+  - {fileID: 292175916}
+  - {fileID: 246819858}
+  - {fileID: 711968683}
+  - {fileID: 1261069784}
+  - {fileID: 917847748}
+  emptyPipColor: {r: 0.14, g: 0.19, b: 0.25, a: 1}
+  lowEnergyColor: {r: 1, g: 0.62, b: 0.18, a: 1}
+  hotPipColor: {r: 1, g: 0.22, b: 0.18, a: 1}
+  dimHotPipColor: {r: 0.45, g: 0.1, b: 0.1, a: 1}
+  overchargeStart: {r: 0.2, g: 0.95, b: 1, a: 1}
+  overchargeEnd: {r: 1, g: 0.88, b: 0.25, a: 1}
+  hotWeaponColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  campaignEchoCards:
+  - {fileID: 578089796}
+  - {fileID: 1930244913}
+  maintenanceEchoCards:
+  - {fileID: 363215735}
+  - {fileID: 129370259}
+  campaignEchoTitles:
+  - {fileID: 890116535}
+  - {fileID: 1144263178}
+  campaignEchoTasks:
+  - {fileID: 796926929}
+  - {fileID: 1987681825}
+  maintenanceEchoTasks:
+  - {fileID: 1326290856}
+  - {fileID: 478508687}
+  campaignEchoProgress:
+  - {fileID: 399362828}
+  - {fileID: 1543571575}
+  maintenanceEchoProgress:
+  - {fileID: 808462328}
+  - {fileID: 1170275068}
+  lockedVaultPrompt: {fileID: 992402951}
+  openedVaultPrompt: {fileID: 1040504881}
+  offlineConsolePrompt: {fileID: 865852697}
+  poweredConsolePrompt: {fileID: 1972492639}
+  sampleDetails: {fileID: 540673574}
+  campaignTactics: {fileID: 1902837545}
+  sampleTactics: {fileID: 1864440643}
+  testProgressPanel: {fileID: 1616717584}
+  sampleObjective: {fileID: 1736078355}
+  sampleGateHint: {fileID: 1865926341}
+  sampleDeviceState: {fileID: 464563379}
+  sampleArchiveInfo: {fileID: 1780730395}
+  sampleRecordHint: {fileID: 1707967731}
+  sampleBottomHint: {fileID: 1776112590}
+  campaignInstructions: {fileID: 176043683}
+  campaignTacticsTip: {fileID: 1526379379}
+  resonanceTitle: {fileID: 1521145539}
+  resonanceBonus: {fileID: 1742771221}
+  resonanceHint: {fileID: 1673949782}
+  testProgressLabel: {fileID: 839109748}
+  resonanceAccent: {fileID: 929490652}
+  campaignRewind: {fileID: 1618719108}
+  sampleRewind: {fileID: 715509986}
+  campaignHeadshot: {fileID: 1379976836}
+  sampleHeadshot: {fileID: 1447043398}
+  campaignKill: {fileID: 1553121478}
+  sampleTeamHit: {fileID: 1665999536}
+  campaignRewindLabel: {fileID: 1136134072}
+  sampleTargetThreat: {fileID: 2073785371}
+  sampleDevicePrompt: {fileID: 224833466}
+  sampleEchoHit: {fileID: 1567883308}
+  upcomingShotLabels:
+  - {fileID: 1053178345}
+  - {fileID: 1627160957}
+  upcomingDeviceLabels:
+  - {fileID: 1911830235}
+  - {fileID: 833249125}
+  campaignMarkerTemplate: {fileID: 1789302860}
+  sampleMarkerTemplate: {fileID: 989917249}
+  echoPlaybackTemplate: {fileID: 1832990361}
+  campaignEnemyTemplate: {fileID: 970135844}
+  sampleEnemyTemplate: {fileID: 1203743850}
+  gateReadyTint: {r: 0.25, g: 0.9, b: 0.55, a: 1}
+  vaultBonusTint: {r: 0.35, g: 0.92, b: 0.6, a: 1}
+  targetPlayerTint: {r: 1, g: 0.4, b: 0.2, a: 1}
+  minimapPanel: {fileID: 1574592061}
+  minimapArea: {fileID: 311949196}
+  minimapSweep: {fileID: 428338873}
+  minimapSweepGlow: {fileID: 957885819}
+  minimapRenderer: {fileID: 1916722890}
+  minimapLabelTemplate: {fileID: 837739197}
+  minimapHeading: {fileID: 1946927384}
+  minimapNorth: {fileID: 174391545}
+  minimapAccent: {fileID: 225280909}
+  minimapOutline: {fileID: 210318632}
+  minimapTelemetry: {fileID: 1146575076}
+  minimapAccentDetails:
+  - {fileID: 182562261}
+  - {fileID: 292684537}
+  - {fileID: 886020926}
+  - {fileID: 928982264}
+  - {fileID: 937794984}
+  - {fileID: 325504972}
+  - {fileID: 1015542412}
+  - {fileID: 450059578}
+  - {fileID: 1649991656}
+  - {fileID: 1441743925}
+  - {fileID: 428338871}
+  - {fileID: 957885817}
+  campaignPlan: {fileID: 1875718742}
+  maintenancePlan: {fileID: 431090907}
+  echoTeachingPanel: {fileID: 851139102}
+  campaignPlanArea: {fileID: 935855414}
+  maintenancePlanArea: {fileID: 1734969604}
+  campaignPlanRenderer: {fileID: 1630614676}
+  maintenancePlanRenderer: {fileID: 735213269}
+  campaignPlanMarker: {fileID: 961719261}
+  maintenancePlanMarker: {fileID: 1719244150}
+  campaignPlanHeading: {fileID: 899671748}
+  campaignPlanGoal: {fileID: 517048443}
+  maintenancePlanHeading: {fileID: 1371653793}
+  maintenancePlanHelp: {fileID: 1828190294}
+  maintenancePlanGoal: {fileID: 493273212}
+  maintenancePlanGate: {fileID: 1296057322}
+  maintenancePlanPreview: {fileID: 1418535124}
+  campaignPlanCards:
+  - {fileID: 561648474}
+  - {fileID: 1443941575}
+  campaignPlanActions:
+  - {fileID: 1124415420}
+  - {fileID: 821911673}
+  maintenancePlanCards:
+  - {fileID: 1505238407}
+  - {fileID: 548054273}
+  maintenancePlanActions:
+  - {fileID: 23471323}
+  - {fileID: 575821306}
+  maintenanceCloseAction: {fileID: 1993471813}
+  campaignPlanButtons:
+  - {fileID: 1760135919}
+  - {fileID: 1597939518}
+  maintenancePlanButtons:
+  - {fileID: 275769445}
+  - {fileID: 1852833528}
+  maintenancePlanSlider: {fileID: 1590577390}
+  campaignPlanInput: {fileID: 1875718743}
+  maintenancePlanInput: {fileID: 431090908}
+  teachingPlanInput: {fileID: 851139103}
+--- !u!114 &910000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894775942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea43c8fede7c451eb43dc8fdd2bf9ded, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  menuMusicSource: {fileID: 859014050}
+  gameMusicSource: {fileID: 1148458723}
+  uiSound: {fileID: 894775943}
+  playerSound: {fileID: 2037124914}
+  weaponSound: {fileID: 2037124913}
+  loopSound: {fileID: 1780342857}
+  archiveUnlockAudio: {fileID: 1225335010}
+  checkpointWinAudio: {fileID: 2141192232}
+  loopFailAudio: {fileID: 546140307}
+  uiClickAudio: {fileID: 2112349656}
+  consoleErrorAudio: {fileID: 1268756500}
+  echoResetAudio: {fileID: 1136887330}
+  echoRecordAudio: {fileID: 903683416}
+  echoSpawnAudio: {fileID: 1872444071}
+  loopWarningAudio: {fileID: 50428594}
+  worldSoundLinks:
+  - Owner: {fileID: 1723499026819184967}
+    Cue: 5
+    Source: {fileID: 1175856024}
+  - Owner: {fileID: 2695802511892189472}
+    Cue: 8
+    Source: {fileID: 1401738849}
+  - Owner: {fileID: 2090089076951099904}
+    Cue: 6
+    Source: {fileID: 110089404}
+  - Owner: {fileID: 2090089076951099904}
+    Cue: 7
+    Source: {fileID: 339187776}
+  - Owner: {fileID: 4050199025480810480}
+    Cue: 5
+    Source: {fileID: 1544106186}
+  - Owner: {fileID: 1331765535472446578}
+    Cue: 8
+    Source: {fileID: 935200857}
+  - Owner: {fileID: 1331765535472446578}
+    Cue: 9
+    Source: {fileID: 1230728741}
+  - Owner: {fileID: 3241829313564914218}
+    Cue: 6
+    Source: {fileID: 239903260}
+  - Owner: {fileID: 3241829313564914218}
+    Cue: 7
+    Source: {fileID: 1875292994}
+  - Owner: {fileID: 3871506389865439797}
+    Cue: 5
+    Source: {fileID: 796535853}
+  - Owner: {fileID: 8821227726422250255}
+    Cue: 8
+    Source: {fileID: 568392546}
+  - Owner: {fileID: 4264717848313796239}
+    Cue: 6
+    Source: {fileID: 703663300}
+  - Owner: {fileID: 4264717848313796239}
+    Cue: 7
+    Source: {fileID: 1622158202}
+  - Owner: {fileID: 8562123581298104060}
+    Cue: 5
+    Source: {fileID: 1084872610}
+  - Owner: {fileID: 7251572717377022034}
+    Cue: 6
+    Source: {fileID: 123329072}
+  - Owner: {fileID: 7251572717377022034}
+    Cue: 7
+    Source: {fileID: 994002389}
+  - Owner: {fileID: 7170084227420458965}
+    Cue: 8
+    Source: {fileID: 1667324423}
+  - Owner: {fileID: 7170084227420458965}
+    Cue: 9
+    Source: {fileID: 263096446}
+  - Owner: {fileID: 5746196122683061783}
+    Cue: 8
+    Source: {fileID: 976280917}
+  - Owner: {fileID: 5746196122683061783}
+    Cue: 9
+    Source: {fileID: 119306249}
+  - Owner: {fileID: 2073008991211483676}
+    Cue: 5
+    Source: {fileID: 1822429310}
+  - Owner: {fileID: 58410539591583883}
+    Cue: 8
+    Source: {fileID: 241662354}
+  - Owner: {fileID: 2522992237028837684}
+    Cue: 8
+    Source: {fileID: 812755973}
+  - Owner: {fileID: 2351139618936161672}
+    Cue: 6
+    Source: {fileID: 319694191}
+  - Owner: {fileID: 2351139618936161672}
+    Cue: 7
+    Source: {fileID: 1627474639}
+  - Owner: {fileID: 62067247639932615}
+    Cue: 5
+    Source: {fileID: 7855096}
+  - Owner: {fileID: 2747904232151141324}
+    Cue: 6
+    Source: {fileID: 708511939}
+  - Owner: {fileID: 2747904232151141324}
+    Cue: 7
+    Source: {fileID: 314078007}
+  - Owner: {fileID: 4516513301352273634}
+    Cue: 8
+    Source: {fileID: 1661869187}
+  - Owner: {fileID: 4516513301352273634}
+    Cue: 9
+    Source: {fileID: 564559733}
+  - Owner: {fileID: 7833005104713469725}
+    Cue: 8
+    Source: {fileID: 1066460520}
+  - Owner: {fileID: 7833005104713469725}
+    Cue: 9
+    Source: {fileID: 1067375703}
+  - Owner: {fileID: 8108578637661658739}
+    Cue: 8
+    Source: {fileID: 1086342493}
+  - Owner: {fileID: 8108578637661658739}
+    Cue: 9
+    Source: {fileID: 193115460}
+  - Owner: {fileID: 850204205}
+    Cue: 5
+    Source: {fileID: 850204204}
+  - Owner: {fileID: 850204203}
+    Cue: 8
+    Source: {fileID: 850204202}
+  - Owner: {fileID: 850204203}
+    Cue: 9
+    Source: {fileID: 850204201}
+  - Owner: {fileID: 1828732640}
+    Cue: 5
+    Source: {fileID: 1828732639}
+  - Owner: {fileID: 1828732638}
+    Cue: 6
+    Source: {fileID: 1828732637}
+  - Owner: {fileID: 1828732638}
+    Cue: 7
+    Source: {fileID: 1828732636}
+  - Owner: {fileID: 1828732635}
+    Cue: 8
+    Source: {fileID: 1828732634}
+  - Owner: {fileID: 1828732635}
+    Cue: 9
+    Source: {fileID: 1828732633}
+  - Owner: {fileID: 1828732632}
+    Cue: 8
+    Source: {fileID: 1828732631}
+  - Owner: {fileID: 1828732632}
+    Cue: 9
+    Source: {fileID: 1828732630}
+  - Owner: {fileID: 2067899704}
+    Cue: 5
+    Source: {fileID: 2067899703}
+  - Owner: {fileID: 2067899702}
+    Cue: 6
+    Source: {fileID: 2067899701}
+  - Owner: {fileID: 2067899702}
+    Cue: 7
+    Source: {fileID: 2067899700}
+  - Owner: {fileID: 2067899699}
+    Cue: 8
+    Source: {fileID: 2067899698}
+  - Owner: {fileID: 2067899699}
+    Cue: 9
+    Source: {fileID: 2067899697}
+  - Owner: {fileID: 2067899696}
+    Cue: 8
+    Source: {fileID: 2067899695}
+  - Owner: {fileID: 2067899696}
+    Cue: 9
+    Source: {fileID: 2067899694}
+  - Owner: {fileID: 2067899693}
+    Cue: 8
+    Source: {fileID: 2067899692}
+  - Owner: {fileID: 2067899693}
+    Cue: 9
+    Source: {fileID: 2067899691}
+--- !u!114 &910000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121267230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15dc7453ed574db0a214761eb9a11615, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  impactPrefab: {fileID: 6960550843755605315, guid: 42de595bf844958498217eb9b1569d5b, type: 3}
+  tracePrefab: {fileID: 5650092755984971970, guid: 35e44d4b9f48a704290c3408ea5c0fe3, type: 3}
+  arcPrefab: {fileID: 2828136002024320189, guid: d75c47234890a67428f7df225e4a7fa8, type: 3}
+  traceDuration: 0.09
+  arcDuration: 0.45
+  cyanShotPreview: {fileID: 4283549291506426420, guid: 7b53e0b48a0608b40a5a4ec75337376b, type: 3}
+  purpleShotPreview: {fileID: 3828025175089185852, guid: 67ddf40f12eb3334b93ae2ca1c643434, type: 3}
+  teamHitRing: {fileID: 7506864240257422331, guid: 8fb9c7ac19c37c3449d02aa3e7c795a6, type: 3}
+  teamHitRingDuration: 0.65

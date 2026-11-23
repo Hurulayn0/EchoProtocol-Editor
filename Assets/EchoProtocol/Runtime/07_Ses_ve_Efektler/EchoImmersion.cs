@@ -12,21 +12,18 @@ namespace EchoProtocol
         private AnimationClip vistaSpin;
         private float weaponTravel;
 
-        [SerializeField] private ParticleSystem impactPrefab;
-        [SerializeField] private LineRenderer tracePrefab, arcPrefab;
-        [SerializeField, Min(.01f)] private float traceDuration = .09f, arcDuration = .45f;
 
         private void CreateImmersion()
         {
             cameraFinish = player.View.GetComponent<EchoCameraFinish>();
-            effectsMaterial = impactPrefab.GetComponent<ParticleSystemRenderer>().sharedMaterial;
+            effectsMaterial = effectsBindings.impactPrefab.GetComponent<ParticleSystemRenderer>().sharedMaterial;
         }
 
         private void EmitImpact(Vector3 position, Color color, int count = 10, float lifetime = .4f)
         {
             impactObjects.RemoveAll(item => item == null);
             if (impactObjects.Count >= 12) return;
-            ParticleSystem particles = Instantiate(impactPrefab, position, Quaternion.identity, worldRoot);
+            ParticleSystem particles = Instantiate(effectsBindings.impactPrefab, position, Quaternion.identity, worldRoot);
             particles.gameObject.name = "Pulse sparks";
             float duration = particles.main.startLifetime.constant * (lifetime / .4f);
             var emission = new ParticleSystem.EmitParams { startColor = particles.main.startColor.color * color * color, startLifetime = duration };

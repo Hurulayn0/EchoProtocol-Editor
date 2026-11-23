@@ -34,10 +34,12 @@ namespace EchoProtocol
             SaveSession();
         }
 
+        private string ServiceWindowText => activeRoom.ServiceWindowSeconds.ToString("0.##", System.Globalization.CultureInfo.GetCultureInfo("tr-TR"));
+
         private void StartSampleStage()
         {
             LoadSampleStage(0); SetScreen(EchoScreen.Playing);
-            Notify(IsLiveDifficulty ? "Muhafızı aş, servis geçidini Echo ile aç ve yük asansörüne ulaş." : "Yük asansörüne ulaş. Servis düğmesi geçidi yalnızca 1,4 saniye açar.");
+            Notify(IsLiveDifficulty ? "Muhafızı aş, servis geçidini Echo ile aç ve yük asansörüne ulaş." : $"Yük asansörüne ulaş. Servis düğmesi geçidi yalnızca {ServiceWindowText} saniye açar.");
             if (!IsLiveDifficulty) { TogglePlanning(); echoTeaching = true; }
         }
         private void LoadSampleStage(int stage)
@@ -48,7 +50,7 @@ namespace EchoProtocol
             sampleActive = true; sampleStage = Mathf.Clamp(stage, 0, 2); levelIndex = 1; sampleStageMemoryHacked = false;
             sectorElapsed = 0; sectorLoops = 0; vistaCore = null; resonanceNode = null; archiveTerminal = null;
             ClearWreckage(); ClearShockwaves();
-            LoadAuthoredRoom(IsLiveDifficulty ? maintenanceRooms : validationRooms, sampleStage);
+            LoadAuthoredRoom((IsLiveDifficulty ? maintenanceRooms : validationRooms)[sampleStage]);
             NewLoop(); TriggerChapterBanner(); QueueStoryBriefing(); introRemaining = 0; message = SampleGoal();
         }
         private void ResetSampleLoop()
@@ -100,7 +102,7 @@ namespace EchoProtocol
                         preferences.SampleMemory = true; if (CanPersist) preferences.Save();
                         playerHealth = MaxPlayerHealth;
                         SpawnResonanceShockwave(device.Position, powerOn);
-                        if (!fromEcho) { Notify("GÖZLEM BELLEĞİ İNDİRİLDİ! +100 Can · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(archiveUnlockAudio, 0.72f); SaveSession();
+                        if (!fromEcho) { Notify($"GÖZLEM BELLEĞİ İNDİRİLDİ! Can {MaxPlayerHealth} · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); SaveSession();
                     }
                 }
                 else
@@ -111,14 +113,14 @@ namespace EchoProtocol
                     else
                     {
                         preferences.SampleMemory = true; if (CanPersist) preferences.Save();
-                        if (!fromEcho) { Notify(SampleMemoryText); notificationRemaining = 9; } PlayUiSound(archiveUnlockAudio, 0.72f); SaveSession();
+                        if (!fromEcho) { Notify(SampleMemoryText); notificationRemaining = 9; } PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); SaveSession();
                     }
                 }
             }
-            if (failure != null) { if (!fromEcho) { Notify(failure); PlayUiSound(consoleErrorAudio, 0.48f); } else Notify("ECHO " + (replayingEcho + 1) + " / " + failure.Replace("E denemen kaydedildi", "E koşulu sağlanmadı")); return false; }
+            if (failure != null) { if (!fromEcho) { Notify(failure); PlayUiSound(audioBindings.consoleErrorAudio, 0.48f); } else Notify("ECHO " + (replayingEcho + 1) + " / " + failure.Replace("E denemen kaydedildi", "E koşulu sağlanmadı")); return false; }
             if (!device.Powered) SampleEvent(device.Name + " / E", fromEcho);
             device.Powered = true; device.Visual.GetComponent<Renderer>().sharedMaterial = powerOn;
-            if (!fromEcho && id != 2) Notify(sampleStage == 0 ? "Geçit 1,4 sn açık. Bu E işlemini R ile Echo’ya kaydet." : device.Name + " etkin. Planın sonraki adımına geç.");
+            if (!fromEcho && id != 2) Notify(sampleStage == 0 ? $"Geçit {ServiceWindowText} sn açık. Bu E işlemini R ile Echo’ya kaydet." : device.Name + " etkin. Planın sonraki adımına geç.");
             PlayAttachedSound(fromEcho ? WorldCue.EchoAction : (sampleStage == 1 ? WorldCue.RelayPower : WorldCue.ConsoleInteract), device.Position, 0.72f, owner: fromEcho ? null : device.Visual);
             return true;
         }
@@ -204,7 +206,7 @@ namespace EchoProtocol
             if (sampleStage == 0)
             {
                 if (sampleServiceUntil <= 0) return "GEÇİT KAPALI / Servis panelinde E işlemi bekleniyor.";
-                return "GEÇİT KAPALI / Servis penceresi 1,4 sn sürdü; geçiş rotanı kısalt.";
+                return $"GEÇİT KAPALI / Servis penceresi {ServiceWindowText} sn sürdü; geçiş rotanı kısalt.";
             }
             if (sampleStage == 1)
             {

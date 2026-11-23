@@ -50,7 +50,7 @@ namespace EchoProtocol
             }
             tape.Freeze(); return tape;
         }
-        private static bool ValidTime(float value) { return Finite(value) && value >= 0 && value <= EchoPrototypeGame.LoopLength; }
+        private static bool ValidTime(float value) { return Finite(value) && value >= 0; }
         private static bool Finite(float value) { return !float.IsNaN(value) && !float.IsInfinity(value); }
         private static bool Finite(Vector3 value) { return Finite(value.x) && Finite(value.y) && Finite(value.z); }
         private static bool ValidPose(EchoPose pose)

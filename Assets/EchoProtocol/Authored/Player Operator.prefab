@@ -310,6 +310,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f89bbf24a771e5a079156f5225a580d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  footstepOneAudio: {fileID: 3808950749575270774}
+  footstepTwoAudio: {fileID: 6134022291146510497}
+  playerHurtAudio: {fileID: 3160190226956300807}
+  playerJumpAudio: {fileID: 6535555529817103061}
+  playerLandAudio: {fileID: 4523236530982009272}
   Controller: {fileID: 8089782121703750843}
   View: {fileID: 7193855284640301068}
   maxHealth: 100

@@ -5,18 +5,22 @@ namespace EchoProtocol
 {
     public sealed partial class EchoPrototypeGame
     {
-        [SerializeField] private Material darkMaterial, plateOn, powerOn, powerOff, objectiveOff;
-        [SerializeField] private Material ghostCyan, ghostPurple, enemyBeam, shotMaterial;
-        [SerializeField] private Material[] accents = new Material[3];
+        private Material darkMaterial => activeRoom.ResonanceSpent;
+        private Material plateOn => activeRoom.SensorActive;
+        private Material powerOn => activeRoom.PowerActive;
+        private Material powerOff => activeRoom.RelayStandby;
+        private Material objectiveOff => activeRoom.ObjectiveStandby;
+        private Material ghostCyan => replayActors[0].shotMaterial;
+        private Material ghostPurple => replayActors[1].shotMaterial;
 
         [SerializeField] private EchoRoomLayout[] campaignRooms;
         [SerializeField] private EchoRoomLayout[] maintenanceRooms;
         [SerializeField] private EchoRoomLayout[] validationRooms;
         [SerializeField] private GameObject authoredRoomDisplay;
         [SerializeField] private EchoPlayer authoredPlayer;
-        [SerializeField] private Transform authoredWeapon;
         private Vector3 closedDoorPosition, doorOpenOffset;
         private bool closedDoorCollision;
+        private bool usesRoomDisplay;
         private Vector3 roomDisplayPosition;
         private Transform roomDisplayParent, roomPlayerSpawn;
         private EchoRoomLayout activeRoom;
@@ -35,7 +39,7 @@ namespace EchoProtocol
         private void UnloadAuthoredRoom()
         {
             if (worldRoot == null) return;
-            worldRoot.gameObject.SetActive(false);
+            if (usesRoomDisplay) worldRoot.gameObject.SetActive(false);
             door.localPosition = closedDoorPosition;
             doorCollider.enabled = closedDoorCollision;
             foreach (var entry in idleMaterials)
@@ -46,20 +50,26 @@ namespace EchoProtocol
             if (empRingInner != null) empRingInner.localRotation = innerRingRest;
             if (vistaSpin != null) vistaSpin.SampleAnimation(vistaCore.gameObject, 0);
             foreach (EchoEnemy enemy in enemies) enemy.ResetEnemy();
-            worldRoot.SetParent(roomDisplayParent, false);
-            worldRoot.localPosition = roomDisplayPosition;
+            if (usesRoomDisplay)
+            {
+                worldRoot.SetParent(roomDisplayParent, false);
+                worldRoot.localPosition = roomDisplayPosition;
+            }
             worldRoot = null;
         }
 
-        private void LoadAuthoredRoom(EchoRoomLayout[] rooms, int index)
+        private void LoadAuthoredRoom(EchoRoomLayout layout)
         {
-            EchoRoomLayout layout = rooms[index];
             activeRoom = layout;
-            roomDisplayParent = layout.transform.parent;
-            roomDisplayPosition = layout.transform.localPosition;
-            layout.transform.SetParent(transform, false);
             worldRoot = layout.transform;
-            worldRoot.localPosition = Vector3.zero;
+            usesRoomDisplay = sceneEntry == LegacyScene || sceneEntry == SynchronizationScene;
+            if (usesRoomDisplay)
+            {
+                roomDisplayParent = worldRoot.parent;
+                roomDisplayPosition = worldRoot.localPosition;
+                worldRoot.SetParent(transform, false);
+                worldRoot.localPosition = Vector3.zero;
+            }
             worldRoot.gameObject.SetActive(true);
             door = layout.Door;
             doorOpenOffset = layout.DoorOpenOffset;

@@ -10,7 +10,7 @@ namespace EchoProtocol
         {
             BeginCampaign();
             Verify(cameraFinish != null && cameraFinish.Ready && effectsMaterial.shader.isSupported, "atmosphere and transparent effects shaders survive runtime loading");
-            Verify(menuMusicSource.clip != null && gameMusicSource.clip != null && FindSound(weaponSound, "Weapon/sfx_weapon_pulse_fire").clip != null && FindSound(playerSound, "Movement/sfx_footstep_1").clip != null,
+            Verify(audioBindings.menuMusicSource.clip != null && audioBindings.gameMusicSource.clip != null && FindSound(audioBindings.weaponSound, "Weapon/sfx_weapon_pulse_fire").clip != null && FindSound(audioBindings.playerSound, "Movement/sfx_footstep_1").clip != null,
                 "original music and sound effects are assigned to their scene emitters");
             Verify(worldRoot.GetComponentsInChildren<ParticleSystem>().Length >= 2 && resonanceNode.GetComponent<Collider>() != null && archiveTerminal.GetComponent<Collider>() != null,
                 "vent ambience resonance target and interactive archive are instantiated");

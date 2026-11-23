@@ -38,8 +38,19 @@ namespace EchoProtocol.Editor
         public static void ConfigureBuild()
         {
             if (!File.Exists(ScenePath)) CreateScene();
-            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
-            Debug.Log("EchoPrototype is configured as the build scene.");
+            string[] scenes =
+            {
+                "Assets/Scenes/MainMenu.unity",
+                "Assets/Scenes/Level1_ArastirmaLabi.unity",
+                "Assets/Scenes/Level2_BakimHatti.unity",
+                "Assets/Scenes/Level3_Eszamanlilik.unity",
+                "Assets/Scenes/Level4_Reaktor.unity",
+                ScenePath
+            };
+            foreach (string scene in scenes)
+                if (!File.Exists(scene)) throw new FileNotFoundException("Campaign build scene is missing.", scene);
+            EditorBuildSettings.scenes = Array.ConvertAll(scenes, scene => new EditorBuildSettingsScene(scene, scene != ScenePath));
+            Debug.Log("Campaign scenes are enabled. EchoPrototype is reserved for validation.");
         }
 
         private static void CreateScene()

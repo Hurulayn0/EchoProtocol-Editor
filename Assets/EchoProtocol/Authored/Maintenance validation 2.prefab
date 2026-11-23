@@ -11678,6 +11678,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 252eec762ee41cc44b272ce988e4bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ResonanceSpent: {fileID: 2100000, guid: 2c885609ddb712342a3affef03d99875, type: 2}
+  SensorActive: {fileID: 2100000, guid: 4831a680551d61f4a9039d586d2f0f8d, type: 2}
+  PowerActive: {fileID: 2100000, guid: 81d74c39190e1034ba4380252cf126c9, type: 2}
+  RelayStandby: {fileID: 2100000, guid: 93bdea521c091eb44aeb9070e2a7c9c2, type: 2}
+  ObjectiveStandby: {fileID: 2100000, guid: 3e9b4d7f156048b47b2a67ca3c5a5e3b, type: 2}
+  ShockwaveAccent: {fileID: 2100000, guid: 3be4568008be1674d9cbfd4c1623cc1a, type: 2}
+  ShockwavePrefab: {fileID: 6411157539721709253, guid: d793d752edfd3ab49b0a05ec39c0e379, type: 3}
+  ShockwaveAnimation: {fileID: 7400000, guid: 25534dde96529904e91b4583ceddb5f5, type: 2}
   Door: {fileID: 756825928053095835}
   DoorOpenOffset: {x: 0, y: 4.5, z: 0}
   PlayerSpawn: {fileID: 0}
