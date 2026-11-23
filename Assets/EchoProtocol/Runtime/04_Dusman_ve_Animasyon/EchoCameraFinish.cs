@@ -5,12 +5,13 @@ namespace EchoProtocol
     [RequireComponent(typeof(Camera))]
     public sealed class EchoCameraFinish : MonoBehaviour
     {
+        [SerializeField] private Material finishTemplate;
         private Material finish;
         public bool Ready { get { return finish != null; } }
         private void Awake()
         {
-            Shader shader = Resources.Load<Shader>("EchoShaders/Atmosphere");
-            if (shader != null && shader.isSupported) finish = new Material(shader);
+            if (finishTemplate != null && finishTemplate.shader.isSupported)
+                finish = Instantiate(finishTemplate);
         }
         public void SetLook(Color accent, float rewind, float time)
         {

@@ -9,6 +9,7 @@ namespace EchoProtocol
         private Material effectsMaterial;
         private readonly List<GameObject> impactObjects = new List<GameObject>();
         private Transform vistaCore;
+        private AnimationClip vistaSpin;
         private float weaponTravel;
 
         [SerializeField] private ParticleSystem impactPrefab;
@@ -41,7 +42,7 @@ namespace EchoProtocol
         }
         private void TickImmersion()
         {
-            if (vistaCore != null) vistaCore.localRotation = vistaRest * Quaternion.Euler(0, clock * 12, 0);
+            if (vistaSpin != null) vistaSpin.SampleAnimation(vistaCore.gameObject, clock % vistaSpin.length);
             if (screen == EchoScreen.Playing)
             {
                 float alert = ActiveLoopLength - clock <= 3f && ActiveLoopLength > 0 ? Mathf.Sin(clock * 16f) * .5f + .5f : 0f;

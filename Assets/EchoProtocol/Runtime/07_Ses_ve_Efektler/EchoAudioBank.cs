@@ -8,6 +8,11 @@ namespace EchoProtocol
     {
         [SerializeField] private AudioSource menuMusicSource, gameMusicSource;
         [SerializeField] private Transform uiSound, playerSound, weaponSound, loopSound;
+        [SerializeField] private AudioSource archiveUnlockAudio, checkpointWinAudio, loopFailAudio, uiClickAudio;
+        [SerializeField] private AudioSource consoleErrorAudio, echoResetAudio, echoRecordAudio, echoSpawnAudio;
+        [SerializeField] private AudioSource loopWarningAudio, playerHurtAudio, playerLandAudio, playerJumpAudio;
+        [SerializeField] private AudioSource footstepOneAudio, footstepTwoAudio, weaponAdsAudio, weaponDryFireAudio;
+        [SerializeField] private AudioSource weaponHeadshotAudio, weaponHitmarkerAudio, weaponFireAudio;
         private readonly Dictionary<AudioSource, Vector2> soundDefaults = new Dictionary<AudioSource, Vector2>();
         private float footstepTimer, lastWarningSecond = -1f;
         private bool wasGrounded = true, wasAiming, wasDoorOpen;
@@ -18,6 +23,8 @@ namespace EchoProtocol
 
         private void CreateAudioBank()
         {
+            foreach (WorldSoundLink link in worldSoundLinks)
+                worldSound.Add((link.Owner, link.Cue), link.Source);
             menuMusicGain = menuMusicSource.volume;
             gameMusicGain = gameMusicSource.volume;
             gameMusicPitch = gameMusicSource.pitch;
@@ -32,32 +39,43 @@ namespace EchoProtocol
 
         private bool AudioSilent { get { return testing || automatedRun || Application.isBatchMode; } }
 
-        private void PlayBankUi(string key, float volume = .7f, float pitch = 1f)
+        private void PlayUiSound(AudioSource source, float volume = .7f, float pitch = 1f)
         {
-            if (AudioSilent) return;
-            Transform group = key.StartsWith("Weapon/") ? weaponSound
-                : key.StartsWith("Movement/") ? playerSound : key.StartsWith("Echo/") ? loopSound : uiSound;
-            PlaySource(FindSound(group, key), volume, pitch, 0);
+            if (!AudioSilent) PlaySource(source, volume, pitch, 0);
         }
 
-        private void PlayBankMove(string key, float volume = .55f, float pitch = 1)
-        {
-            if (!AudioSilent) PlaySource(FindSound(playerSound, key), volume, pitch, 0);
-        }
-
-        private void PlayBankWorld(string key, Vector3 origin, float volume = .75f, float pitch = 1f, Transform owner = null)
+        private void PlayWorldSound(AudioSource source, Vector3 origin, float volume, float pitch)
         {
             if (AudioSilent) return;
-            if (owner == null && key.StartsWith("Echo/") && replayingEcho >= 0 && replayingEcho < ghosts.Count)
-                owner = ghosts[replayingEcho].Body.transform;
-            Transform group = owner == null ? weaponSound : owner.Find(
-                key.StartsWith("Sentry/") ? "Sentry Audio" : key.StartsWith("Echo/") ? "Replay Audio" :
-                key.EndsWith("door_open") ? "Door Audio" : key.Contains("resonance_") ? "Resonance Audio" :
-                owner.Find("Console Audio") != null ? "Console Audio" : "Panel Audio");
             Vector3 offset = origin - player.View.transform.position;
             float pan = Vector3.Dot(player.View.transform.right, offset.normalized) * .65f;
-            PlaySource(FindSound(group, key), volume / (1f + offset.magnitude * .04f), pitch, pan);
+            PlaySource(source, volume / (1f + offset.magnitude * .04f), pitch, pan);
         }
+        private enum WorldCue { SentryAlert, SentryCharge, SentryDestroy, SentryFire, SentryStun, DoorOpen, ResonanceActivate, ResonancePulse, ConsoleInteract, RelayPower, EchoAction }
+
+        [System.Serializable]
+        private struct WorldSoundLink
+        {
+            public Transform Owner;
+            public WorldCue Cue;
+            public AudioSource Source;
+        }
+
+        [SerializeField] private WorldSoundLink[] worldSoundLinks;
+        private readonly Dictionary<(Transform, WorldCue), AudioSource> worldSound =
+            new Dictionary<(Transform, WorldCue), AudioSource>();
+
+        private void PlayAttachedSound(WorldCue cue, Vector3 origin, float volume = .75f, float pitch = 1f, Transform owner = null)
+        {
+            if (AudioSilent) return;
+            AudioSource source;
+            if (cue == WorldCue.EchoAction && owner == null && replayingEcho >= 0 && replayingEcho < ghosts.Count)
+                source = ghosts[replayingEcho].Body.GetComponent<EchoReplayActor>().ActionCue;
+            else if (owner == null || !worldSound.TryGetValue((owner, cue), out source))
+                return;
+            PlayWorldSound(source, origin, volume, pitch);
+        }
+
 
         private static AudioSource FindSound(Transform group, string key)
         {
@@ -135,8 +153,8 @@ namespace EchoProtocol
             Vector3 horizVel = player.Controller != null ? new Vector3(player.Controller.velocity.x, 0, player.Controller.velocity.z) : Vector3.zero;
             float speed = horizVel.magnitude;
 
-            if (!wasGrounded && grounded) PlayBankMove("Movement/sfx_player_land", 0.52f, 0.95f);
-            else if (wasGrounded && !grounded && player.Controller.velocity.y > 1.5f) PlayBankMove("Movement/sfx_player_jump", 0.45f, 1.02f);
+            if (!wasGrounded && grounded) PlayUiSound(playerLandAudio, 0.52f, 0.95f);
+            else if (wasGrounded && !grounded && player.Controller.velocity.y > 1.5f) PlayUiSound(playerJumpAudio, 0.45f, 1.02f);
             wasGrounded = grounded;
 
             if (grounded && speed > 0.8f)
@@ -145,21 +163,21 @@ namespace EchoProtocol
                 if (footstepTimer <= 0f)
                 {
                     bool alt = ((int)(elapsedTotal * 3f)) % 2 == 0;
-                    PlayBankMove(alt ? "Movement/sfx_footstep_1" : "Movement/sfx_footstep_2", speed > 4.8f ? 0.42f : 0.28f, alt ? 1.0f : 0.94f);
+                    PlayUiSound(alt ? footstepOneAudio : footstepTwoAudio, speed > 4.8f ? 0.42f : 0.28f, alt ? 1.0f : 0.94f);
                     footstepTimer = 0.44f;
                 }
             }
             else footstepTimer = 0.08f;
 
             // ADS optic zoom click
-            if (player.IsAiming && !wasAiming) PlayBankUi("Weapon/sfx_weapon_ads_in", 0.42f, 1.0f);
+            if (player.IsAiming && !wasAiming) PlayUiSound(weaponAdsAudio, 0.42f, 1.0f);
             wasAiming = player.IsAiming;
 
             // Door opening transition sound
             if (doorOpen && !wasDoorOpen)
             {
                 Vector3 gatePos = sampleActive ? SampleGatePosition : (door != null ? door.position : new Vector3(0, 2, 5));
-                PlayBankWorld("Devices/sfx_door_open", gatePos, 0.72f, 1.0f, door);
+                PlayAttachedSound(WorldCue.DoorOpen, gatePos, 0.72f, 1.0f, door);
             }
             wasDoorOpen = doorOpen;
 
@@ -170,14 +188,14 @@ namespace EchoProtocol
                 if (enemy.HasTarget && !enemyAlertedIds.Contains(enemy.Id))
                 {
                     enemyAlertedIds.Add(enemy.Id);
-                    PlayBankWorld("Sentry/sfx_sentry_alert", enemy.transform.position, 0.6f, 1.0f, owner: enemy.transform);
+                    PlayAttachedSound(WorldCue.SentryAlert, enemy.transform.position, 0.6f, 1.0f, owner: enemy.transform);
                 }
                 else if (!enemy.HasTarget) enemyAlertedIds.Remove(enemy.Id);
 
                 if (enemy.Charging && !enemyChargingIds.Contains(enemy.Id))
                 {
                     enemyChargingIds.Add(enemy.Id);
-                    PlayBankWorld("Sentry/sfx_sentry_charge", enemy.transform.position, 0.55f, 1.0f, owner: enemy.transform);
+                    PlayAttachedSound(WorldCue.SentryCharge, enemy.transform.position, 0.55f, 1.0f, owner: enemy.transform);
                 }
                 else if (!enemy.Charging) enemyChargingIds.Remove(enemy.Id);
             }
@@ -190,7 +208,7 @@ namespace EchoProtocol
                 if (sec != Mathf.RoundToInt(lastWarningSecond))
                 {
                     lastWarningSecond = sec;
-                    PlayBankUi("Echo/sfx_loop_warning_tick", 0.55f, 1.0f + (3 - sec) * 0.12f);
+                    PlayUiSound(loopWarningAudio, 0.55f, 1.0f + (3 - sec) * 0.12f);
                 }
             }
             else lastWarningSecond = -1f;

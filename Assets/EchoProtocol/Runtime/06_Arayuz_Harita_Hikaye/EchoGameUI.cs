@@ -119,7 +119,7 @@ namespace EchoProtocol
                     campaignEchoTitles[i].text = $"ECHO {i + 1} / {state}";
                     string assignment = "Plakada bitmeyen kayıt";
                     foreach (ConsoleState item in consoles)
-                        if (OnPlate(ghost.FinalPose.Position, item.Plate))
+                        if (OnPlate(ghost.FinalPose.Position, item.PlateArea))
                             assignment = "Plaka " + (item.Id == 0 ? "A" : "B") +
                                 ((ghost.ConsoleMask & (1 << item.Id)) != 0 ? " + konsol kaydı hazır" : " / konsol etkileşimi eksik");
                     campaignEchoTasks[i].text = assignment;
@@ -407,7 +407,7 @@ namespace EchoProtocol
                 string devName = sampleDevices != null && dev.Action.TargetId >= 0 && dev.Action.TargetId < sampleDevices.Count ? sampleDevices[dev.Action.TargetId].Name : "PANEL";
                 return devName + " / " + (dev.Time - clock).ToString("0.0") + "s";
             }
-            if (sampleStage == 1 && OnPlate(ghost.Body.transform.position, SampleSensorPosition)) return "LENSİ TUTUYOR";
+            if (sampleStage == 1 && OnPlate(ghost.Body.transform.position, sampleSensorArea)) return "LENSİ TUTUYOR";
             foreach (EchoSavedAction item in savedTapes[index].Actions)
                 if (item.Time > clock) return item.Action.Kind == EchoActionKind.Fire ? "ATIŞA HAZIRLANIYOR" : sampleDevices[item.Action.TargetId].Name + " GÖREVİ";
             return clock < ghost.Tape.Duration ? "ROTAYI TAMAMLIYOR" : "SON KONUMDA";
@@ -448,7 +448,7 @@ namespace EchoProtocol
                 if (!IsLiveDifficulty && sampleStage == 2 && device.Id == 2 && (!sampleDecoyObserved || ResonanceRemaining <= 0) && Vector3.Distance(player.transform.position, device.Position) > 3) continue;
                 if (!device.Powered) ShowSampleMarker(device.Position, device.Name + (IsLiveDifficulty && device.Id == 2 ? " / [E] ZORUNLU" : " / E"), device.Accent);
             }
-            if (sampleStage == 1 && !SampleSensorHeld()) ShowSampleMarker(new Vector3(-4, .3f, -2), "LENS SENSÖRÜ", Color.cyan);
+            if (sampleStage == 1 && !SampleSensorHeld()) ShowSampleMarker(sampleSensor.position + Vector3.up * .18f, "LENS SENSÖRÜ", Color.cyan);
             if (resonanceNode != null && !resonanceSpent && (sampleStage != 2 || (enemies.Count > 0 && enemies[0].Alive) || (IsLiveDifficulty && !sampleStageMemoryHacked) || (sampleDecoyObserved && !preferences.SampleMemory))) ShowSampleMarker(ResonancePosition, "EMP JENERATÖRÜ / VUR", Level.Accent);
             if (doorOpen) ShowSampleMarker(SampleGatePosition + Vector3.down, "YOL AÇIK", Color.green);
             else if (sampleStage == 0) ShowSampleMarker(SampleGatePosition + Vector3.down, "YÜK ASANSÖRÜ", uiMuted);
@@ -501,7 +501,7 @@ namespace EchoProtocol
         private bool EchoAssigned(ConsoleState item)
         {
             foreach (Ghost ghost in ghosts)
-                if ((ghost.ConsoleMask & (1 << item.Id)) != 0 && OnPlate(ghost.FinalPose.Position, item.Plate)) return true;
+                if ((ghost.ConsoleMask & (1 << item.Id)) != 0 && OnPlate(ghost.FinalPose.Position, item.PlateArea)) return true;
             return false;
         }
         private ConsoleState UnassignedConsole()

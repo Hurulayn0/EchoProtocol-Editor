@@ -80,7 +80,7 @@ namespace EchoProtocol
         public void ActivateGamePanelButton(int choice)
         {
             if (testing) return;
-            PlayBankUi("UI/sfx_ui_click", .55f);
+            PlayUiSound(uiClickAudio, .55f);
             switch (choice)
             {
                 case 0: preferences.InvertLook = !preferences.InvertLook; ApplyPreferences(); break;
@@ -136,7 +136,7 @@ namespace EchoProtocol
         public void ActivateMenuButton(int choice)
         {
             if (testing || (screen != EchoScreen.MainMenu && screen != EchoScreen.Controls)) return;
-            PlayBankUi("UI/sfx_ui_click", .55f);
+            PlayUiSound(uiClickAudio, .55f);
             switch (choice)
             {
                 case 0: BeginCampaign(); break;
@@ -235,7 +235,7 @@ namespace EchoProtocol
             if (!storyBriefingActive) return;
             storyBriefingActive = false;
             SetCursor(screen == EchoScreen.Playing && !testing && !planning);
-            PlayBankUi("UI/sfx_ui_click", 0.55f);
+            PlayUiSound(uiClickAudio, 0.55f);
         }
 
         [SerializeField] private GameObject archivePanel, normalArchiveRows, compactArchiveRows, archiveMemory;
@@ -305,12 +305,12 @@ namespace EchoProtocol
             if (testing) return;
             if (screen == EchoScreen.Archives && action == 0)
             {
-                PlayBankUi("UI/sfx_ui_click", .55f);
+                PlayUiSound(uiClickAudio, .55f);
                 SetScreen(EchoScreen.MainMenu);
                 return;
             }
             if (!sampleActive || (screen != EchoScreen.GameLost && screen != EchoScreen.GameWon)) return;
-            PlayBankUi("UI/sfx_ui_click", .55f);
+            PlayUiSound(uiClickAudio, .55f);
             switch (action)
             {
                 case 1 when screen == EchoScreen.GameLost: RetryLevel(); break;
@@ -412,12 +412,12 @@ namespace EchoProtocol
             }
             if (action == 1 && screen == EchoScreen.MainMenu && creditsOverlayActive)
             {
-                PlayBankUi("UI/sfx_ui_click", .55f);
+                PlayUiSound(uiClickAudio, .55f);
                 creditsOverlayActive = false;
             }
             if (screen != EchoScreen.GameWon || sampleActive) return;
             if (action != 2 && action != 3) return;
-            PlayBankUi("UI/sfx_ui_click", .55f);
+            PlayUiSound(uiClickAudio, .55f);
             if (action == 2) BeginCampaign();
             else ReturnToMenu();
         }

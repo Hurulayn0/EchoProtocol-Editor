@@ -12,6 +12,7 @@ namespace EchoProtocol
         private float sampleServiceUntil;
         [SerializeField, Min(.1f)] private float serviceWindowSeconds = 1.4f;
         private Transform sampleShutter, sampleSensor;
+        private BoxCollider sampleSensorArea;
         private readonly List<SampleDevice> sampleDevices = new List<SampleDevice>();
         private readonly List<SampleReplayEvent> sampleEvents = new List<SampleReplayEvent>();
         private readonly List<string> sampleFinalEvents = new List<string>();
@@ -93,7 +94,7 @@ namespace EchoProtocol
                         preferences.SampleMemory = true; if (CanPersist) preferences.Save();
                         playerHealth = maxPlayerHealth;
                         SpawnResonanceShockwave(device.Position, powerOn);
-                        if (!fromEcho) { Notify("GÖZLEM BELLEĞİ İNDİRİLDİ! +100 Can · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayBankUi("UI/sfx_archive_unlock", 0.72f); SaveSession();
+                        if (!fromEcho) { Notify("GÖZLEM BELLEĞİ İNDİRİLDİ! +100 Can · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(archiveUnlockAudio, 0.72f); SaveSession();
                     }
                 }
                 else
@@ -104,15 +105,15 @@ namespace EchoProtocol
                     else
                     {
                         preferences.SampleMemory = true; if (CanPersist) preferences.Save();
-                        if (!fromEcho) { Notify(SampleMemoryText); notificationRemaining = 9; } PlayBankUi("UI/sfx_archive_unlock", 0.72f); SaveSession();
+                        if (!fromEcho) { Notify(SampleMemoryText); notificationRemaining = 9; } PlayUiSound(archiveUnlockAudio, 0.72f); SaveSession();
                     }
                 }
             }
-            if (failure != null) { if (!fromEcho) { Notify(failure); PlayBankUi("Devices/sfx_console_error", 0.48f); } else Notify("ECHO " + (replayingEcho + 1) + " / " + failure.Replace("E denemen kaydedildi", "E koşulu sağlanmadı")); return false; }
+            if (failure != null) { if (!fromEcho) { Notify(failure); PlayUiSound(consoleErrorAudio, 0.48f); } else Notify("ECHO " + (replayingEcho + 1) + " / " + failure.Replace("E denemen kaydedildi", "E koşulu sağlanmadı")); return false; }
             if (!device.Powered) SampleEvent(device.Name + " / E", fromEcho);
             device.Powered = true; device.Visual.GetComponent<Renderer>().sharedMaterial = powerOn;
             if (!fromEcho && id != 2) Notify(sampleStage == 0 ? "Geçit 1,4 sn açık. Bu E işlemini R ile Echo’ya kaydet." : device.Name + " etkin. Planın sonraki adımına geç.");
-            PlayBankWorld(fromEcho ? "Echo/sfx_echo_action_cue" : (sampleStage == 1 ? "Devices/sfx_relay_power" : "Devices/sfx_console_interact"), device.Position, 0.72f, owner: fromEcho ? null : device.Visual);
+            PlayAttachedSound(fromEcho ? WorldCue.EchoAction : (sampleStage == 1 ? WorldCue.RelayPower : WorldCue.ConsoleInteract), device.Position, 0.72f, owner: fromEcho ? null : device.Visual);
             return true;
         }
         private void SampleEvent(string text, bool fromEcho)
@@ -125,8 +126,8 @@ namespace EchoProtocol
 
         private bool SampleSensorHeld()
         {
-            if (OnPlate(player.transform.position, SampleSensorPosition)) return true;
-            foreach (Ghost ghost in ghosts) if (OnPlate(ghost.Tape.Sample(clock, EchoPose.Lerp).Position, SampleSensorPosition)) return true;
+            if (OnPlate(player.transform.position, sampleSensorArea)) return true;
+            foreach (Ghost ghost in ghosts) if (OnPlate(ghost.Tape.Sample(clock, EchoPose.Lerp).Position, sampleSensorArea)) return true;
             return false;
         }
         private void UpdateSampleDoor(float dt)
@@ -148,7 +149,7 @@ namespace EchoProtocol
             if (doorOpen && threshold) sampleCrossingAuthorized = true;
             bool physicalOpen = doorOpen || (threshold && doorFraction > .01f);
             doorFraction = Mathf.MoveTowards(doorFraction, physicalOpen ? 1 : 0, dt * 5);
-            door.localPosition = closedDoorPosition + Vector3.up * (doorFraction * 4.5f);
+            door.localPosition = closedDoorPosition + doorOpenOffset * doorFraction;
             doorCollider.enabled = closedDoorCollision && !physicalOpen;
             if (vistaCore != null) vistaCore.GetComponent<Renderer>().sharedMaterial = doorOpen ? powerOn : IdleMaterial(vistaCore);
         }

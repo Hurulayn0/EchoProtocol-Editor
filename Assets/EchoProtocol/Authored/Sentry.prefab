@@ -298,6 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1469203664462778456}
   - component: {fileID: 7957387878631532950}
+  - component: {fileID: 3978355726712221964}
   m_Layer: 0
   m_Name: Enemy_QuadShell(Clone)
   m_TagString: Untagged
@@ -330,7 +331,7 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632671801313881889}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Animation: {fileID: -429512112410174799, guid: 1bb396428cd50744ca26576eef698b86, type: 3}
   m_Animations:
@@ -346,6 +347,27 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 1
+--- !u!95 &3978355726712221964
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632671801313881889}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b325beb9dd7899341af373019640492e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &687696824710457386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,10 +1215,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fafc12805bb88d64d8b615b851f0a99b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 3978355726712221964}
   muzzleL: {fileID: 2526897088624511791}
   muzzleR: {fileID: 689943804409440403}
-  muzzleLRenderer: {fileID: 6212223917434658535}
-  muzzleRRenderer: {fileID: 8357573451352204506}
 --- !u!1 &2773150330582170253
 GameObject:
   m_ObjectHideFlags: 0

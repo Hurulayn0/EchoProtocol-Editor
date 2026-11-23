@@ -222,7 +222,7 @@ namespace EchoProtocol
                 }
                 if (sampleStage == 1)
                 {
-                    AddMinimapMarker(map, new Vector3(-4, 0, -2), SampleSensorHeld() ? Color.green : Color.cyan, 7, "L", SampleSensorHeld());
+                    AddMinimapMarker(map, SampleSensorPosition, SampleSensorHeld() ? Color.green : Color.cyan, 7, "L", SampleSensorHeld());
                     if (IsLiveDifficulty && sampleDevices.Count >= 2)
                     {
                         Color condCol = ResonanceRemaining > 0 ? new Color(.2f, .95f, .55f, .75f) : new Color(accent.r, accent.g, accent.b, .35f);
@@ -328,6 +328,36 @@ namespace EchoProtocol
             if (!string.IsNullOrEmpty(shortTag))
                 AddMinimapLabel(new Vector2(p.x + size * .5f + 2, p.y - 8), shortTag, color);
         }
+        private bool echoTeaching, pendingEchoRecord;
+        private int replacementEchoSlot = -1;
+        private float planPreviewTime;
+
+        private void FinishEchoTeaching()
+        {
+            echoTeaching = false; planning = false; SetCursor(!testing);
+            Notify("Hareketin ve E etkileşimlerin kaydediliyor. R ile bu kaydı Echo olarak oynat.");
+        }
+        private void OpenEchoRecordReview()
+        {
+            TogglePlanning(); pendingEchoRecord = true;
+        }
+        private void ChooseEchoReplacement(int index)
+        {
+            if (!planning || index < 0 || index >= recordings.Count) return;
+            if (pendingEchoRecord) { CommitLoop(index); return; }
+            TogglePlanning(); replacementEchoSlot = index;
+            Notify("Sonraki R bu denemeyi Echo " + (index + 1) + " yerine kaydeder. Diğer Echo korunur. T kayıtları koruyup döngüyü başlatır.");
+        }
+        private void CommitReviewedNewEcho()
+        {
+            if (sampleActive && planning && pendingEchoRecord && recordings.Count < MaxEchoes) CommitLoop();
+        }
+        private void CancelEchoRecordReview()
+        {
+            if (pendingEchoRecord && clock >= ActiveLoopLength) RetryLevel();
+            else TogglePlanning();
+        }
+
         [SerializeField] private GameObject campaignPlan, maintenancePlan, echoTeachingPanel;
         [SerializeField] private RectTransform campaignPlanArea, maintenancePlanArea;
         [SerializeField] private CanvasRenderer campaignPlanRenderer, maintenancePlanRenderer;
@@ -406,7 +436,7 @@ namespace EchoProtocol
         public void ActivatePlanningButton(int action)
         {
             if (testing || screen != EchoScreen.Playing || !planning) return;
-            PlayBankUi("UI/sfx_ui_click", .55f);
+            PlayUiSound(uiClickAudio, .55f);
             switch (action)
             {
                 case 0:
@@ -500,7 +530,7 @@ namespace EchoProtocol
                 AddPlanMarker(map, current.Sample(Mathf.Min(planPreviewTime, clock), EchoPose.Lerp).Position, Color.white, "SEN", -8);
             }
             foreach (SampleDevice device in sampleDevices) AddPlanMarker(map, device.Position, device.Accent, device.Name);
-            if (sampleStage == 1) AddPlanMarker(map, new Vector3(-4, 0, -2), Color.cyan, "LENS");
+            if (sampleStage == 1) AddPlanMarker(map, SampleSensorPosition, Color.cyan, "LENS");
             if (resonanceNode != null) AddPlanMarker(map, ResonancePosition, Level.Accent, "P");
             foreach (EchoEnemy enemy in enemies) if (enemy.Alive) AddPlanMarker(map, enemy.transform.position, Color.red, "M");
         }

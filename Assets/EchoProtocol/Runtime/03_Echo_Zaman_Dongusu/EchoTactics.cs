@@ -1,10 +1,12 @@
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace EchoProtocol
 {
     public sealed partial class EchoPrototypeGame
     {
+        [SerializeField] private LineRenderer cyanShotPreview, purpleShotPreview, teamHitRing;
+        [SerializeField, Min(.01f)] private float teamHitRingDuration = .65f;
+
         private float teamHitTimer;
         private int teamHits;
         private const float ShotPreviewWindow = 1;
@@ -38,15 +40,9 @@ namespace EchoProtocol
             {
                 Ghost ghost = ghosts[i]; EchoSavedAction shot;
                 bool show = UpcomingEchoShot(i, out shot);
+                LineRenderer template = i == 0 ? cyanShotPreview : purpleShotPreview;
                 if (show && ghost.ShotPreview == null)
-                {
-                    GameObject hint = new GameObject("Echo recorded shot anticipation");
-                    hint.transform.SetParent(ghost.Body.transform);
-                    ghost.ShotPreview = hint.AddComponent<LineRenderer>();
-                    ghost.ShotPreview.sharedMaterial = i == 0 ? ghostCyan : ghostPurple;
-                    ghost.ShotPreview.useWorldSpace = true; ghost.ShotPreview.positionCount = 2;
-                    ghost.ShotPreview.shadowCastingMode = ShadowCastingMode.Off;
-                }
+                    ghost.ShotPreview = Instantiate(template, ghost.Body.transform);
                 if (ghost.ShotPreview == null) continue;
                 ghost.ShotPreview.enabled = show;
                 if (!show) continue;
@@ -54,7 +50,7 @@ namespace EchoProtocol
                 Vector3 origin = shot.Action.Origin;
                 Vector3 end = origin + shot.Action.Direction * 45;
                 if (Physics.Raycast(origin, shot.Action.Direction, out hit, 45, ~(1 << 2), QueryTriggerInteraction.Ignore)) end = hit.point;
-                ghost.ShotPreview.startWidth = ghost.ShotPreview.endWidth = .012f + .012f * (1 - (shot.Time - clock));
+                ghost.ShotPreview.widthMultiplier = template.widthMultiplier * (2 - (shot.Time - clock));
                 ghost.ShotPreview.SetPosition(0, origin); ghost.ShotPreview.SetPosition(1, end);
             }
         }
@@ -64,15 +60,9 @@ namespace EchoProtocol
             teamHits++; teamHitTimer = 1.1f;
             if (enemy.Alive) enemy.Stagger(.8f);
             EmitImpact(point, new Color(.25f, 1, .9f), 28, .8f);
-            GameObject pulse = new GameObject("Synchronized hit ring"); pulse.transform.SetParent(worldRoot);
-            transientBeams.Add(pulse);
-            LineRenderer ring = pulse.AddComponent<LineRenderer>(); ring.sharedMaterial = ghostCyan;
-            ring.useWorldSpace = true; ring.loop = true; ring.positionCount = 40;
-            ring.startWidth = ring.endWidth = .045f; ring.shadowCastingMode = ShadowCastingMode.Off;
-            Vector3 center = enemy.transform.position + Vector3.up * .12f;
-            for (int i = 0; i < 40; i++)
-            { float angle = i * Mathf.PI * 2 / 40; ring.SetPosition(i, center + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * .9f); }
-            Destroy(pulse, .65f);
+            LineRenderer ring = Instantiate(teamHitRing, enemy.transform.position, Quaternion.identity, worldRoot);
+            transientBeams.Add(ring.gameObject);
+            Destroy(ring.gameObject, teamHitRingDuration);
             SampleEvent("EŞZAMANLI VURUŞ / +10 HASAR", fromEcho);
         }
 

@@ -41,8 +41,8 @@ namespace EchoProtocol
                     if (!enemy.Alive) continue;
                     ShowEmpArc(ResonancePosition, enemy.transform.position + Vector3.up * 1.2f, ghostCyan);
                     enemy.TakeDamage(20);
-                    if (enemy.Alive) { enemy.Stagger(3.5f); PlayBankWorld("Sentry/sfx_sentry_stun", enemy.transform.position, 0.78f, owner: enemy.transform); }
-                    else { PlayBankWorld("Sentry/sfx_sentry_destroy", enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    if (enemy.Alive) { enemy.Stagger(3.5f); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.78f, owner: enemy.transform); }
+                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
                 }
                 if (sampleActive)
                 {
@@ -73,14 +73,14 @@ namespace EchoProtocol
                         ? "EMP ZİNCİR ŞOKU! Tüm muhafızlar -20 Can & 3.5 sn dondu · +25 Can · 4 sn Aşırı Yükleme!"
                         : "EMP ZİNCİR ŞOKU! Muhafızlar dondu (-20 Can) · +25 Can · VERİ KASASI KİLİDİ 10 SN AÇILDI (Kasada E'ye bas)!");
                 }
-                PlayBankWorld("Devices/sfx_resonance_pulse", ResonancePosition, 0.82f, owner: resonanceNode);
-                PlayBankWorld("Devices/sfx_resonance_activate", ResonancePosition, 0.72f, owner: resonanceNode);
+                PlayAttachedSound(WorldCue.ResonancePulse, ResonancePosition, 0.82f, owner: resonanceNode);
+                PlayAttachedSound(WorldCue.ResonanceActivate, ResonancePosition, 0.72f, owner: resonanceNode);
                 return true;
             }
             resonanceSpent = true; resonanceUntil = Mathf.Min(LoopLength, clock + 6);
             resonanceNode.GetComponent<Renderer>().sharedMaterial = darkMaterial;
             foreach (EchoEnemy enemy in enemies)
-                if (Vector3.Distance(enemy.transform.position, ResonancePosition) < 6) { enemy.Stagger(2); PlayBankWorld("Sentry/sfx_sentry_stun", enemy.transform.position, 0.72f, owner: enemy.transform); }
+                if (Vector3.Distance(enemy.transform.position, ResonancePosition) < 6) { enemy.Stagger(2); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.72f, owner: enemy.transform); }
             if (Vector3.Distance(player.transform.position, ResonancePosition) < 6 && playerHealth > 0) playerHealth = Mathf.Min(maxPlayerHealth, playerHealth + 20);
             EmitImpact(ResonancePosition, Level.Accent, 35, 1.8f);
             SpawnResonanceShockwave(ResonancePosition, accents[levelIndex]);
@@ -88,8 +88,8 @@ namespace EchoProtocol
             AddCameraShake(.42f);
             if (sampleActive) { SampleEvent("EMP Rezonansı / 6 sn enerji", fromEcho); Notify("EMP ŞOKU! Muhafız 2 sn dondu · +20 Can · Silah enerjisi doldu!"); }
             else if (!fromEcho) Notify("EMP ŞOKU! Muhafızlar 2 sn dondu · +20 Can · Silah doldu · Veri Kasası 6 sn açık!");
-            PlayBankWorld("Devices/sfx_resonance_pulse", ResonancePosition, 0.75f, owner: resonanceNode);
-            PlayBankWorld("Devices/sfx_resonance_activate", ResonancePosition, 0.65f, owner: resonanceNode);
+            PlayAttachedSound(WorldCue.ResonancePulse, ResonancePosition, 0.75f, owner: resonanceNode);
+            PlayAttachedSound(WorldCue.ResonanceActivate, ResonancePosition, 0.65f, owner: resonanceNode);
             return true;
         }
         private bool EchoHoldsArchiveLock()
@@ -97,7 +97,7 @@ namespace EchoProtocol
             foreach (ConsoleState console in consoles)
             {
                 bool held = false;
-                foreach (Ghost ghost in ghosts) held |= OnPlate(ghost.Body.transform.position, console.Plate);
+                foreach (Ghost ghost in ghosts) held |= OnPlate(ghost.Body.transform.position, console.PlateArea);
                 if (!console.Powered || !held) return false;
             }
             return true;
@@ -138,8 +138,8 @@ namespace EchoProtocol
                     if (!enemy.Alive) continue;
                     ShowEmpArc(ArchivePosition, enemy.transform.position + Vector3.up * 1.2f, powerOn);
                     enemy.TakeDamage(25);
-                    if (enemy.Alive) { enemy.Stagger(4f); PlayBankWorld("Sentry/sfx_sentry_stun", enemy.transform.position, 0.8f, owner: enemy.transform); }
-                    else { PlayBankWorld("Sentry/sfx_sentry_destroy", enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    if (enemy.Alive) { enemy.Stagger(4f); PlayAttachedSound(WorldCue.SentryStun, enemy.transform.position, 0.8f, owner: enemy.transform); }
+                    else { PlayAttachedSound(WorldCue.SentryDestroy, enemy.transform.position, 0.85f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
                 }
                 SpawnResonanceShockwave(ArchivePosition, powerOn);
                 RefillWeaponEnergyFromEmp(6f, "VERİ KASASI HACKLENDİ (" + ArchiveCount + "/3)! 100 CAN · MUHAFIZLAR FELÇ · " + ActiveVaultBonusText());

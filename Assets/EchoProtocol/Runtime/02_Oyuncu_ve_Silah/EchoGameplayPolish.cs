@@ -19,12 +19,13 @@ namespace EchoProtocol
         private readonly List<GameObject> wreckageObjects = new List<GameObject>();
         private readonly List<ShockwaveRing> activeShockwaves = new List<ShockwaveRing>();
         private Transform empRingOuter, empRingInner, empConduitLine;
+        [SerializeField] private MeshRenderer shockwavePrefab;
+        [SerializeField] private AnimationClip shockwaveAnimation;
 
         private sealed class ShockwaveRing
         {
             public GameObject Ring;
             public float Age;
-            public float Duration;
         }
 
         private bool IsLiveDifficulty { get { return !testing && !automatedRun; } }
@@ -86,7 +87,7 @@ namespace EchoProtocol
             }
             if (weaponOverheated)
             {
-                PlayBankUi("Weapon/sfx_weapon_dryfire", 0.55f);
+                PlayUiSound(weaponDryFireAudio, 0.55f);
                 Notify("SİLAH AŞIRI ISINDI / Enerji soğuyor... (EMP Küresi anında doldurur)");
                 return false;
             }
@@ -95,7 +96,7 @@ namespace EchoProtocol
             if (weaponEnergy <= .01f)
             {
                 weaponOverheated = true;
-                PlayBankUi("Weapon/sfx_weapon_dryfire", 0.55f, 0.85f);
+                PlayUiSound(weaponDryFireAudio, 0.55f, 0.85f);
                 Notify("ENERJİ TÜKENDİ / Kısa soğuma bekleniyor...");
             }
             return true;
@@ -201,18 +202,9 @@ namespace EchoProtocol
         private void SpawnResonanceShockwave(Vector3 origin, Material mat)
         {
             if (!IsLiveDifficulty || worldRoot == null) return;
-            GameObject ring = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            ring.name = "EMP Shockwave Ring";
-            ring.layer = 2;
-            ring.transform.SetParent(worldRoot, false);
-            ring.transform.position = origin;
-            ring.transform.localScale = new Vector3(.6f, .06f, .6f);
-            Collider col = ring.GetComponent<Collider>();
-            if (col != null) { col.enabled = false; Destroy(col); }
-            Renderer rend = ring.GetComponent<Renderer>();
-            if (mat != null) rend.sharedMaterial = mat;
-            rend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            activeShockwaves.Add(new ShockwaveRing { Ring = ring, Age = 0f, Duration = .65f });
+            MeshRenderer ring = Instantiate(shockwavePrefab, origin, worldRoot.rotation, worldRoot);
+            if (mat != null) ring.sharedMaterial = mat;
+            activeShockwaves.Add(new ShockwaveRing { Ring = ring.gameObject });
         }
 
         private void TickShockwaves(float dt)
@@ -222,11 +214,8 @@ namespace EchoProtocol
                 ShockwaveRing sw = activeShockwaves[i];
                 if (sw.Ring == null) { activeShockwaves.RemoveAt(i); continue; }
                 sw.Age += dt;
-                float frac = Mathf.Clamp01(sw.Age / sw.Duration);
-                float radius = Mathf.Lerp(.6f, 12.5f, 1f - Mathf.Pow(1f - frac, 2.2f));
-                float height = Mathf.Lerp(.14f, .012f, frac);
-                sw.Ring.transform.localScale = new Vector3(radius, height, radius);
-                if (sw.Age >= sw.Duration)
+                shockwaveAnimation.SampleAnimation(sw.Ring, Mathf.Min(sw.Age, shockwaveAnimation.length));
+                if (sw.Age >= shockwaveAnimation.length)
                 {
                     sw.Ring.SetActive(false);
                     Destroy(sw.Ring);

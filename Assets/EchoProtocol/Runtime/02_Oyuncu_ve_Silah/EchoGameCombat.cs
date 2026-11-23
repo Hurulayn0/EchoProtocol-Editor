@@ -56,16 +56,16 @@ namespace EchoProtocol
                     bool teamHit = sampleActive && sampleStage == 2 && enemy.RegisterTeamHit(actor, clock);
                     enemy.TakeDamage((headshot ? shotDamage * 2 : shotDamage) + EffectiveBonusShotDamage + (teamHit ? 10 : 0));
                     if (teamHit) ShowTeamHit(enemy, hit.point, fromEcho);
-                    if (headshot && enemy.Alive) { enemy.Stagger(.45f); PlayBankWorld("Sentry/sfx_sentry_stun", hit.point, 0.65f, owner: enemy.transform); }
-                    if (headshot && !fromEcho) { headshotTimer = .6f; PlayBankUi("Weapon/sfx_weapon_headshot", 0.7f); }
-                    else if (!fromEcho) PlayBankUi("Weapon/sfx_weapon_hitmarker", 0.55f);
-                    if (!enemy.Alive) { EmitImpact(hit.point, new Color(1, .65f, .2f), 22, .75f); PlayBankWorld("Sentry/sfx_sentry_destroy", hit.point, 0.8f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
+                    if (headshot && enemy.Alive) { enemy.Stagger(.45f); PlayAttachedSound(WorldCue.SentryStun, hit.point, 0.65f, owner: enemy.transform); }
+                    if (headshot && !fromEcho) { headshotTimer = .6f; PlayUiSound(weaponHeadshotAudio, 0.7f); }
+                    else if (!fromEcho) PlayUiSound(weaponHitmarkerAudio, 0.55f);
+                    if (!enemy.Alive) { EmitImpact(hit.point, new Color(1, .65f, .2f), 22, .75f); PlayAttachedSound(WorldCue.SentryDestroy, hit.point, 0.8f, owner: enemy.transform); SpawnSentryWreckage(enemy.transform.position, enemy.transform.rotation); }
                     if (!fromEcho) hitTimer = .12f;
                     if (!enemy.Alive) killTimer = .6f;
                 }
             }
             ShowBeam(action.Origin + action.Direction * .3f, end, fromEcho ? (replayingEcho == 1 ? ghostPurple : ghostCyan) : shotMaterial);
-            PlayBankWorld("Weapon/sfx_weapon_pulse_fire", action.Origin, fromEcho ? 0.42f : 0.72f, fromEcho ? 1.12f : 1.0f);
+            PlayWorldSound(weaponFireAudio, action.Origin, fromEcho ? 0.42f : 0.72f, fromEcho ? 1.12f : 1.0f);
         }
 
         private void ShowBeam(Vector3 from, Vector3 to, Material material)
@@ -105,7 +105,7 @@ namespace EchoProtocol
             if (playerHealth <= 0 || damage <= 0 || screen != EchoScreen.Playing) return;
             playerHealth = Mathf.Max(0, playerHealth - damage); damageFlash = .25f;
             sectorDamageTaken += damage;
-            PlayBankUi("Movement/sfx_player_hurt", 0.65f);
+            PlayUiSound(playerHurtAudio, 0.65f);
             if (playerHealth == 0)
             {
                 if (sampleActive) sampleDeaths++;

@@ -47,7 +47,18 @@ namespace EchoProtocol
         private sealed class ConsoleState
         {
             public int Id;
-            public Vector3 Plate, Position;
+            public Vector3 Position;
+            public BoxCollider PlateArea;
+            public Vector3 Plate
+            {
+                get
+                {
+                    Vector3 center = PlateArea.transform.TransformPoint(PlateArea.center);
+                    center.y = PlateVisual.position.y + PlateFloorOffset;
+                    return center;
+                }
+            }
+            public float PlateFloorOffset;
             public Transform Visual, PlateVisual;
             public bool Powered, Held;
         }
@@ -200,8 +211,8 @@ namespace EchoProtocol
             if (value == EchoScreen.Playing && pendingStoryBriefing && IsLiveDifficulty) OpenStoryBriefing();
             if (previous != value)
             {
-                if (value == EchoScreen.LevelComplete || value == EchoScreen.GameWon) PlayBankUi("UI/sfx_checkpoint_win", 0.72f);
-                else if (value == EchoScreen.GameLost) PlayBankUi("UI/sfx_loop_fail", 0.72f);
+                if (value == EchoScreen.LevelComplete || value == EchoScreen.GameWon) PlayUiSound(checkpointWinAudio, 0.72f);
+                else if (value == EchoScreen.GameLost) PlayUiSound(loopFailAudio, 0.72f);
             }
             TickImmersion();
             TickAudioMusic(0);
@@ -301,7 +312,7 @@ namespace EchoProtocol
             foreach (EchoEnemy enemy in enemies)
             {
                 Vector3 enemyPos = enemy.transform.position;
-                enemy.Tick(dt, player, decoyPositions, dmg => { RegisterDamageSource(enemyPos); DamagePlayer(dmg); }, (from, to) => { ShowBeam(from, to, enemyBeam); PlayBankWorld("Sentry/sfx_sentry_fire", from, 0.72f, owner: enemy.transform); });
+                enemy.Tick(dt, player, decoyPositions, dmg => { RegisterDamageSource(enemyPos); DamagePlayer(dmg); }, (from, to) => { ShowBeam(from, to, enemyBeam); PlayAttachedSound(WorldCue.SentryFire, from, 0.72f, owner: enemy.transform); });
                 if (playerHealth == 0) break;
             }
             UpdateDoor(dt);
@@ -355,7 +366,7 @@ namespace EchoProtocol
                     replayingEcho = ghostIndex;
                     EchoPose eventPose = ghost.Tape.Sample(eventTime, EchoPose.Lerp);
                     if (action.Kind == EchoActionKind.Console && TryActivate(eventPose.Position, action.TargetId))
-                    { echoActivations++; TriggerGhostInteractAnimation(ghostIndex, eventPose.Position + Vector3.up); PlayBankWorld("Echo/sfx_echo_action_cue", eventPose.Position, 0.65f); }
+                    { echoActivations++; TriggerGhostInteractAnimation(ghostIndex, eventPose.Position + Vector3.up); PlayAttachedSound(WorldCue.EchoAction, eventPose.Position, 0.65f); }
                     else if (action.Kind == EchoActionKind.Fire)
                     { ExecuteShot(action, true); echoShots++; }
                     else if (action.Kind == EchoActionKind.Archive && action.TargetId == levelIndex)
@@ -377,18 +388,18 @@ namespace EchoProtocol
             Physics.SyncTransforms();
             RaycastHit hit;
             if (!Physics.Raycast(player.View.transform.position, player.View.transform.forward, out hit, 2.6f,
-                ~(1 << 2), QueryTriggerInteraction.Ignore)) { PlayBankUi("Devices/sfx_console_error", 0.35f); return; }
-            if (hit.transform == archiveTerminal) { if (TryArchive(player.transform.position, false)) { PlayBankUi("UI/sfx_archive_unlock", 0.72f); RecordPose(clock, player.Pose); RecordAction(clock, EchoAction.Archive(levelIndex)); SaveSession(); } else PlayBankUi("Devices/sfx_console_error", 0.45f); return; }
+                ~(1 << 2), QueryTriggerInteraction.Ignore)) { PlayUiSound(consoleErrorAudio, 0.35f); return; }
+            if (hit.transform == archiveTerminal) { if (TryArchive(player.transform.position, false)) { PlayUiSound(archiveUnlockAudio, 0.72f); RecordPose(clock, player.Pose); RecordAction(clock, EchoAction.Archive(levelIndex)); SaveSession(); } else PlayUiSound(consoleErrorAudio, 0.45f); return; }
             foreach (ConsoleState item in consoles)
             {
                 if (hit.transform != item.Visual || !TryActivate(player.transform.position, item.Id)) continue;
                 RecordPose(clock, player.Pose);
                 RecordAction(clock, EchoAction.Console(item.Id));
-                PlayBankWorld("Devices/sfx_console_interact", item.Position, 0.72f, owner: item.Visual);
+                PlayAttachedSound(WorldCue.ConsoleInteract, item.Position, 0.72f, owner: item.Visual);
                 Notify("Güç açıldı. Plakada kal ve R ile bir Echo kaydet.");
                 return;
             }
-            PlayBankUi("Devices/sfx_console_error", 0.35f);
+            PlayUiSound(consoleErrorAudio, 0.35f);
         }
 
         private bool TryActivate(Vector3 actorPosition, int id)
@@ -401,10 +412,12 @@ namespace EchoProtocol
             return true;
         }
 
-        private static bool OnPlate(Vector3 position, Vector3 plate)
+        private static bool OnPlate(Vector3 position, BoxCollider area)
         {
-            return Mathf.Abs(position.x - plate.x) < 1.05f && Mathf.Abs(position.z - plate.z) < 1.05f
-                && position.y > -.2f && position.y < .35f;
+            if (area == null || !area.enabled) return false;
+            Vector3 offset = area.transform.InverseTransformPoint(position) - area.center;
+            Vector3 half = area.size * .5f;
+            return Mathf.Abs(offset.x) < half.x && Mathf.Abs(offset.y) < half.y && Mathf.Abs(offset.z) < half.z;
         }
 
         private void UpdateDoor(float dt)
@@ -413,14 +426,14 @@ namespace EchoProtocol
             power = true; plateHeld = true;
             foreach (ConsoleState item in consoles)
             {
-                item.Held = OnPlate(player.transform.position, item.Plate);
-                foreach (Ghost ghost in ghosts) item.Held |= OnPlate(ghost.Body.transform.position, item.Plate);
+                item.Held = OnPlate(player.transform.position, item.PlateArea);
+                foreach (Ghost ghost in ghosts) item.Held |= OnPlate(ghost.Body.transform.position, item.PlateArea);
                 power &= item.Powered; plateHeld &= item.Held;
                 item.PlateVisual.GetComponent<Renderer>().sharedMaterial = item.Held ? plateOn : IdleMaterial(item.PlateVisual);
             }
             doorOpen = power && plateHeld;
             doorFraction = Mathf.MoveTowards(doorFraction, doorOpen ? 1 : 0, dt * 2);
-            door.localPosition = closedDoorPosition + Vector3.up * (doorFraction * 4.5f);
+            door.localPosition = closedDoorPosition + doorOpenOffset * doorFraction;
             doorCollider.enabled = closedDoorCollision && doorFraction < .92f;
         }
 
@@ -450,8 +463,8 @@ namespace EchoProtocol
             else { recordings.Add(current); savedTapes.Add(saved); }
             bool replaced = selectedReplacement || recordings.Count > MaxEchoes;
             if (!selectedReplacement && replaced) { recordings.RemoveAt(0); if (savedTapes.Count > MaxEchoes) savedTapes.RemoveAt(0); }
-            PlayBankUi("Echo/sfx_echo_record_start", 0.65f);
-            PlayBankUi("Echo/sfx_echo_loop_reset", 0.6f);
+            PlayUiSound(echoRecordAudio, 0.65f);
+            PlayUiSound(echoResetAudio, 0.6f);
             savedLoops++; sectorLoops++; NewLoop(); SetScreen(EchoScreen.Playing); SaveSession();
             Notify(selectedReplacement ? "Echo " + (replacementIndex + 1) + " değiştirildi. Diğer Echo korundu; ikisi de otomatik oynuyor."
                 : replaced ? "Yeni Echo kaydedildi. İki Echo sınırı nedeniyle en eski kayıt silindi."
@@ -500,7 +513,7 @@ namespace EchoProtocol
             current = new ReplayTimeline<EchoPose, EchoAction>(); RecordPose(0, player.Pose);
             for (int i = 0; i < recordings.Count; i++) ghosts.Add(CreateGhost(recordings[i], i));
             ResetAudioTracking();
-            if (ghosts.Count > 0 && screen == EchoScreen.Playing) PlayBankUi("Echo/sfx_echo_spawn", 0.5f);
+            if (ghosts.Count > 0 && screen == EchoScreen.Playing) PlayUiSound(echoSpawnAudio, 0.5f);
             Physics.SyncTransforms();
         }
 
@@ -512,7 +525,7 @@ namespace EchoProtocol
             ghost.FinalPose = tape.Sample(tape.Duration, EchoPose.Lerp);
             if (sampleActive && sampleStage == 1)
                 for (float t = 0; t <= tape.Duration; t += .05f)
-                    if (OnPlate(tape.Sample(t, EchoPose.Lerp).Position, SampleSensorPosition))
+                    if (OnPlate(tape.Sample(t, EchoPose.Lerp).Position, sampleSensorArea))
                     { if (ghost.SensorStart < 0) ghost.SensorStart = t; ghost.SensorEnd = t; }
             tape.CreateCursor().Advance(tape.Duration, (time, action) => {
                 if (action.Kind == EchoActionKind.Console && action.TargetId >= 0 && action.TargetId < consoles.Count)

@@ -16,13 +16,13 @@ namespace EchoProtocol
         [SerializeField] private EchoPlayer authoredPlayer;
         [SerializeField] private Transform authoredWeapon;
         [SerializeField] private GameObject authoredMuzzle;
-        private Vector3 closedDoorPosition;
+        private Vector3 closedDoorPosition, doorOpenOffset;
         private bool closedDoorCollision;
         private Vector3 roomDisplayPosition;
         private Transform roomDisplayParent, roomPlayerSpawn;
         private readonly Dictionary<Transform, Material> idleMaterials = new Dictionary<Transform, Material>();
         private Vector3 resonanceRestScale;
-        private Quaternion outerRingRest, innerRingRest, vistaRest;
+        private Quaternion outerRingRest, innerRingRest;
         private Color roomAmbient;
 
         private void CaptureIdleMaterial(Transform target)
@@ -44,7 +44,7 @@ namespace EchoProtocol
             if (resonanceNode != null) resonanceNode.localScale = resonanceRestScale;
             if (empRingOuter != null) empRingOuter.localRotation = outerRingRest;
             if (empRingInner != null) empRingInner.localRotation = innerRingRest;
-            if (vistaCore != null) vistaCore.localRotation = vistaRest;
+            if (vistaSpin != null) vistaSpin.SampleAnimation(vistaCore.gameObject, 0);
             foreach (EchoEnemy enemy in enemies) enemy.ResetEnemy();
             worldRoot.SetParent(roomDisplayParent, false);
             worldRoot.localPosition = roomDisplayPosition;
@@ -61,6 +61,7 @@ namespace EchoProtocol
             worldRoot.localPosition = Vector3.zero;
             worldRoot.gameObject.SetActive(true);
             door = layout.Door;
+            doorOpenOffset = layout.DoorOpenOffset;
             doorCollider = door.GetComponent<Collider>();
             closedDoorPosition = door.localPosition;
             closedDoorCollision = doorCollider.enabled;
@@ -72,12 +73,13 @@ namespace EchoProtocol
             empConduitLine = layout.Conduit;
             sampleShutter = layout.Shutter;
             sampleSensor = layout.Sensor;
+            sampleSensorArea = layout.SensorArea;
             roomPlayerSpawn = layout.PlayerSpawn;
             roomAmbient = layout.GameplayAmbient;
             if (resonanceNode != null) resonanceRestScale = resonanceNode.localScale;
             if (empRingOuter != null) outerRingRest = empRingOuter.localRotation;
             if (empRingInner != null) innerRingRest = empRingInner.localRotation;
-            if (vistaCore != null) vistaRest = vistaCore.localRotation;
+            vistaSpin = layout.VistaSpin;
             CaptureIdleMaterial(resonanceNode);
             CaptureIdleMaterial(archiveTerminal);
             CaptureIdleMaterial(empConduitLine);
@@ -90,7 +92,7 @@ namespace EchoProtocol
                 CaptureIdleMaterial(link.Switch);
                 CaptureIdleMaterial(link.Plate);
                 consoles.Add(new ConsoleState { Id = i, Visual = link.Switch, PlateVisual = link.Plate,
-                    Position = link.Switch.position, Plate = link.Plate.position + link.PlateOffset });
+                    Position = link.Switch.position, PlateArea = link.PlateArea, PlateFloorOffset = link.PlateOffset.y });
             }
             for (int i = 0; i < layout.Devices.Length; i++)
             {
