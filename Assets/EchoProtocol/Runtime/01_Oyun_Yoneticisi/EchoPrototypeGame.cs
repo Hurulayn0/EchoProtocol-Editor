@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,22 +26,14 @@ namespace EchoProtocol
         private Transform worldRoot, door;
         private Collider doorCollider;
         private float clock, nextSample, doorFraction, elapsedTotal;
-        private bool power, plateHeld, doorOpen, paused = true, won, testing;
+        private bool power, plateHeld, doorOpen, paused = true, won;
         private int MaxPlayerHealth => player.MaxHealth;
         private int levelIndex, playerHealth, echoActivations, echoShots, savedLoops;
         private EchoScreen screen = EchoScreen.MainMenu;
         private string message = "Geçmişin, takım arkadaşın.";
-        private string testResult = "F6 / otomatik oyun testi";
         private float notificationRemaining;
         private readonly EchoPreferences preferences = new EchoPreferences();
         private EchoScreen settingsReturn = EchoScreen.MainMenu;
-        private bool automatedRun;
-        public bool SmokeTestFinished { get; private set; }
-        public bool SmokeTestPassed { get; private set; }
-        public string SmokeTestDetails { get; private set; }
-        public int SmokeTestCount { get; private set; }
-        public string SmokeTestSummary { get; private set; }
-        public event Action<string> SmokeCheckpoint;
         private EchoLevelDefinition Level { get { return EchoLevelDefinition.Campaign[levelIndex]; } }
 
         private sealed class ConsoleState
@@ -80,10 +71,9 @@ namespace EchoProtocol
         private void Awake()
         {
             Application.targetFrameRate = 60;
-            automatedRun = Array.IndexOf(Environment.GetCommandLineArgs(), "-echo-smoke-test") >= 0;
             preferences.Load(authoredPlayer.LookSensitivity, authoredPlayer.View.fieldOfView);
             InitializeSession();
-            if (sceneEntry == LegacyScene || sceneEntry == SynchronizationScene) authoredRoomDisplay.SetActive(false);
+            if (sceneEntry == SynchronizationScene) authoredRoomDisplay.SetActive(false);
             player = authoredPlayer;
             player.CaptureSceneSettings();
             spawn = player.Pose;
@@ -99,46 +89,9 @@ namespace EchoProtocol
             InitializeSceneEntry();
         }
 
-        private IEnumerator Start()
-        {
-            string[] args = Environment.GetCommandLineArgs();
-            if (sceneEntry != LegacyScene && automatedRun && Application.CanStreamedLevelBeLoaded(ValidationScene))
-            {
-                SceneManager.LoadScene(ValidationScene);
-                yield break;
-            }
-            if (runValidationOnEntry)
-            {
-                runValidationOnEntry = false;
-                yield return null;
-                StartSmokeChecks();
-                yield break;
-            }
-            if (!automatedRun) yield break;
-            Application.runInBackground = true;
-            int captureIndex = Array.IndexOf(args, "-echo-capture");
-            string capturePath = captureIndex >= 0 && captureIndex + 1 < args.Length ? args[captureIndex + 1] : null;
-            if (capturePath != null)
-                SmokeCheckpoint += checkpoint => ScreenCapture.CaptureScreenshot(capturePath + "-" + checkpoint + ".png");
-            yield return null;
-            StartSmokeChecks();
-            float deadline = Time.realtimeSinceStartup + 180;
-            while (!SmokeTestFinished && Time.realtimeSinceStartup < deadline) yield return null;
-            bool passed = SmokeTestFinished && SmokeTestPassed;
-            Debug.Log("ECHO STANDALONE " + (passed ? "PASS: " : "FAIL: ") + SmokeTestDetails);
-            if (capturePath != null && SmokeTestFinished)
-            {
-                yield return new WaitForEndOfFrame();
-                ScreenCapture.CaptureScreenshot(capturePath + "-result.png");
-                yield return new WaitForSeconds(.2f);
-            }
-            Application.Quit(passed ? 0 : 1);
-        }
-
         private void Update()
         {
             RefreshCanvasMenus();
-            if (testing) return;
             float dt = Mathf.Min(Time.deltaTime, .1f);
             TickAudioMusic(dt);
             TickMenuShowcase(dt);
@@ -147,7 +100,6 @@ namespace EchoProtocol
 
         private void ProcessControls(float dt, EchoInputFrame input, bool canPlay = true)
         {
-            if (input.Test) { OpenValidation(); return; }
             if (screen == EchoScreen.Playing && storyBriefingActive)
             {
                 if (input.Confirm || input.Pause || Input.GetKeyDown(KeyCode.Space)) DismissStoryBriefing();
@@ -157,7 +109,6 @@ namespace EchoProtocol
             {
                 if (sampleActive && screen == EchoScreen.Playing && planning)
                 {
-                    if (echoTeaching) FinishEchoTeaching();
                     return;
                 }
                 if (screen == EchoScreen.GameWon && sampleActive) ContinueToReactor();
@@ -177,7 +128,7 @@ namespace EchoProtocol
             }
             if (screen != EchoScreen.Playing) return;
             if (input.Plan) { if (sampleActive && pendingEchoRecord) CancelEchoRecordReview(); else TogglePlanning(); return; }
-            if (input.Retry && !echoTeaching) { RetryLevel(); return; }
+            if (input.Retry) { RetryLevel(); return; }
             if (planning) return;
             if (!canPlay) return;
             if (input.Clear) { ClearRun(); return; }
@@ -201,7 +152,7 @@ namespace EchoProtocol
 
         private void OnApplicationFocus(bool focused)
         {
-            if (!testing) HandleFocus(focused);
+            HandleFocus(focused);
         }
 
         private void HandleFocus(bool focused)
@@ -214,14 +165,14 @@ namespace EchoProtocol
             EchoScreen previous = screen;
             if (value == EchoScreen.Paused) SaveSession();
             planning = false;
-            echoTeaching = false; pendingEchoRecord = false;
+            pendingEchoRecord = false;
             if (value != EchoScreen.Playing) storyBriefingActive = false;
             screen = value;
             paused = value != EchoScreen.Playing;
             won = value == EchoScreen.LevelComplete || value == EchoScreen.GameWon;
             if (value == EchoScreen.Playing) RestorePlayerViewFromShowcase();
-            SetCursor(value == EchoScreen.Playing && !testing);
-            if (value == EchoScreen.Playing && pendingStoryBriefing && IsLiveDifficulty) OpenStoryBriefing();
+            SetCursor(value == EchoScreen.Playing);
+            if (value == EchoScreen.Playing && pendingStoryBriefing) OpenStoryBriefing();
             if (previous != value)
             {
                 if (value == EchoScreen.LevelComplete || value == EchoScreen.GameWon) PlayUiSound(audioBindings.checkpointWinAudio, 0.72f);
@@ -234,7 +185,8 @@ namespace EchoProtocol
         private void BeginCampaign()
         {
             elapsedTotal = 0; savedLoops = 0;
-            if (IsLiveDifficulty) { preferences.ArchiveMask = 0; preferences.SampleMemory = false; }
+            preferences.ArchiveMask = 0;
+            preferences.SampleMemory = false;
             if (CanPersist) preferences.Save();
             if (ChangeScene(LaboratoryScene, saveOnArrival: true)) return;
             LoadLevel(0); SetScreen(EchoScreen.Playing);
@@ -266,7 +218,7 @@ namespace EchoProtocol
 
         private void SaveCheckpoint(int nextLevel)
         {
-            if (testing || automatedRun || Application.isBatchMode) return;
+            if (Application.isBatchMode) return;
             resumeSave = null;
             try { if (saveStore != null) saveStore.Clear(); }
             catch (Exception ex) when (ex is System.IO.IOException || ex is UnauthorizedAccessException) { Debug.LogWarning("ECHO SAVE: " + ex.Message); }
@@ -297,7 +249,7 @@ namespace EchoProtocol
         private void ContinueCampaign()
         {
             if (screen != EchoScreen.LevelComplete) return;
-            if (!testing && levelIndex == 1) { BeginSample(); return; }
+            if (levelIndex == 1) { BeginSample(); return; }
             if (ChangeScene(CampaignScene(levelIndex + 1), saveOnArrival: true)) return;
             LoadLevel(levelIndex + 1); SetScreen(EchoScreen.Playing); SaveSession();
         }
@@ -310,9 +262,8 @@ namespace EchoProtocol
             message = "Geçmişin, takım arkadaşın.";
         }
 
-        private const int LegacyScene = -2, MenuScene = -1, LaboratoryScene = 0;
+        private const int MenuScene = -1, LaboratoryScene = 0;
         private const int MaintenanceScene = 1, SynchronizationScene = 2, ReactorScene = 3;
-        private const string ValidationScene = "EchoPrototype";
 
         private static readonly string[] sceneNames =
         {
@@ -320,9 +271,8 @@ namespace EchoProtocol
             "Level3_Eszamanlilik", "Level4_Reaktor"
         };
 
-        [SerializeField, Range(LegacyScene, ReactorScene)] private int sceneEntry = LegacyScene;
+        [SerializeField, Range(MenuScene, ReactorScene)] private int sceneEntry = MenuScene;
         private static SceneEntryRequest pendingSceneEntry;
-        private static bool runValidationOnEntry;
         [SerializeField] private EchoCanvasBindings canvasBindings;
         [SerializeField] private EchoAudioBindings audioBindings;
         [SerializeField] private EchoEffectsBindings effectsBindings;
@@ -332,7 +282,6 @@ namespace EchoProtocol
         private static void ResetSceneRequests()
         {
             pendingSceneEntry = null;
-            runValidationOnEntry = false;
         }
 
         private sealed class SceneEntryRequest
@@ -348,7 +297,7 @@ namespace EchoProtocol
 
         private bool ChangeScene(int entry, EchoSessionSave resume = null, bool saveOnArrival = false)
         {
-            if (sceneEntry == LegacyScene || testing || sceneEntry == entry) return false;
+            if (sceneEntry == entry) return false;
             if (loadingScene) return true;
 
             pendingSceneEntry = new SceneEntryRequest
@@ -366,7 +315,7 @@ namespace EchoProtocol
 
         private void InitializeSceneEntry()
         {
-            if (sceneEntry == LegacyScene || sceneEntry == MenuScene)
+            if (sceneEntry == MenuScene)
             {
                 pendingSceneEntry = null;
                 LoadLevel(0);
@@ -409,21 +358,6 @@ namespace EchoProtocol
             SaveSession();
         }
 
-        private void OpenValidation()
-        {
-            if (sceneEntry == LegacyScene)
-            {
-                StartSmokeChecks();
-                return;
-            }
-
-            if (loadingScene || !Application.CanStreamedLevelBeLoaded(ValidationScene)) return;
-            SaveSession();
-            runValidationOnEntry = true;
-            loadingScene = true;
-            SceneManager.LoadScene(ValidationScene);
-        }
-
         private void LoadLevel(int index)
         {
             sampleActive = false; sampleDevices.Clear(); sampleEvents.Clear(); ClearWreckage(); ClearShockwaves();
@@ -432,7 +366,7 @@ namespace EchoProtocol
             ghosts.Clear(); recordings.Clear(); savedTapes.Clear(); enemies.Clear(); consoles.Clear();
             sectorElapsed = 0; sectorLoops = 0; sectorDamageTaken = 0;
             levelIndex = Mathf.Clamp(index, 0, EchoLevelDefinition.Campaign.Length - 1);
-            LoadAuthoredRoom(sceneEntry == LegacyScene ? campaignRooms[levelIndex] : authoredRoomDisplay.GetComponentInChildren<EchoRoomLayout>(true));
+            LoadAuthoredRoom(authoredRoomDisplay.GetComponentInChildren<EchoRoomLayout>(true));
             NewLoop(); introRemaining = 6;
             TriggerChapterBanner();
             QueueStoryBriefing();
@@ -581,7 +515,7 @@ namespace EchoProtocol
             CompleteSectorProfile();
             RecordCurrentPerformanceRank(levelIndex, sectorElapsed, sectorLoops);
             SetScreen(levelIndex == 2 ? EchoScreen.GameWon : EchoScreen.LevelComplete);
-            if (levelIndex == MaintenanceScene && sceneEntry != LegacyScene && !testing)
+            if (levelIndex == MaintenanceScene)
                 SaveSynchronizationCheckpoint();
             else
                 SaveCheckpoint(levelIndex == 2 ? -1 : levelIndex + 1);
@@ -630,7 +564,7 @@ namespace EchoProtocol
 
         private void NewLoop()
         {
-            planning = false; echoTeaching = false; pendingEchoRecord = false; replacementEchoSlot = -1;
+            planning = false; pendingEchoRecord = false; replacementEchoSlot = -1;
             capturedFrames.Clear(); capturedActions.Clear();
             ClearBeams(); ClearImpacts(); ClearWreckage(); ClearShockwaves(); ResetResonance(); ResetWeaponEnergy(); ResetCameraShake();
             foreach (Ghost ghost in ghosts) { ghost.Body.SetActive(false); Destroy(ghost.Body); }
@@ -697,7 +631,6 @@ namespace EchoProtocol
         private void OnDestroy()
         {
             if (minimapMesh != null) Destroy(minimapMesh);
-            Application.logMessageReceived -= ObserveValidationError;
             SetCursor(false);
         }
 

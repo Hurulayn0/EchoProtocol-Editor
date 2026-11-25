@@ -10,7 +10,7 @@ namespace EchoProtocol
         [SerializeField] internal RectTransform mainMenuPanel;
         [SerializeField] internal RectTransform controlsPanel;
         [SerializeField] internal CanvasGroup menuInput;
-        [SerializeField] internal TMP_Text continueLabel, unavailableLabel, archiveLabel, validationLabel;
+        [SerializeField] internal TMP_Text continueLabel, unavailableLabel, archiveLabel;
         [SerializeField] internal TMP_Text[] sectorRecords;
         [SerializeField] internal Button[] sectorButtons;
         [SerializeField] internal RectTransform settingsPanel, statePanel;
@@ -62,9 +62,9 @@ namespace EchoProtocol
         [SerializeField] internal TMP_Text[] campaignEchoTitles, campaignEchoTasks, maintenanceEchoTasks;
         [SerializeField] internal Image[] campaignEchoProgress, maintenanceEchoProgress;
         [SerializeField] internal TMP_Text lockedVaultPrompt, openedVaultPrompt, offlineConsolePrompt, poweredConsolePrompt;
-        [SerializeField] internal GameObject sampleDetails, campaignTactics, sampleTactics, testProgressPanel;
+        [SerializeField] internal GameObject sampleDetails, campaignTactics, sampleTactics;
         [SerializeField] internal TMP_Text sampleObjective, sampleGateHint, sampleDeviceState, sampleArchiveInfo, sampleRecordHint, sampleBottomHint;
-        [SerializeField] internal TMP_Text campaignInstructions, campaignTacticsTip, resonanceTitle, resonanceBonus, resonanceHint, testProgressLabel;
+        [SerializeField] internal TMP_Text campaignInstructions, campaignTacticsTip, resonanceTitle, resonanceBonus, resonanceHint;
         [SerializeField] internal Image resonanceAccent, campaignRewind, sampleRewind;
         [SerializeField] internal GameObject campaignHeadshot, sampleHeadshot, campaignKill, sampleTeamHit;
         [SerializeField] internal TMP_Text campaignRewindLabel, sampleTargetThreat, sampleDevicePrompt, sampleEchoHit;
@@ -77,7 +77,7 @@ namespace EchoProtocol
         [SerializeField] internal TMP_Text minimapLabelTemplate, minimapHeading, minimapNorth;
         [SerializeField] internal Image minimapAccent, minimapOutline, minimapTelemetry;
         [SerializeField] internal Image[] minimapAccentDetails;
-        [SerializeField] internal GameObject campaignPlan, maintenancePlan, echoTeachingPanel;
+        [SerializeField] internal GameObject campaignPlan, maintenancePlan;
         [SerializeField] internal RectTransform campaignPlanArea, maintenancePlanArea;
         [SerializeField] internal CanvasRenderer campaignPlanRenderer, maintenancePlanRenderer;
         [SerializeField] internal TMP_Text campaignPlanMarker, maintenancePlanMarker;
@@ -87,6 +87,6 @@ namespace EchoProtocol
         [SerializeField] internal TMP_Text maintenanceCloseAction;
         [SerializeField] internal Button[] campaignPlanButtons, maintenancePlanButtons;
         [SerializeField] internal Slider maintenancePlanSlider;
-        [SerializeField] internal CanvasGroup campaignPlanInput, maintenancePlanInput, teachingPlanInput;
+        [SerializeField] internal CanvasGroup campaignPlanInput, maintenancePlanInput;
     }
 }

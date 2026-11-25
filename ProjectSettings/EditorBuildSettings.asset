@@ -20,7 +20,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level4_Reaktor.unity
     guid: 8453468b4a76f3e1813aeafc4bab342a
-  - enabled: 0
-    path: Assets/Scenes/EchoPrototype.unity
-    guid: 30b92c1bd54b4c43820ca77a3cf23cf6
   m_configObjects: {}

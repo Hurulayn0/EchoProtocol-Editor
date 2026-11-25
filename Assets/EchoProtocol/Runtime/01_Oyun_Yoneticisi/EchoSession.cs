@@ -15,7 +15,7 @@ namespace EchoProtocol
         private float sectorElapsed;
         private int sectorLoops;
         private bool planning, resumeRecovered;
-        private bool CanPersist { get { return !testing && !automatedRun && !Application.isBatchMode; } }
+        private bool CanPersist { get { return !Application.isBatchMode; } }
 
         private void InitializeSession()
         {
@@ -120,11 +120,10 @@ namespace EchoProtocol
         }
         private void TogglePlanning()
         {
-            if (echoTeaching) { FinishEchoTeaching(); return; }
             planning = !planning;
             pendingEchoRecord = false;
             if (planning) { planPreviewTime = clock; SaveSession(); }
-            SetCursor(!planning && !testing);
+            SetCursor(!planning);
         }
         private void CompleteSectorProfile()
         {

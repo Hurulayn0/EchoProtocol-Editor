@@ -24,7 +24,7 @@ namespace EchoProtocol
         private EchoPose SampleSpawn => roomPlayerSpawn != null
             ? new EchoPose { Position = roomPlayerSpawn.position, Rotation = roomPlayerSpawn.rotation, Pitch = spawn.Pitch }
             : spawn;
-        private Vector3 SamplePulsePosition { get { return sampleStage == 0 && IsLiveDifficulty ? new Vector3(-1.2f, 1.35f, -3.2f) : new Vector3(0, 1.35f, 4); } }
+        private Vector3 SamplePulsePosition { get { return sampleStage == 0 ? new Vector3(-1.2f, 1.35f, -3.2f) : new Vector3(0, 1.35f, 4); } }
 
         private void BeginSample()
         {
@@ -39,8 +39,7 @@ namespace EchoProtocol
         private void StartSampleStage()
         {
             LoadSampleStage(0); SetScreen(EchoScreen.Playing);
-            Notify(IsLiveDifficulty ? "Muhafızı aş, servis geçidini Echo ile aç ve yük asansörüne ulaş." : $"Yük asansörüne ulaş. Servis düğmesi geçidi yalnızca {ServiceWindowText} saniye açar.");
-            if (!IsLiveDifficulty) { TogglePlanning(); echoTeaching = true; }
+            Notify("Muhafızı aş, servis geçidini Echo ile aç ve yük asansörüne ulaş.");
         }
         private void LoadSampleStage(int stage)
         {
@@ -50,7 +49,7 @@ namespace EchoProtocol
             sampleActive = true; sampleStage = Mathf.Clamp(stage, 0, 2); levelIndex = 1; sampleStageMemoryHacked = false;
             sectorElapsed = 0; sectorLoops = 0; vistaCore = null; resonanceNode = null; archiveTerminal = null;
             ClearWreckage(); ClearShockwaves();
-            LoadAuthoredRoom((IsLiveDifficulty ? maintenanceRooms : validationRooms)[sampleStage]);
+            LoadAuthoredRoom(maintenanceRooms[sampleStage]);
             NewLoop(); TriggerChapterBanner(); QueueStoryBriefing(); introRemaining = 0; message = SampleGoal();
         }
         private void ResetSampleLoop()
@@ -91,30 +90,16 @@ namespace EchoProtocol
             }
             else if (sampleStage == 2 && id == 2)
             {
-                if (IsLiveDifficulty)
-                {
-                    if (sampleStageMemoryHacked) { if (!fromEcho) Notify(SampleMemoryText); return true; }
-                    bool canScan = ResonanceRemaining > 0 || sampleDecoyObserved || (enemies.Count > 0 && !enemies[0].Alive);
-                    if (!canScan) failure = "Tarama kilitli: EMP Küresini vur, muhafızı durdur ya da Echo'nu yem yap, sonra [E]'ye bas!";
-                    else
-                    {
-                        sampleStageMemoryHacked = true;
-                        preferences.SampleMemory = true; if (CanPersist) preferences.Save();
-                        playerHealth = MaxPlayerHealth;
-                        SpawnResonanceShockwave(device.Position, powerOn);
-                        if (!fromEcho) { Notify($"GÖZLEM BELLEĞİ İNDİRİLDİ! Can {MaxPlayerHealth} · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); SaveSession();
-                    }
-                }
+                if (sampleStageMemoryHacked) { if (!fromEcho) Notify(SampleMemoryText); return true; }
+                bool canScan = ResonanceRemaining > 0 || sampleDecoyObserved || (enemies.Count > 0 && !enemies[0].Alive);
+                if (!canScan) failure = "Tarama kilitli: EMP Küresini vur, muhafızı durdur ya da Echo'nu yem yap, sonra [E]'ye bas!";
                 else
                 {
-                    if (preferences.SampleMemory) { if (!fromEcho) Notify(SampleMemoryText); return true; }
-                    if (!sampleDecoyObserved) failure = "Gözlem eksik: muhafızın bir Echo’ya ateş etmesini sağla.";
-                    else if (ResonanceRemaining <= 0) failure = "Tarama kilitli: gözlemden sonra rezonans penceresinde terminali oku.";
-                    else
-                    {
-                        preferences.SampleMemory = true; if (CanPersist) preferences.Save();
-                        if (!fromEcho) { Notify(SampleMemoryText); notificationRemaining = 9; } PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); SaveSession();
-                    }
+                    sampleStageMemoryHacked = true;
+                    preferences.SampleMemory = true; if (CanPersist) preferences.Save();
+                    playerHealth = MaxPlayerHealth;
+                    SpawnResonanceShockwave(device.Position, powerOn);
+                    if (!fromEcho) { Notify($"GÖZLEM BELLEĞİ İNDİRİLDİ! Can {MaxPlayerHealth} · Tahliye kilidi için Operatör + Sol Servis rölesini tamamla!"); notificationRemaining = 9; } PlayUiSound(audioBindings.archiveUnlockAudio, 0.72f); SaveSession();
                 }
             }
             if (failure != null) { if (!fromEcho) { Notify(failure); PlayUiSound(audioBindings.consoleErrorAudio, 0.48f); } else Notify("ECHO " + (replayingEcho + 1) + " / " + failure.Replace("E denemen kaydedildi", "E koşulu sağlanmadı")); return false; }
@@ -142,12 +127,12 @@ namespace EchoProtocol
         {
             if (sampleStage == 1 && sampleShutter != null)
             {
-                bool held = SampleSensorHeld() || (IsLiveDifficulty && ResonanceRemaining > 0f);
+                bool held = SampleSensorHeld() || (ResonanceRemaining > 0f);
                 sampleShutter.GetComponent<Collider>().enabled = !held; sampleShutter.GetComponent<Renderer>().enabled = !held;
                 sampleSensor.GetComponent<Renderer>().sharedMaterial = held ? plateOn : IdleMaterial(sampleSensor);
             }
             if (sampleStage == 2 && enemies.Count > 0 && enemies[0].Attacks > 0 && enemies[0].LastTargetWasEcho) sampleDecoyObserved = true;
-            bool stage2Unlocked = IsLiveDifficulty ? (sampleExtraction && (sampleDevices[2].Powered || sampleStageMemoryHacked)) : sampleExtraction;
+            bool stage2Unlocked = sampleExtraction && (sampleDevices[2].Powered || sampleStageMemoryHacked);
             power = sampleStage == 0 ? clock < sampleServiceUntil : sampleStage == 1 ? sampleDevices[0].Powered && sampleDevices[1].Powered : stage2Unlocked;
             plateHeld = sampleStage != 1 || SampleSensorHeld();
             doorOpen = power && (sampleStage != 1 || ResonanceRemaining > 0);
@@ -222,7 +207,7 @@ namespace EchoProtocol
             if (!sampleDevices[0].Powered) return "SOL RÖLE KAPALI / Sol servis terminali E.";
             if (enemies.Count > 0 && enemies[0].Alive && enemies[0].StunRemaining <= 0) return "MUHAFIZ AKTİF / Rezonansla durdur veya vur.";
             if (!sampleExtraction) return "OPERATÖR BEKLİYOR / Üst sağ terminal E.";
-            if (IsLiveDifficulty && !sampleDevices[2].Powered && !sampleStageMemoryHacked) return "GÖZLEM BELLEĞİ EKSİK / Sol üst terminalde E ile indir.";
+            if (!sampleDevices[2].Powered && !sampleStageMemoryHacked) return "GÖZLEM BELLEĞİ EKSİK / Sol üst terminalde E ile indir.";
             return "OPERATÖR BEKLİYOR / Üst sağ terminal E.";
         }
     }

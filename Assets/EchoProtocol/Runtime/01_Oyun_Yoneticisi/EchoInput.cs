@@ -9,7 +9,7 @@ namespace EchoProtocol
     public struct EchoInputFrame
     {
         public Vector2 Move, Look;
-        public bool Jump, Interact, Record, Clear, Pause, Confirm, Test, Fire, Sprint, Aim, Undo, Plan, Retry, Crouch;
+        public bool Jump, Interact, Record, Clear, Pause, Confirm, Fire, Sprint, Aim, Undo, Plan, Retry, Crouch;
     }
 
     // Works in old-input and new-input projects without requiring an asset package.
@@ -21,7 +21,7 @@ namespace EchoProtocol
                 Move = Move(), Look = Look(), Jump = Down(KeyCode.Space),
                 Interact = Down(KeyCode.E), Record = Down(KeyCode.R), Clear = Down(KeyCode.X),
                 Pause = Down(KeyCode.Escape), Confirm = Down(KeyCode.Return),
-                Test = Down(KeyCode.F6), Fire = FireHeld(), Sprint = SprintHeld(),
+                Fire = FireHeld(), Sprint = SprintHeld(),
                 Aim = AimHeld(), Undo = Down(KeyCode.Q), Plan = Down(KeyCode.Tab), Retry = Down(KeyCode.T),
                 Crouch = CrouchHeld()
             };
@@ -41,7 +41,6 @@ namespace EchoProtocol
                 case KeyCode.Tab: return k.tabKey.wasPressedThisFrame;
                 case KeyCode.Escape: return k.escapeKey.wasPressedThisFrame;
                 case KeyCode.Space: return k.spaceKey.wasPressedThisFrame;
-                case KeyCode.F6: return k.f6Key.wasPressedThisFrame;
                 case KeyCode.Return: return k.enterKey.wasPressedThisFrame;
             }
             return false;

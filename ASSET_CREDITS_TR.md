@@ -1,7 +1,7 @@
 # Echo Protocol — görsel asset kaynakları
 
 Ortamlar mevcut proje içinde modüler parçalarla kuruldu. Hazır bir oyunun
-haritası kullanılmadı. Üç sektörün yerleşimi `EchoGameArt.cs` içinde bulunur.
+haritası kullanılmadı. Bölüm yerleşimleri Assets/Scenes altındaki sahnelerde düzenlenir.
 
 ## Quaternius / Modular Sci-Fi MegaKit / Standard
 
@@ -30,9 +30,7 @@ Seçilmiş 22 FBX modelinin kaynakları ve dokuları projededir. Materyaller
 Built-in Standard shader'a bağlandı; albedo, normal ve mevcut emissive
 dokuları kullanılır. GPU dokuları 1024 piksel üst sınırla içe aktarılır.
 Hazırlanan prefab ve materyaller `Assets/EchoProtocol/Resources/EchoArt`
-altındadır. `EchoArtBuilder.BatchBake` bunları kaynak assetlerden yeniden
-oluşturur. FBX ölçeği, eksen yönü ve animasyon dışındaki merkezleme burada
-düzenlenir. Runtime materyal kopyaları üretilmez.
+altındadır.
 
 Assetler görsel kaplama olarak kullanılır. Kapı, siper, zemin, konsol ve
 oyuncunun doğrulanan fizik collider'ları oyun kurallarını yürütür.

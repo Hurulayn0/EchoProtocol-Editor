@@ -30,7 +30,7 @@ namespace EchoProtocol
             }
         }
 
-        private bool AudioSilent { get { return testing || automatedRun || Application.isBatchMode; } }
+        private bool AudioSilent { get { return Application.isBatchMode; } }
 
         private void PlayUiSound(AudioSource source, float volume = .7f, float pitch = 1f)
         {

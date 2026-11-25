@@ -13,9 +13,7 @@ namespace EchoProtocol
         private Material ghostCyan => replayActors[0].shotMaterial;
         private Material ghostPurple => replayActors[1].shotMaterial;
 
-        [SerializeField] private EchoRoomLayout[] campaignRooms;
         [SerializeField] private EchoRoomLayout[] maintenanceRooms;
-        [SerializeField] private EchoRoomLayout[] validationRooms;
         [SerializeField] private GameObject authoredRoomDisplay;
         [SerializeField] private EchoPlayer authoredPlayer;
         private Vector3 closedDoorPosition, doorOpenOffset;
@@ -62,7 +60,7 @@ namespace EchoProtocol
         {
             activeRoom = layout;
             worldRoot = layout.transform;
-            usesRoomDisplay = sceneEntry == LegacyScene || sceneEntry == SynchronizationScene;
+            usesRoomDisplay = sceneEntry == SynchronizationScene;
             if (usesRoomDisplay)
             {
                 roomDisplayParent = worldRoot.parent;
@@ -115,7 +113,7 @@ namespace EchoProtocol
             for (int i = 0; i < layout.Sentries.Length; i++)
             {
                 EchoEnemy enemy = layout.Sentries[i];
-                enemy.SetDifficultyTier(sampleActive ? 2 : levelIndex == 2 ? 3 : levelIndex, IsLiveDifficulty);
+                enemy.SetDifficultyTier(sampleActive ? 2 : levelIndex == 2 ? 3 : levelIndex, true);
                 enemy.BindAuthored(i);
                 enemies.Add(enemy);
             }

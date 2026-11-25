@@ -195,12 +195,6 @@ namespace EchoProtocol
                 tacticalCounts.TryGetValue(entry.Key, out int count);
                 for (int i = count; i < entry.Value.Count; i++) entry.Value[i].gameObject.SetActive(false);
             }
-            canvasBindings.testProgressPanel.SetActive(testing);
-            if (testing)
-            {
-                canvasBindings.testProgressLabel.text = $"OTOMATIK TEST / {passedChecks.Count} KONTROL TAMAMLANDI";
-                canvasBindings.testProgressLabel.color = Level.Accent;
-            }
         }
 
         private RectTransform GetTacticalWidget(RectTransform template, Vector2 point)
@@ -342,14 +336,8 @@ namespace EchoProtocol
         }
         private string SampleArchiveHint()
         {
-            if (IsLiveDifficulty)
-            {
-                if (sampleStageMemoryHacked) return "GÖZLEM BELLEĞİ (ZORUNLU) / İNDİRİLDİ ✓";
-                return "ZORUNLU KİLİT / GÖZLEM BELLEĞİ\nSol üst terminalde [E] ile indir.\n(EMP vur, muhafızı durdur veya yem yap)";
-            }
-            if (preferences.SampleMemory) return "GÖZLEM BELLEĞİ / BULUNDU";
-            if (sampleDecoyObserved) return "GÖZLEM ALGILANDI / Arşiv terminalindeki kayıt değişti.";
-            return "İSTEĞE BAĞLI / ARŞİV\nKayıt henüz kilitli.\nTesis verilerini çevreden izle.";
+            if (sampleStageMemoryHacked) return "GÖZLEM BELLEĞİ (ZORUNLU) / İNDİRİLDİ ✓";
+            return "ZORUNLU KİLİT / GÖZLEM BELLEĞİ\nSol üst terminalde [E] ile indir.\n(EMP vur, muhafızı durdur veya yem yap)";
         }
         private string SampleTapeEvents(int index, int maxEvents = 3)
         {
@@ -411,13 +399,12 @@ namespace EchoProtocol
             for (int i = 0; i < ghosts.Count; i++) UpdateEchoPlaybackLabel(i);
             foreach (SampleDevice device in sampleDevices)
             {
-                if (device.Id == 2 && (IsLiveDifficulty ? sampleStageMemoryHacked : preferences.SampleMemory)) continue;
+                if (device.Id == 2 && sampleStageMemoryHacked) continue;
                 if (sampleStage == 2 && device.Id == 1 && !sampleDevices[0].Powered && Vector3.Distance(player.transform.position, device.Position) > 4) continue;
-                if (!IsLiveDifficulty && sampleStage == 2 && device.Id == 2 && (!sampleDecoyObserved || ResonanceRemaining <= 0) && Vector3.Distance(player.transform.position, device.Position) > 3) continue;
-                if (!device.Powered) ShowSampleMarker(device.Position, device.Name + (IsLiveDifficulty && device.Id == 2 ? " / [E] ZORUNLU" : " / E"), device.Accent);
+                if (!device.Powered) ShowSampleMarker(device.Position, device.Name + (device.Id == 2 ? " / [E] ZORUNLU" : " / E"), device.Accent);
             }
             if (sampleStage == 1 && !SampleSensorHeld()) ShowSampleMarker(sampleSensor.position + Vector3.up * .18f, "LENS SENSÖRÜ", Color.cyan);
-            if (resonanceNode != null && !resonanceSpent && (sampleStage != 2 || (enemies.Count > 0 && enemies[0].Alive) || (IsLiveDifficulty && !sampleStageMemoryHacked) || (sampleDecoyObserved && !preferences.SampleMemory))) ShowSampleMarker(ResonancePosition, "EMP JENERATÖRÜ / VUR", Level.Accent);
+            if (resonanceNode != null && !resonanceSpent && (sampleStage != 2 || (enemies.Count > 0 && enemies[0].Alive) || (!sampleStageMemoryHacked) || (sampleDecoyObserved && !preferences.SampleMemory))) ShowSampleMarker(ResonancePosition, "EMP JENERATÖRÜ / VUR", Level.Accent);
             if (doorOpen) ShowSampleMarker(SampleGatePosition + Vector3.down, "YOL AÇIK", Color.green);
             else if (sampleStage == 0) ShowSampleMarker(SampleGatePosition + Vector3.down, "YÜK ASANSÖRÜ", uiMuted);
             canvasBindings.sampleHeadshot.SetActive(headshotTimer > 0);

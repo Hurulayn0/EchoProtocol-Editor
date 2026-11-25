@@ -1077,9 +1077,7 @@ MonoBehaviour:
   canvasBindings: {fileID: 979360360}
   audioBindings: {fileID: 910000000000000002}
   effectsBindings: {fileID: 910000000000000003}
-  campaignRooms: []
   maintenanceRooms: []
-  validationRooms: []
   authoredRoomDisplay: {fileID: 121267230}
   authoredPlayer: {fileID: 2037124912}
 --- !u!1 &592645109
@@ -1878,10 +1876,6 @@ PrefabInstance:
       objectReference: {fileID: 568025805}
     - target: {fileID: 1762517646, guid: fbd7baf301b515641bad9ee174bcd464, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 568025805}
-    - target: {fileID: 1764612544, guid: fbd7baf301b515641bad9ee174bcd464, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 568025805}
     - target: {fileID: 1852833528, guid: fbd7baf301b515641bad9ee174bcd464, type: 3}

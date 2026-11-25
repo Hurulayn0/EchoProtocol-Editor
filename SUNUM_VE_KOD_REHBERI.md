@@ -8,7 +8,7 @@
 ## 1. Proje Klasör Yapısı (Unity `Assets/` ve `Hierarchy`)
 
 ### Unity `Assets/` Klasörleri
-- `Assets/Scenes/` → Ana oyun sahnesi (`EchoPrototype.unity`)
+- `Assets/Scenes/` → Ana menü ve dört bağımsız oyun sahnesi
 - `Assets/Sesler/Resources/EchoAudio/` → **32 adet `.wav` müzik ve ses efekti** (`Music`, `Movement`, `Weapon`, `Sentry`, `Echo`, `Devices`, `UI`)
 - `Assets/Arayuz_Gorselleri/` → 38 adet HUD / UI görsel sprite dosyası
 - `Assets/EchoProtocol/Runtime/` → **Türkçe gruplanmış tüm C# scriptleri:**
@@ -19,10 +19,9 @@
   - `05_Bolumler_ve_Mekanikler/` → 4 bölüm tasarımı, EMP Jeneratörü & Veri Kasası, Bölüm 3 (3 Aşama) (`EchoLevelDefinition.cs`, `EchoGameWorld.cs`, `EchoResonance.cs`, `EchoSampleLevel.cs`, `EchoSampleWorld.cs`)
   - `06_Arayuz_Harita_Hikaye/` → Ana menü, HUD, Canlı Taktik Harita, Hikaye Brifingi & Credits (`EchoGameUI.cs`, `EchoStoryBriefing.cs`, `EchoHierarchyAndMinimap.cs`, `EchoPlanningMap.cs`, `EchoSampleUI.cs`)
   - `07_Ses_ve_Efektler/` → 32 WAV ses yöneticisi, müzik geçişleri ve parçacık efektleri (`EchoAudioBank.cs`, `EchoImmersion.cs`)
-  - `08_Otomatik_Testler/` → 311 adet otomatik doğrulama testi (`*Checks*.cs`)
 
 ### Unity `Hierarchy` Sahne Klasörleri
-> Unity üst menüden **`Echo Protocol → Build Visible Scene Hierarchy`** tıklandığında sahne aşağıdaki Türkçe klasörlerle yenilenir:
+Sahne hiyerarşisini incelemek için Assets/Scenes altındaki ilgili sahneyi açın.
 - `01_Yoneticiler` → `EchoProtocolRuntime`
 - `02_Isik_ve_Kamera` → Ana kamera ve tesis aydınlatmaları
 - `03_Cevre_ve_Harita` → Zemin, duvarlar, kapılar, kolonlar ve tesis objeleri

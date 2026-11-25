@@ -26,12 +26,11 @@ namespace EchoProtocol
             public float Age;
         }
 
-        private bool IsLiveDifficulty { get { return !testing && !automatedRun; } }
 
         // Permanent upgrades unlocked by collecting Sector Data Vaults (Bellek Kasaları) + live Overcharge buff
-        private float EffectiveMaxWeaponEnergy { get { return IsLiveDifficulty && ArchiveCount >= 2 ? MaxWeaponEnergy + 2f : MaxWeaponEnergy; } }
-        private int EffectiveBonusShotDamage { get { return (IsLiveDifficulty && ArchiveCount >= 3 ? 5 : 0) + (IsLiveDifficulty && overchargeTimer > 0f ? 10 : 0); } }
-        private bool IsWeaponOvercharged { get { return IsLiveDifficulty && overchargeTimer > 0f; } }
+        private float EffectiveMaxWeaponEnergy { get { return ArchiveCount >= 2 ? MaxWeaponEnergy + 2f : MaxWeaponEnergy; } }
+        private int EffectiveBonusShotDamage { get { return (ArchiveCount >= 3 ? 5 : 0) + (overchargeTimer > 0f ? 10 : 0); } }
+        private bool IsWeaponOvercharged { get { return overchargeTimer > 0f; } }
         private string ActiveVaultBonusText()
         {
             int c = ArchiveCount;
@@ -41,7 +40,7 @@ namespace EchoProtocol
             return "AKTİF: +%30 Soğuma · 10 Enerji · +5 Bonus Hasar";
         }
 
-        private float ActiveLoopLength => IsLiveDifficulty && activeRoom != null ? activeRoom.LoopSeconds : LoopLength;
+        private float ActiveLoopLength => activeRoom != null ? activeRoom.LoopSeconds : LoopLength;
 
         private void ResetWeaponEnergy()
         {
@@ -56,14 +55,13 @@ namespace EchoProtocol
             weaponEnergy = EffectiveMaxWeaponEnergy;
             weaponRechargeDelay = 0f;
             weaponOverheated = false;
-            if (IsLiveDifficulty) overchargeTimer = Mathf.Max(overchargeTimer, overchargeSeconds);
+            overchargeTimer = Mathf.Max(overchargeTimer, overchargeSeconds);
             empCalloutText = bannerText ?? "EMP ŞOKU! MUHAFIZLAR 20 HASAR + 3.5 SN DONDU · +25 CAN · 4 SN SINIRSIZ GÜÇ!";
             empCalloutTimer = 3.0f;
         }
 
         private bool TryConsumeWeaponEnergy()
         {
-            if (!IsLiveDifficulty) return true;
             if (overchargeTimer > 0f)
             {
                 weaponEnergy = EffectiveMaxWeaponEnergy;
@@ -89,7 +87,6 @@ namespace EchoProtocol
 
         private void TickWeaponEnergy(float dt)
         {
-            if (!IsLiveDifficulty) return;
             overchargeTimer = Mathf.Max(0f, overchargeTimer - dt);
             float maxE = EffectiveMaxWeaponEnergy;
             if (overchargeTimer > 0f) { weaponEnergy = maxE; weaponOverheated = false; return; }
@@ -105,7 +102,6 @@ namespace EchoProtocol
 
         private void AddCameraShake(float trauma)
         {
-            if (!IsLiveDifficulty) return;
             cameraShake = Mathf.Clamp01(cameraShake + trauma);
         }
 
@@ -131,7 +127,7 @@ namespace EchoProtocol
             chapterBannerTimer = Mathf.Max(0f, chapterBannerTimer - dt);
             empCalloutTimer = Mathf.Max(0f, empCalloutTimer - dt);
             TickShockwaves(dt);
-            if (!IsLiveDifficulty || player == null || player.View == null) return;
+            if (player == null || player.View == null) return;
             if (screen != EchoScreen.Playing || planning) { cameraShake = 0f; return; }
             if (cameraShake > 0f)
             {
@@ -146,7 +142,6 @@ namespace EchoProtocol
 
         private void TriggerChapterBanner()
         {
-            if (!IsLiveDifficulty) return;
             chapterBannerTimer = 3.2f;
             if (sampleActive)
             {
@@ -166,7 +161,7 @@ namespace EchoProtocol
 
         private void ShowEmpArc(Vector3 from, Vector3 to, Material mat = null)
         {
-            if (!IsLiveDifficulty || worldRoot == null) return;
+            if (worldRoot == null) return;
             LineRenderer line = Instantiate(effectsBindings.arcPrefab, worldRoot);
             line.gameObject.name = "EMP Lightning Arc";
             transientBeams.RemoveAll(item => item == null);
@@ -186,7 +181,7 @@ namespace EchoProtocol
 
         private void SpawnResonanceShockwave(Vector3 origin, Material mat)
         {
-            if (!IsLiveDifficulty || worldRoot == null) return;
+            if (worldRoot == null) return;
             MeshRenderer ring = Instantiate(activeRoom.ShockwavePrefab, origin, worldRoot.rotation, worldRoot);
             if (mat != null) ring.sharedMaterial = mat;
             activeShockwaves.Add(new ShockwaveRing { Ring = ring.gameObject });
@@ -219,7 +214,7 @@ namespace EchoProtocol
 
         private void SpawnSentryWreckage(EchoEnemy enemy)
         {
-            if (!IsLiveDifficulty || worldRoot == null) return;
+            if (worldRoot == null) return;
             GameObject wreck = Instantiate(enemy.wreckagePrefab, enemy.transform.position, enemy.transform.rotation, worldRoot);
             wreck.name = "Sentry wreckage";
             EchoRobotMotion motion = wreck.GetComponentInChildren<EchoRobotMotion>();
@@ -272,7 +267,7 @@ namespace EchoProtocol
         private int EvaluatePerformanceRank(int slot, float seconds, int loops, int damageTaken)
         {
             // S = 4, A = 3, B = 2, C = 1
-            int score = 100 + (IsLiveDifficulty && ArchiveCount >= 3 ? 15 : 0);
+            int score = 100 + (ArchiveCount >= 3 ? 15 : 0);
             float parTime = slot == 0 ? 22f : slot == 1 ? 30f : slot == 2 ? 42f : 75f;
             int parLoops = slot == 0 ? 1 : slot == 1 ? 2 : slot == 2 ? 3 : 4;
             if (seconds > parTime) score -= Mathf.Min(30, Mathf.RoundToInt((seconds - parTime) * .9f));

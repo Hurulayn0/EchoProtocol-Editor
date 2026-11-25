@@ -213,7 +213,7 @@ namespace EchoProtocol
                 if (sampleStage == 1)
                 {
                     AddMinimapMarker(map, SampleSensorPosition, SampleSensorHeld() ? Color.green : Color.cyan, 7, "L", SampleSensorHeld());
-                    if (IsLiveDifficulty && sampleDevices.Count >= 2)
+                    if (sampleDevices.Count >= 2)
                     {
                         Color condCol = ResonanceRemaining > 0 ? new Color(.2f, .95f, .55f, .75f) : new Color(accent.r, accent.g, accent.b, .35f);
                         AddMinimapLine(MapPoint(map, ResonancePosition), MapPoint(map, sampleDevices[0].Position), condCol, 1.5f);
@@ -222,7 +222,7 @@ namespace EchoProtocol
                 }
                 foreach (SampleDevice dev in sampleDevices)
                 {
-                    bool memDone = dev.Id == 2 && (IsLiveDifficulty ? sampleStageMemoryHacked : preferences.SampleMemory);
+                    bool memDone = dev.Id == 2 && sampleStageMemoryHacked;
                     if (memDone) continue;
                     AddMinimapMarker(map, dev.Position, dev.Powered ? Color.green : dev.Accent, 7, dev.Id == 0 ? "1" : dev.Id == 1 ? "2" : "G", !dev.Powered);
                 }
@@ -318,15 +318,10 @@ namespace EchoProtocol
             if (!string.IsNullOrEmpty(shortTag))
                 AddMinimapLabel(new Vector2(p.x + size * .5f + 2, p.y - 8), shortTag, color);
         }
-        private bool echoTeaching, pendingEchoRecord;
+        private bool pendingEchoRecord;
         private int replacementEchoSlot = -1;
         private float planPreviewTime;
 
-        private void FinishEchoTeaching()
-        {
-            echoTeaching = false; planning = false; SetCursor(!testing);
-            Notify("Hareketin ve E etkileşimlerin kaydediliyor. R ile bu kaydı Echo olarak oynat.");
-        }
         private void OpenEchoRecordReview()
         {
             TogglePlanning(); pendingEchoRecord = true;
@@ -353,16 +348,13 @@ namespace EchoProtocol
         {
             bool visible = screen == EchoScreen.Playing && planning;
             bool campaign = visible && !sampleActive;
-            bool maintenance = visible && sampleActive && !echoTeaching;
+            bool maintenance = visible && sampleActive;
             canvasBindings.campaignPlan.SetActive(campaign);
             canvasBindings.maintenancePlan.SetActive(maintenance);
-            canvasBindings.echoTeachingPanel.SetActive(visible && sampleActive && echoTeaching);
-            canvasBindings.teachingPlanInput.interactable = !testing;
             if (!campaign && !maintenance) return;
 
             if (campaign)
             {
-                canvasBindings.campaignPlanInput.interactable = !testing;
                 canvasBindings.campaignPlanHeading.color = Level.Accent;
                 canvasBindings.campaignPlanGoal.text = Level.Objective;
                 for (int i = 0; i < canvasBindings.campaignPlanCards.Length; i++)
@@ -380,7 +372,6 @@ namespace EchoProtocol
                 return;
             }
 
-            canvasBindings.maintenancePlanInput.interactable = !testing;
             bool expired = clock >= ActiveLoopLength;
             canvasBindings.maintenancePlanHeading.text = pendingEchoRecord ?
                 recordings.Count == MaxEchoes ? "YENİ KAYIT HAZIR / HANGİ ECHO DEĞİŞSİN?" : "20 SANİYE DOLDU / BU KAYDI SAKLA?" :
@@ -414,7 +405,7 @@ namespace EchoProtocol
 
         public void ActivatePlanningButton(int action)
         {
-            if (testing || screen != EchoScreen.Playing || !planning) return;
+            if (screen != EchoScreen.Playing || !planning) return;
             PlayUiSound(audioBindings.uiClickAudio, .55f);
             switch (action)
             {
@@ -436,13 +427,12 @@ namespace EchoProtocol
                     else TogglePlanning();
                     break;
                 case 3: RetryLevel(); break;
-                case 4 when echoTeaching: FinishEchoTeaching(); break;
             }
         }
 
         public void SetPlanningPreview(float time)
         {
-            if (!testing && screen == EchoScreen.Playing && planning && sampleActive && !echoTeaching)
+            if (screen == EchoScreen.Playing && planning && sampleActive)
                 planPreviewTime = time;
         }
 

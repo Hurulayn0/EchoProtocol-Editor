@@ -14,7 +14,6 @@ namespace EchoProtocol
             canvasBindings.settingsPanel.gameObject.SetActive(showSettings);
             if (showSettings)
             {
-                canvasBindings.settingsInput.interactable = !testing;
                 canvasBindings.settingSliders[0].SetValueWithoutNotify(preferences.Sensitivity);
                 canvasBindings.settingSliders[1].SetValueWithoutNotify(preferences.Volume);
                 canvasBindings.settingSliders[2].SetValueWithoutNotify(preferences.MusicVolume);
@@ -30,7 +29,6 @@ namespace EchoProtocol
             bool complete = screen == EchoScreen.LevelComplete;
             canvasBindings.statePanel.gameObject.SetActive(pausedPanel || lost || complete);
             if (!canvasBindings.statePanel.gameObject.activeSelf) return;
-            canvasBindings.stateInput.interactable = !testing;
             canvasBindings.pausedOptions.SetActive(pausedPanel);
             canvasBindings.resultOptions.SetActive(!pausedPanel);
             canvasBindings.stateTitle.color = lost ? new Color(1, .3f, .25f) : Level.Accent;
@@ -57,7 +55,7 @@ namespace EchoProtocol
 
         public void ApplySettingsSliders()
         {
-            if (testing || screen != EchoScreen.Settings) return;
+            if (screen != EchoScreen.Settings) return;
             preferences.Sensitivity = canvasBindings.settingSliders[0].value;
             preferences.Volume = canvasBindings.settingSliders[1].value;
             preferences.MusicVolume = canvasBindings.settingSliders[2].value;
@@ -67,7 +65,6 @@ namespace EchoProtocol
 
         public void ActivateGamePanelButton(int choice)
         {
-            if (testing) return;
             PlayUiSound(audioBindings.uiClickAudio, .55f);
             switch (choice)
             {
@@ -94,7 +91,7 @@ namespace EchoProtocol
             canvasBindings.controlsPanel.gameObject.SetActive(screen == EchoScreen.Controls);
             if (!main) return;
 
-            canvasBindings.menuInput.interactable = !testing && !creditsOverlayActive;
+            canvasBindings.menuInput.interactable = !creditsOverlayActive;
             canvasBindings.menuInput.blocksRaycasts = !creditsOverlayActive;
             bool canResume = preferences.ResumeLevel >= 0;
             canvasBindings.continueLabel.transform.parent.gameObject.SetActive(canResume);
@@ -104,8 +101,6 @@ namespace EchoProtocol
                 : "DEVAM / BÖLÜM " + (preferences.ResumeLevel + 1);
             canvasBindings.unavailableLabel.text = preferences.Completed ? "TÜM BÖLÜMLER TAMAMLANDI" : "KOLAY → ORTA → ZOR → FİNAL";
             canvasBindings.archiveLabel.text = "BELLEK ARŞİVİ / " + ArchiveCount + " / 3";
-            canvasBindings.validationLabel.text = testResult;
-            canvasBindings.validationLabel.color = SmokeTestPassed ? new Color(.25f, .85f, .55f) : uiMuted;
             for (int i = 0; i < canvasBindings.sectorButtons.Length; i++)
             {
                 bool unlocked = i == 0 || i == 2 || (i == 1 && preferences.UnlockedLevel >= 1)
@@ -123,7 +118,7 @@ namespace EchoProtocol
 
         public void ActivateMenuButton(int choice)
         {
-            if (testing || (screen != EchoScreen.MainMenu && screen != EchoScreen.Controls)) return;
+            if ((screen != EchoScreen.MainMenu && screen != EchoScreen.Controls)) return;
             PlayUiSound(audioBindings.uiClickAudio, .55f);
             switch (choice)
             {
@@ -131,7 +126,6 @@ namespace EchoProtocol
                 case 1: ContinueSavedCampaign(); break;
                 case 2: SetScreen(EchoScreen.Controls); break;
                 case 3: OpenSettings(); break;
-                case 4: OpenValidation(); break;
                 case 5: creditsOverlayActive = true; break;
                 case 6: QuitGame(); break;
                 case 7: SetScreen(EchoScreen.Archives); break;
@@ -148,7 +142,7 @@ namespace EchoProtocol
 
         private void TickMenuShowcase(float dt)
         {
-            if (testing || automatedRun || player == null || player.View == null) return;
+            if (player == null || player.View == null) return;
             bool inMenu = screen == EchoScreen.MainMenu || screen == EchoScreen.Controls || screen == EchoScreen.Settings || screen == EchoScreen.Archives;
             if (!inMenu) return;
             menuOrbitTime += dt;
@@ -202,19 +196,17 @@ namespace EchoProtocol
 
         private void QueueStoryBriefing()
         {
-            if (IsLiveDifficulty) pendingStoryBriefing = true;
+            pendingStoryBriefing = true;
         }
 
         private void OpenStoryBriefing()
         {
             pendingStoryBriefing = false;
-            if (!IsLiveDifficulty) return;
 
             storyOpenedAt = Time.unscaledTime;
             storyNodeIndex = sampleActive ? sampleStage + 2 : levelIndex == 2 ? 5 : levelIndex;
             storyBriefingActive = true;
             planning = false;
-            echoTeaching = false;
             SetCursor(false);
         }
 
@@ -222,7 +214,7 @@ namespace EchoProtocol
         {
             if (!storyBriefingActive) return;
             storyBriefingActive = false;
-            SetCursor(screen == EchoScreen.Playing && !testing && !planning);
+            SetCursor(screen == EchoScreen.Playing && !planning);
             PlayUiSound(audioBindings.uiClickAudio, 0.55f);
         }
 
@@ -243,7 +235,6 @@ namespace EchoProtocol
                 canvasBindings.archiveMemoryCountLabel.gameObject.SetActive(compact);
                 canvasBindings.archiveBonusSummary.text = ActiveVaultBonusText();
                 canvasBindings.archiveBonusSummary.color = ArchiveCount > 0 ? canvasBindings.archiveBonusActive : uiMuted;
-                canvasBindings.archiveControls.interactable = !testing;
                 GameObject[] locked = compact ? canvasBindings.compactArchiveLocked : canvasBindings.archiveLocked;
                 GameObject[] unlocked = compact ? canvasBindings.compactArchiveUnlocked : canvasBindings.archiveUnlocked;
                 for (int i = 0; i < locked.Length; i++)
@@ -265,10 +256,8 @@ namespace EchoProtocol
             if (lost)
             {
                 canvasBindings.maintenanceLossStats.text = stats;
-                canvasBindings.maintenanceLossControls.interactable = !testing;
                 return;
             }
-            canvasBindings.maintenanceWinControls.interactable = !testing;
             canvasBindings.maintenanceWinTitle.text = "TAHLİYE AÇILDI  ·  NOT: " + EchoPreferences.RankLetter(lastEarnedRank);
             canvasBindings.maintenanceWinTitle.color = RankColor(lastEarnedRank);
             canvasBindings.maintenanceWinStats.text = stats;
@@ -282,7 +271,6 @@ namespace EchoProtocol
 
         public void ActivateArchiveAndResultButton(int action)
         {
-            if (testing) return;
             if (screen == EchoScreen.Archives && action == 0)
             {
                 PlayUiSound(audioBindings.uiClickAudio, .55f);
@@ -367,7 +355,6 @@ namespace EchoProtocol
 
         public void ActivateNarrativeButton(int action)
         {
-            if (testing) return;
             if (action == 0 && storyBriefingActive && screen == EchoScreen.Playing)
             {
                 DismissStoryBriefing();
