@@ -24,9 +24,7 @@ The project includes 22 selected FBX models and their textures. The materials us
 
 ## Sound and music
 
-Assets/Sesler/Resources/EchoAudio contains 32 WAV files in Music, Movement, Weapon, Sentry, Echo, Devices and UI. All 32 clips are assigned to AudioSource components in Unity scenes or prefabs. The game plays those clips, adjusts volume and pitch, and manages music transitions. It does not create audio files at runtime.
-
-The Phase 2 sound catalog describes the intended use and technical format of the sounds. The creator and distribution license could not be verified for each current WAV file.
+The game includes 32 WAV audio files (2 music tracks and 30 sound effects) generated for the project through mathematical audio synthesis. No external audio libraries or samples were used. No separate distribution license has been documented for these files.
 
 ## TextMesh Pro
 
