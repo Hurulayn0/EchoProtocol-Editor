@@ -35,7 +35,7 @@ Each level has its own scene under Assets/Scenes. The C# files are grouped by ro
 
 Extract the entire submission ZIP and open Windows_Game/EchoProtocol.exe. Keep EchoProtocol_Data, MonoBleedingEdge and the DLL files next to the EXE. To run the project in the editor, add the extracted ZIP's root to Unity Hub and follow the Unity steps above.
 
-[Asset credits and licenses](ASSET_CREDITS.md) · [Presentation and code guide](PRESENTATION_AND_CODE_GUIDE.md)
+[Asset credits and licenses](ASSET_CREDITS.md)
 
 ## Phase 1 GDD and the current campaign
 
